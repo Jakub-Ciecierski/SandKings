@@ -41,8 +41,20 @@ public abstract class Mobile {
 		// get current location in grid
 		GridPoint gp = grid.getLocation(this);
 		// get random next position
-		int randX = gp.getX() + RandomHelper.nextIntFromTo(-1, 2);
-		int randY = gp.getY() + RandomHelper.nextIntFromTo(-1, 2);
+		int randX = ( RandomHelper.nextIntFromTo(0, 2) );
+		int randY = ( RandomHelper.nextIntFromTo(0, 2) );
+		
+		if ( RandomHelper.nextIntFromTo(0,2) == 0 )
+		{
+			randX *= (-1);
+		}
+		if ( RandomHelper.nextIntFromTo(0,2) == 0 )
+		{
+			randY *= (-1);
+		}
+		
+		randX += gp.getX();
+		randY += gp.getY();
 		
 		// catch out of bounds
 		GridDimensions spaceDim = grid.getDimensions();
