@@ -19,23 +19,14 @@ public class nodeNetwork
 		return nodeList;
 	}
 
-	public void addToList(desireNode newNode){
+	public void addToList(desireNode newNode)
+	{
 		for( desireNode node : nodeList ){
 		if(node.getName().equals(newNode.getName())){
 			return;
 			}
-		}
-		
+		}	
 		nodeList.add(newNode);
-	}
-	
-	public void init(){
-		for(desireNode node : nodeList){
-			node.recalculateLookupTable();
-		}
-		for(desireNode node : nodeList){
-			node.recalculateInfluence();
-		}		
 	}
 
 
@@ -43,19 +34,28 @@ public class nodeNetwork
     * CONSTRUCTORS *
 	****************/
 	
-	public nodeNetwork(){
+	public nodeNetwork()
+	{
 		nodeList = new ArrayList<desireNode>();
+	}
+	
+	public nodeNetwork(nodeNetwork Copy)
+	{
+		nodeList = new ArrayList<desireNode>();
+		nodeList = (ArrayList<desireNode>) Copy.nodeList.clone();
 	}
 	
    /***********
     * Methods *
 	***********/
 	
-	public void initNodeNetworkForPlayer(){
+	public void initNodeNetworkForPlayer()
+	{
 		
 	}
 	
-	public void initNodeNetworkForUnit(){
+	public void initNodeNetworkForUnit()
+	{
 		
 	}
 	
@@ -69,27 +69,14 @@ public class nodeNetwork
 		return 0;
 	}
 	
-	// Check if added node creates loops.
-	// We don't wanna loops.
-	private boolean checkForLoopsFromNode(desireNode checkedNode){
-		ArrayList<Boolean> wasVisited = new ArrayList<Boolean>();
-		for (int i = 0; i < nodeList.size(); i++){
-			wasVisited.add(false);
+	public void doStep()
+	{
+		for( desireNode node : nodeList){
+			node.singleStep();
+		}
+		for( desireNode node : nodeList){
+			node.updateStep();
 		}
 		
-		return hasCycle(nodeList.indexOf(checkedNode), wasVisited);
-	}
-	
-	private boolean hasCycle(int start, ArrayList<Boolean> wasVisited )
-	{
-		wasVisited.set(start, true);
-	    for (influence relation : nodeList.get(start).getInfluenceList()) {
-	    	if(!nodeList.contains(relation.getReferenceNode()))
-	    		continue;
-	    	int index = nodeList.indexOf(relation.getReferenceNode());
-	        if (wasVisited.get(index)  ||  hasCycle(index, wasVisited))
-	            return true;
-	    }
-	    return false;
 	}
 }
