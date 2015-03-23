@@ -23,8 +23,8 @@ public abstract class Mobile {
 	private int carryCapacity = 0;
 	private int diplomacySkill = 0;
 	
-	private int playerID = 0;
-	
+		private int playerID = 0;
+
 	// simulation props
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
@@ -40,19 +40,11 @@ public abstract class Mobile {
 	{
 		// get current location in grid
 		GridPoint gp = grid.getLocation(this);
+		
 		// get random next position
-		int randX = ( RandomHelper.nextIntFromTo(0, 2) );
-		int randY = ( RandomHelper.nextIntFromTo(0, 2) );
-		
-		if ( RandomHelper.nextIntFromTo(0,2) == 0 )
-		{
-			randX *= (-1);
-		}
-		if ( RandomHelper.nextIntFromTo(0,2) == 0 )
-		{
-			randY *= (-1);
-		}
-		
+		int randX = ( RandomHelper.nextIntFromTo(-1, 1) );
+		int randY = ( RandomHelper.nextIntFromTo(-1, 1) );
+
 		randX += gp.getX();
 		randY += gp.getY();
 		
@@ -95,7 +87,8 @@ public abstract class Mobile {
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
-			grid.moveTo(this, (int)thisLocation.getX(), (int)thisLocation.getY() );
+			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
+			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
 		}
 	}
 	
