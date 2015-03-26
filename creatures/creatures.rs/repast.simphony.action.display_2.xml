@@ -1,5 +1,5 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor>
-  <name>New Display</name>
+  <name>Map</name>
   <type>2D</type>
   <styles>
     <entry>
@@ -10,6 +10,10 @@
       <string>creatures.CreatureClasses.Maw</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
+    <entry>
+      <string>map.Resources</string>
+      <string>map.ResourceStyle</string>
+    </entry>
   </styles>
   <editedStyles>
     <entry>
@@ -18,7 +22,11 @@
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <string>creatures.CreatureClasses.Maw.style_2.xml</string>
+      <string>creatures.CreatureClasses.Maw.style_7.xml</string>
+    </entry>
+    <entry>
+      <string>map.Resources</string>
+      <null/>
     </entry>
   </editedStyles>
   <netStyles/>
@@ -31,7 +39,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>959381858</hashCode>
+    <hashCode>-1094957581</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -39,11 +47,15 @@
   <layerOrder>
     <entry>
       <string>creatures.CreatureClasses.Worker</string>
-      <int>0</int>
+      <int>1</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <int>1</int>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>map.Resources</string>
+      <int>0</int>
     </entry>
   </layerOrder>
   <projections>
@@ -105,7 +117,7 @@
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>true</boolean>
+                <boolean>false</boolean>
               </entry>
             </map>
           </entry>

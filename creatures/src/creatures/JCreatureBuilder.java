@@ -1,5 +1,6 @@
 package creatures;
 
+import map.Resources;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.Worker;
 import repast.simphony.context.Context;
@@ -17,11 +18,13 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StrictBorders;
+import repast.simphony.space.grid.WrapAroundBorders;
+import repast.simphony.valueLayer.GridValueLayer;
 
 public class JCreatureBuilder implements ContextBuilder<Object> {
 
 	@Override
-	public Context build(Context<Object> context) {
+	public Context<Object> build(Context<Object> context) {
 		System.out.println(RandomHelper.getSeed());
 		context.setId("creatures");
 		
@@ -76,11 +79,33 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		grid.moveTo(player4Maw,		(int)bottomright.getX(), (int)bottomright.getY());
 		space.moveTo(player4Maw,	(int)bottomright.getX(), (int)bottomright.getY());
 		
+		for (int i = 0; i < 50; i++)
+			for (int j = 0; j < 50; j++) {
+				int rand = RandomHelper.nextIntFromTo(0, 1);
+				int resourceType = 0;
+				if(rand == 0)
+					resourceType = RandomHelper.nextIntFromTo(1, 4);
+				else resourceType = 2; //I wanted to place more wood (green) on the map ^^
+				
+				Resources resource = new Resources(space, grid, resourceType);
+				context.add( resource );
+				NdPoint point = new NdPoint( i, j );
+				grid.moveTo(resource, (int)point.getX(), (int)point.getY());
+				space.moveTo(resource, (int)point.getX(), (int)point.getY());
+			}
+		
 		// don't loop endlessly
 		if (RunEnvironment.getInstance().isBatch()) {
 			RunEnvironment.getInstance().endAt(200);
 		}
 		
+		final GridValueLayer valueLayer = new GridValueLayer(Constants.Constants.LAYER_ID,
+															true, new WrapAroundBorders(),
+														50, 50);
+		context.addValueLayer(valueLayer);
+		/*for(int i = 0; i < 50; i++)	
+			for (int j = 0; i < 50; j++)
+					valueLayer.set(50, i, j);*/
 		return context;
 	}
 
