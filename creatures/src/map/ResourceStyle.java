@@ -31,22 +31,22 @@ public class ResourceStyle extends DefaultStyleOGL2D {
 				
 				if ( resourceID == 1 ) //water
 				{
-					return new Color( 0x80, 0xC0, 0xFF );
+					return new Color( 0xE9, 0xCE, 0x46 );
 				}
 					
 				if ( resourceID == 2 ) //stone
 				{
-					return new Color( 0x4D, 0x83, 0x4D); //grey: ( 0x80, 0x80, 0x80 ); 
+					return new Color( 0xB2, 0xB2, 0x75); //grey: ( 0x80, 0x80, 0x80 ); 
 				}
 				
 				if ( resourceID == 3 ) //sand
 				{
-					return new Color ( 0xBE, 0xD8, 0x3B ); //yellow: ( 0xFF,0xFF,0x00 );
+					return new Color ( 0xF0, 0xD4, 0x1C ); //yellow: ( 0xFF,0xFF,0x00 );
 				}
 				
 				if ( resourceID == 4 ) //wood
 				{
-					return new Color( 0x1E, 0x9F, 0x1E );
+					return new Color( 0xEB, 0xE5, 0x46 );
 				}
 					
 			return super.getColor(resource);

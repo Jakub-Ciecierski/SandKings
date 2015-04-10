@@ -84,10 +84,7 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 				int rand = RandomHelper.nextIntFromTo(0, 1);
 				int resourceType = 0;
 				if(rand == 0) {
-					if(i > 3 & i < 47 & j > 3 & j < 47) { //inner part of the map
-								resourceType = RandomHelper.nextIntFromTo(1, 3); // + water
-					}
-					else resourceType = RandomHelper.nextIntFromTo(2, 3); // outter part
+					 resourceType = RandomHelper.nextIntFromTo(1, 3); // outter part
 				}
 				else resourceType = 4; //more wood in general
 				
