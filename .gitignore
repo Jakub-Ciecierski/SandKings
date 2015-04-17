@@ -1,3 +1,19 @@
 creatures/Repast.settings
 creatures/debug.log.1
 creatures/velocity.log.1
+/Nodal Network/bin/desireNode.class
+/Nodal Network/bin/influence.class
+/Nodal Network/bin/mainClass.class
+/Nodal Network/bin/nodeNetwork.class
+/Nodal Network/bin/resourceNode.class
+/creatures/bin/Constants/Constants.class
+/creatures/bin/NodalNetwork/desireNode.class
+/creatures/bin/NodalNetwork/influence.class
+/creatures/bin/NodalNetwork/nodeNetwork.class
+/creatures/bin/NodalNetwork/resourceNode.class
+/communication/bin/communication/*.class
+/communication/bin/communication/messages/*.class
+/communication/bin/communication/rules/*.class
+/communication/bin/jzombies/*.class
+/communication/bin/jzombies/*.agent
+/communication/bin/jzombies/*.groovy
