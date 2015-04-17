@@ -1,24 +1,40 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor>
-  <name>New Display</name>
+  <name>Pizza Party</name>
   <type>2D</type>
   <styles>
     <entry>
-      <string>creatures.CreatureClasses.Worker</string>
+      <string>creatures.CreatureClasses.Mobile</string>
       <string>creatures.ColoredCreature</string>
+    </entry>
+    <entry>
+      <string>map.Food</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
+    <entry>
+      <string>map.Terrarium</string>
+      <string>map.MapStyle</string>
+    </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>creatures.CreatureClasses.Worker</string>
+      <string>creatures.CreatureClasses.Mobile</string>
       <null/>
     </entry>
     <entry>
+      <string>map.Food</string>
+      <string>map.Food.style_5.xml</string>
+    </entry>
+    <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <string>creatures.CreatureClasses.Maw.style_2.xml</string>
+      <string>creatures.CreatureClasses.Maw.style_14.xml</string>
+    </entry>
+    <entry>
+      <string>map.Terrarium</string>
+      <null/>
     </entry>
   </editedStyles>
   <netStyles/>
@@ -31,19 +47,27 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>959381858</hashCode>
+    <hashCode>1843105558</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>creatures.CreatureClasses.Worker</string>
-      <int>0</int>
+      <string>creatures.CreatureClasses.Mobile</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>map.Food</string>
+      <int>2</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <int>1</int>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>map.Terrarium</string>
+      <int>0</int>
     </entry>
   </layerOrder>
   <projections>
@@ -105,7 +129,7 @@
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>true</boolean>
+                <boolean>false</boolean>
               </entry>
             </map>
           </entry>

@@ -11,6 +11,8 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import Constants.Constants;
+
 
 /**
  * @author Asmodiel
@@ -73,7 +75,7 @@ public class Maw {
 		return numberOfChildren;
 	}
 
-	@ScheduledMethod ( start = 1 , interval = 1)
+	@ScheduledMethod ( start = Constants.START , interval = Constants.MOBILE_SPAWN_INTERVAL)
 	public void step()
 	{
 		if ( power > 0 )
