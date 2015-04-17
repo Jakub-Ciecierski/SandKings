@@ -28,3 +28,4 @@ creatures/velocity.log.1
 /creatures/bin/map/God.class
 /creatures/bin/map/MapStyle.class
 /creatures/bin/map/Terrarium.class
+*.class
