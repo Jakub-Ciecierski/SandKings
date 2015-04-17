@@ -1,8 +1,9 @@
 package creatures;
 
-import map.Resources;
+import map.God;
+import map.Terrarium;
+import Constants.Constants;
 import creatures.CreatureClasses.Maw;
-import creatures.CreatureClasses.Worker;
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -18,8 +19,6 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StrictBorders;
-import repast.simphony.space.grid.WrapAroundBorders;
-import repast.simphony.valueLayer.GridValueLayer;
 
 public class JCreatureBuilder implements ContextBuilder<Object> {
 
@@ -34,11 +33,14 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 				"space", 
 				context, 
 				new RandomCartesianAdder<Object>(), 
-				new repast.simphony.space.continuous.StrictBorders (), 50, 50);
+				new repast.simphony.space.continuous.StrictBorders (), Constants.GRID_SIZE, Constants.GRID_SIZE);
 		GridFactory gridFactory = GridFactoryFinder . createGridFactory ( null );
 		Grid<Object> grid = gridFactory.createGrid ( "grid", context, new GridBuilderParameters<Object>(new StrictBorders(),
-				new SimpleGridAdder<Object>(), true, 50, 50));
+				new SimpleGridAdder<Object>(), true, Constants.GRID_SIZE, Constants.GRID_SIZE));
 		
+		// add God
+		God god = new God(space, grid);
+
 		// create maws for 4 players with random initial power
 		Maw player1Maw = new Maw( space, grid, 1, RandomHelper.nextIntFromTo(10, 20) );
 		Maw player2Maw = new Maw( space, grid, 2, RandomHelper.nextIntFromTo(10, 20) );
@@ -46,11 +48,12 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		Maw player4Maw = new Maw( space, grid, 4, RandomHelper.nextIntFromTo(10, 20) );
 		
 		// add maws to context
+		context.add( god );
 		context.add( player1Maw );
 		context.add( player2Maw );
 		context.add( player3Maw );
 		context.add( player4Maw );
-		
+
 		// place all objects in the context 
 		for (Object obj : context) {
 			NdPoint pt = space.getLocation(obj);
@@ -59,9 +62,9 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		
 		// init corner coords
 		NdPoint bottomleft  = new NdPoint(  5,  5 );
-		NdPoint bottomright = new NdPoint( 45,  5 );
-		NdPoint topleft		= new NdPoint( 45, 45 );
-		NdPoint topright 	= new NdPoint(  5, 45 );
+		NdPoint bottomright = new NdPoint( Constants.GRID_SIZE - 5,  5 );
+		NdPoint topleft		= new NdPoint( Constants.GRID_SIZE - 5, Constants.GRID_SIZE - 5 );
+		NdPoint topright 	= new NdPoint(  5, Constants.GRID_SIZE - 5 );
 		
 		// move maw 1
 		grid.moveTo(player1Maw,  (int)topleft.getX(), (int)topleft.getY() );
@@ -79,35 +82,30 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		grid.moveTo(player4Maw,		(int)bottomright.getX(), (int)bottomright.getY());
 		space.moveTo(player4Maw,	(int)bottomright.getX(), (int)bottomright.getY());
 		
-		for (int i = 0; i < 50; i++)
-			for (int j = 0; j < 50; j++) {
+		// create map
+		for (int i = 0; i < Constants.GRID_SIZE; i++)
+			for (int j = 0; j < Constants.GRID_SIZE; j++) {
 				int rand = RandomHelper.nextIntFromTo(0, 1);
-				int resourceType = 0;
+				int colour = 0;
+				//there is more of colour 4 so it doesn't look too random
 				if(rand == 0) {
-					 resourceType = RandomHelper.nextIntFromTo(1, 3); // outter part
+					 colour = RandomHelper.nextIntFromTo(1, 3);
 				}
-				else resourceType = 4; //more wood in general
+				else colour = 4;
 				
-				Resources resource = new Resources(space, grid, resourceType);
+				Terrarium resource = new Terrarium(space, grid, colour);
 				context.add( resource );
 				NdPoint point = new NdPoint( i, j );
 				grid.moveTo(resource, (int)point.getX(), (int)point.getY());
 				space.moveTo(resource, (int)point.getX(), (int)point.getY());
 			}
 		
+		
 		// don't loop endlessly
 		if (RunEnvironment.getInstance().isBatch()) {
 			RunEnvironment.getInstance().endAt(200);
 		}
 		
-		final GridValueLayer valueLayer = new GridValueLayer(Constants.Constants.LAYER_ID,
-															true, new WrapAroundBorders(),
-														50, 50);
-		context.addValueLayer(valueLayer);
-		/*for(int i = 0; i < 50; i++)	
-			for (int j = 0; i < 50; j++)
-					valueLayer.set(50, i, j);*/
 		return context;
 	}
-
 }

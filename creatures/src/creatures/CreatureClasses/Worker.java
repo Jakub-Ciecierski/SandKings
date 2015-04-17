@@ -6,6 +6,7 @@ package creatures.CreatureClasses;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
+import Constants.Constants;
 
 /**
  * @author Asmodiel
@@ -19,7 +20,7 @@ public class Worker extends Mobile {
 		// TODO Auto-generated constructor stub
 	}
 
-	@ScheduledMethod ( start = 1 , interval = 1)
+	@ScheduledMethod ( start = Constants.START , interval = Constants.MOVE_INTERVAL)
 	public void step()
 	{
 		this.randomMove();
