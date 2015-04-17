@@ -17,3 +17,14 @@ creatures/velocity.log.1
 /communication/bin/jzombies/*.class
 /communication/bin/jzombies/*.agent
 /communication/bin/jzombies/*.groovy
+/creatures/bin/creatures/ColoredCreature.class
+/creatures/bin/creatures/CreatureClasses/Fighter.class
+/creatures/bin/creatures/CreatureClasses/FoodGatherer.class
+/creatures/bin/creatures/CreatureClasses/Maw.class
+/creatures/bin/creatures/CreatureClasses/Mobile.class
+/creatures/bin/creatures/CreatureClasses/Worker.class
+/creatures/bin/creatures/JCreatureBuilder.class
+/creatures/bin/map/Food.class
+/creatures/bin/map/God.class
+/creatures/bin/map/MapStyle.class
+/creatures/bin/map/Terrarium.class
