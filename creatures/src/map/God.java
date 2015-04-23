@@ -39,8 +39,10 @@ public class God {
 		int rand = RandomHelper.nextIntFromTo(0, 5);
 		if (rand == 0) //20% chance of food drop
 		{ 
+			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
-			Food food = new Food( space, grid, 0);
+			int foodID = RandomHelper.nextIntFromTo(0, 3);
+			Food food = new Food( space, grid, foodID);
 			int x = RandomHelper.nextIntFromTo(2, Constants.GRID_SIZE - 2);
 			int y = RandomHelper.nextIntFromTo(2, Constants.GRID_SIZE - 2);
 			Object temp = grid.getObjectAt(x, y);
