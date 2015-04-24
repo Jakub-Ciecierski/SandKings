@@ -46,4 +46,17 @@ public class ColoredCreature extends DefaultStyleOGL2D {
 		
 		return super.getColor(agent);
 	}
+	
+	@Override
+	public float getScale(final Object agent) {
+		
+		if ( agent instanceof Mobile )
+		{
+			final Mobile mob = (Mobile) agent;
+			float size = 1 + (mob.getStrength() / 100 );
+			return size;		
+		}
+		
+		return 1;
+	}
 }

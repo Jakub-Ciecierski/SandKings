@@ -3,9 +3,13 @@
  */
 package creatures.CreatureClasses;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
@@ -27,6 +31,8 @@ public class Maw {
 	// simulation props
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
+	private List<Worker> children = new ArrayList<Worker>();
+
 	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{
@@ -79,19 +85,41 @@ public class Maw {
 	public void step()
 	{
 		if ( power > 0 )
-		{
+		{			
 			Context<Object> context = ContextUtils.getContext(this);
 			NdPoint spacePt = space.getLocation(this);
 			GridPoint gridPt = grid.getLocation(this);
 			Worker child = new Worker( space, grid, playerID );
-			
+			children.add(child);
 			context.add(child);
 			space.moveTo(child, spacePt.getX(), spacePt.getY());
 			grid.moveTo(child, gridPt.getX(), gridPt.getY());
 			
 			numberOfChildren++;
 			power--;
+			
+		}
+		else if (power == 0) {
+				AddStrengthToChildren();
 		}
 	}
 	
+	private void AddStrengthToChildren() {
+		if(RandomHelper.nextIntFromTo(0, 100) == 50) {
+			//float strength = 0;
+			float extra = (float)0.1;
+			
+			if(playerID == 1) //red one be bigger
+				extra = (float)0.5;
+			
+			if(children.get(0).getStrength() < 300) {
+				for(Worker child : children) {
+					child.setStrength(child.getStrength() + extra);	
+					//strength = child.getStrength();
+	
+				}
+			}
+			//System.out.println("Strength[" + playerID + "]: " + strength);
+		}		
+	}
 }

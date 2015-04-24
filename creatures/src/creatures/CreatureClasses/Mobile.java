@@ -17,7 +17,7 @@ import repast.simphony.space.grid.GridPoint;
 public abstract class Mobile {
 	
 	// creature properties
-	private int strength = 0;
+	private float strength = 0;
 	private int experience = 0;
 	private int intelligence = 0;
 	private int carryCapacity = 0;
@@ -111,13 +111,13 @@ public abstract class Mobile {
 	 * @return the strength
 	 */
 	@Parameter(displayName = "strength", usageName = "strength")
-	public int getStrength() {
-		return strength;
+	public float getStrength() {
+		return this.strength;
 	}
 	/**
 	 * @param strength the strength to set
 	 */
-	public void setStrength(int strength) {
+	public void setStrength(float strength) {
 		this.strength = strength;
 	}
 	
