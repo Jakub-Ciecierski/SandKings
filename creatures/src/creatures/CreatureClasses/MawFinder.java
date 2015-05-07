@@ -29,5 +29,9 @@ public class MawFinder {
 		}
 		return null;
 	}
+	public void AddMaw(Maw m) 
+	{	
+		_mawList.add(m);
+	}
 	
 }

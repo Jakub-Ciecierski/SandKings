@@ -4,6 +4,7 @@ import map.God;
 import map.Terrarium;
 import Constants.Constants;
 import creatures.CreatureClasses.Maw;
+import creatures.CreatureClasses.MawFinder;
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -54,7 +55,12 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		context.add( player2Maw );
 		context.add( player3Maw );
 		context.add( player4Maw );
-
+		
+		//add maws to list
+		MawFinder.Instance().AddMaw( player1Maw );
+		MawFinder.Instance().AddMaw( player2Maw );
+		MawFinder.Instance().AddMaw( player3Maw );
+		MawFinder.Instance().AddMaw( player4Maw );
 		// place all objects in the context 
 		for (Object obj : context) {
 			NdPoint pt = space.getLocation(obj);

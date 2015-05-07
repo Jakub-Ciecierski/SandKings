@@ -1,8 +1,10 @@
 package map;
 
+import repast.simphony.context.Context;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
+import repast.simphony.util.ContextUtils;
 
 
 /**
@@ -18,7 +20,7 @@ public class Food implements Comparable {
 	private int power = 1;
 	private int weight = 1;
 	private int ratio = 1;
-	
+	private boolean isPicked = false;
 	public Food (ContinuousSpace<Object> space, Grid<Object> grid, int foodID) {
 		this.space = space;
 		this.grid = grid;
@@ -26,19 +28,19 @@ public class Food implements Comparable {
 		
 		switch(this.foodID) {
 			case 0: //pizza
-				power = 50;
+				power = 25;
 				weight = 3;
 				break;
 			case 1: //donut
-				power = 40;
+				power = 20;
 				weight = 2;
 				break;
 			case 2: //grape
-				power = 20;
+				power = 10;
 				weight = 5;
 				break;
 			case 3: //cabbage
-				power = 10;
+				power = 5;
 				weight = 10;
 				break;
 			default:
@@ -48,13 +50,19 @@ public class Food implements Comparable {
 		this.ratio = power / weight;
 	}
 	
+	public void Delete() {
+		  Context<Object> context = ContextUtils.getContext(this);
+		  if(this != null && context != null)
+			  context.remove( this );	
+	 }
+	
 	@Parameter(displayName = "Food", usageName = "foodID")
 	public int getFoodID() {
 		return foodID;
 	}
 	
 	/**
-	 * @param enemyID the foodID to set
+	 * @param foodID the foodID to set
 	 */
 	public void setFoodID(int foodID) {
 		this.foodID = foodID;
@@ -76,6 +84,14 @@ public class Food implements Comparable {
 			return -100;
 		Food f = (Food) o;
 		return ( this.getRatio() - f.getRatio() ) ;
+	}
+
+	public boolean isPicked() {
+		return isPicked;
+	}
+
+	public void setPicked(boolean isPicked) {
+		this.isPicked = isPicked;
 	}
 	
 	

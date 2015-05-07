@@ -30,7 +30,7 @@ public class God {
 	/*
 	 * We can add everything God will be doing here - dropping food, creatures etc.
 	 * */
-	@ScheduledMethod ( start = Constants.GOD_MODE_START , interval = Constants.FOOD_DROP_INTERVAL)
+	@ScheduledMethod ( start = Constants.GOD_MODE_START , interval = Constants.GOD_MODE_INTERVAL)
 	public void step()
 	{
 		DropFood();
@@ -59,8 +59,8 @@ public class God {
 	}
 	
 	private void DropFood() {		
-		int rand = RandomHelper.nextIntFromTo( 0, 5 );
-		if (rand == 0) //20% chance of food drop
+		int rand = RandomHelper.nextIntFromTo( 0, 3 );
+		if (rand == 0) //25% chance of food drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext( this );

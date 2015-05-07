@@ -1,5 +1,5 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor>
-  <name>Pizza Party</name>
+  <name>Food Party</name>
   <type>2D</type>
   <styles>
     <entry>
@@ -8,11 +8,7 @@
     </entry>
     <entry>
       <string>map.Food</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
-    </entry>
-    <entry>
-      <string>map.God</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>map.FoodTypes</string>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
@@ -30,11 +26,11 @@
     </entry>
     <entry>
       <string>map.Food</string>
-      <string>map.Food.style_5.xml</string>
+      <null/>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <string>creatures.CreatureClasses.Maw.style_14.xml</string>
+      <string>creatures.CreatureClasses.Maw.style_15.xml</string>
     </entry>
     <entry>
       <string>map.Terrarium</string>
@@ -54,28 +50,24 @@
     <hashCode>1228313028</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
-  <layoutProjection>grid</layoutProjection>
+  <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
       <string>creatures.CreatureClasses.Mobile</string>
-      <int>2</int>
+      <int>1</int>
     </entry>
     <entry>
       <string>map.Food</string>
-      <int>3</int>
-    </entry>
-    <entry>
-      <string>map.God</string>
-      <int>0</int>
+      <int>2</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
-      <int>4</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>
-      <int>1</int>
+      <int>0</int>
     </entry>
   </layerOrder>
   <projections>

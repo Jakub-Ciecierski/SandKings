@@ -35,14 +35,14 @@ public abstract class Mobile {
 	private float strength = 0;
 	private int experience = 0;
 	private int intelligence = 0;
-	private int carryCapacity = 0;
+	private int carryCapacity = 1000;
 	private int carriedWeight = 0;
 	private List<Food> carriedStuff = new ArrayList<Food>();
 	private int diplomacySkill = 0;
 	
 	//Moving logic
 	private boolean isGoingSomewhere = false;
-	private GridPoint gp;
+	private GridPoint goingPoint;
 	private GoingWhere goingWhere = GoingWhere.Uknown;
 	
 		private int playerID = 0;
@@ -74,6 +74,7 @@ public abstract class Mobile {
 	{
 		this.carriedStuff.add(food);
 		this.carriedWeight += food.getWeight();
+		food.setPicked(true);
 	}
 	
 	protected void MoveCarriedStuff()
@@ -89,18 +90,18 @@ public abstract class Mobile {
 	
 	public void MoveThere()
 	{
-		moveTowards( gp );
+		moveTowards( goingPoint );
 	}
 	
 	public boolean IsAtDestination()
 	{
-		if ( gp == null ) return false;
+		if ( goingPoint == null ) return false;
 		
 		// get current location in grid
 		GridPoint currentPos = grid.getLocation(this);
 		if ( currentPos == null ) return false;
 		
-		return ( gp.getX() == currentPos.getX() && gp.getY() == currentPos.getY() );
+		return ( goingPoint.getX() == currentPos.getX() && goingPoint.getY() == currentPos.getY() );
 	}
 	
 	public void ActOnArrival()
@@ -125,7 +126,7 @@ public abstract class Mobile {
 			default: break;
 			case Uknown: break;				
 		}
-		this.gp = null;
+		this.goingPoint = null;
 		this.isGoingSomewhere = false;
 		this.goingWhere = GoingWhere.Uknown;
 	}
@@ -144,7 +145,7 @@ public abstract class Mobile {
 	private void GoHome()
 	{
 		this.setGoingSomewhere(true);
-		gp = MawFinder.Instance().GetMawPosition( this.playerID );
+		goingPoint = MawFinder.Instance().GetMawPosition( this.playerID );
 	}
 
 	@SuppressWarnings("unchecked")
@@ -164,8 +165,10 @@ public abstract class Mobile {
 			} else
 			{
 				// lift
-				StartCarrying( food );
-				found ++;
+				if(!food.isPicked()) {
+					StartCarrying( food );
+					found ++;
+				}
 			}
 		}
 		

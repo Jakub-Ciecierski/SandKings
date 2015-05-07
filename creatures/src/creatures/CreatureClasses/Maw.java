@@ -51,6 +51,7 @@ public class Maw {
 	public void GiveFood( Food f )
 	{
 		this.power += f.getPower();
+		f.Delete();
 	}
 	
 	/**
