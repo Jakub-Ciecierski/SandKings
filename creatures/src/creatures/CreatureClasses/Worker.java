@@ -23,7 +23,17 @@ public class Worker extends Mobile {
 	@ScheduledMethod ( start = Constants.START , interval = Constants.MOVE_INTERVAL)
 	public void step()
 	{
-		this.randomMove();
+		if ( this.IsAtDestination() )
+		{
+			this.ActOnArrival();
+		} else if ( this.isGoingSomewhere() )
+		{
+			this.MoveThere();
+			this.MoveCarriedStuff();
+		} else {
+			this.Explore();
+			this.MoveCarriedStuff();
+		}
 	}
 	
 }

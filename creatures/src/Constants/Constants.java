@@ -17,6 +17,6 @@ public final class Constants {
 	 * Hidden constructor to ensure no instances are created.
 	 */
 	private Constants() {
-		;
+
 	}
 }

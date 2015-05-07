@@ -3,9 +3,12 @@
  */
 package creatures.CreatureClasses;
 
+import NodalNetwork.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
@@ -29,19 +32,26 @@ public class Maw {
 	private int numberOfChildren;
 
 	// simulation props
+	private nodeNetwork NN;
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
+	private GridPoint gridpos;
 	private List<Worker> children = new ArrayList<Worker>();
 
 	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{
+		NN = new nodeNetwork();
 		this.space = space;
 		this.grid = grid;
 		this.playerID = setPlayerID;
 		this.power = power;
 	}	
 	
+	public void GiveFood( Food f )
+	{
+		this.power += f.getPower();
+	}
 	
 	/**
 	 * @return the power
@@ -121,5 +131,19 @@ public class Maw {
 			}
 			//System.out.println("Strength[" + playerID + "]: " + strength);
 		}		
+	}
+
+	/**
+	 * @return the gridpos
+	 */
+	public GridPoint getGridpos() {
+		return gridpos;
+	}
+
+	/**
+	 * @param gridpos the gridpos to set
+	 */
+	public void setGridpos(GridPoint gridpos) {
+		this.gridpos = gridpos;
 	}
 }

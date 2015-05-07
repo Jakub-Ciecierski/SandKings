@@ -25,7 +25,8 @@ ShapeFactory2D factory;
 		@Override
 		public VSpatial getVSpatial(final Object resource, VSpatial spatial)  {
 			final Food food = (Food)resource;
-			String projectDir = System.getProperty("user.dir") + "\\icons\\";
+			String projectDir = System.getProperty("user.dir") + "\\icons\\"; // THIS IS ERROR.
+			//String projectDir = "/Home/Documents/workspace/sandkings/creatures/icons/";
 			String iconDir = "pizza.png";
 			final int foodID = food.getFoodID();
 			if (spatial == null) {
