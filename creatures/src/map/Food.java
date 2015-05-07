@@ -27,10 +27,10 @@ public class Food {
 	}
 	
 	/**
-	 * @param foodID the foodID to set
+	 * @param enemyID the foodID to set
 	 */
-	public void setFoodID(int resourceID) {
-		this.foodID = resourceID;
+	public void setFoodID(int foodID) {
+		this.foodID = foodID;
 	}
 	
 	public int getPower() {

@@ -10,6 +10,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 import Constants.Constants;
+import Enemies.Enemy;
 
 
 /**
@@ -33,25 +34,47 @@ public class God {
 	public void step()
 	{
 		DropFood();
+		DropEnemy();
 	}
 	
-	private void DropFood() {		
-		int rand = RandomHelper.nextIntFromTo(0, 5);
-		if (rand == 0) //20% chance of food drop
+	private void DropEnemy() {		
+		int rand = RandomHelper.nextIntFromTo(0, 20);
+		if (rand == 0) //5% chance of food drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
-			int foodID = RandomHelper.nextIntFromTo(0, 3);
-			Food food = new Food( space, grid, foodID);
-			int x = RandomHelper.nextIntFromTo(2, Constants.GRID_SIZE - 2);
-			int y = RandomHelper.nextIntFromTo(2, Constants.GRID_SIZE - 2);
-			Object temp = grid.getObjectAt(x, y);
+			int enemyID = RandomHelper.nextIntFromTo( 0, 1 );
+			Enemy enemy = new Enemy( space, grid, enemyID );
+			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+			Object temp = grid.getObjectAt( x, y );
+			
+			if(!(temp instanceof Enemy)) //don't add enemy where food already is
+			{ 
+				context.add( enemy );
+				space.moveTo( enemy, x, y );
+				grid.moveTo( enemy, x, y );
+			}
+		}			
+	}
+	
+	private void DropFood() {		
+		int rand = RandomHelper.nextIntFromTo( 0, 5 );
+		if (rand == 0) //20% chance of food drop
+		{ 
+			@SuppressWarnings("unchecked")
+			Context<Object> context = ContextUtils.getContext( this );
+			int foodID = RandomHelper.nextIntFromTo( 0, 3 );
+			Food food = new Food( space, grid, foodID );
+			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+			Object temp = grid.getObjectAt( x, y );
 			
 			if(!(temp instanceof Food)) //don't add food where food already is
 			{ 
-				context.add(food);
-				space.moveTo(food, x, y);
-				grid.moveTo(food, x, y);
+				context.add( food );
+				space.moveTo( food, x, y );
+				grid.moveTo( food, x, y );
 			}
 		}			
 	}
