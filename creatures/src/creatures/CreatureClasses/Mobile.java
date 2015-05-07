@@ -1,5 +1,10 @@
 package creatures.CreatureClasses;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import map.Food;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.Dimensions;
@@ -16,12 +21,29 @@ import repast.simphony.space.grid.GridPoint;
  */
 public abstract class Mobile {
 	
+	public enum GoingWhere
+	{
+		Uknown,
+		Home,
+		ForFood,
+		HomeWithFood,
+		Explore,
+		Wpierdol
+	}
+	
 	// creature properties
 	private float strength = 0;
 	private int experience = 0;
 	private int intelligence = 0;
 	private int carryCapacity = 0;
+	private int carriedWeight = 0;
+	private List<Food> carriedStuff = new ArrayList<Food>();
 	private int diplomacySkill = 0;
+	
+	//Moving logic
+	private boolean isGoingSomewhere = false;
+	private GridPoint gp;
+	private GoingWhere goingWhere = GoingWhere.Uknown;
 	
 		private int playerID = 0;
 
@@ -35,48 +57,159 @@ public abstract class Mobile {
 		this.grid = grid;
 		this.playerID = setPlayerID;
 	}
-
-	public void randomMove()
+	
+	// are we standing on food?
+	public List<Food> FoodAtPoint(GridPoint pt)
+	{
+		List<Food> food = new ArrayList<Food>();
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+			if (obj instanceof Food) {
+				food.add( (Food) obj);
+			}
+		}
+		return food;
+	}
+	
+	private void StartCarrying( Food food )
+	{
+		this.carriedStuff.add(food);
+		this.carriedWeight += food.getWeight();
+	}
+	
+	protected void MoveCarriedStuff()
 	{
 		// get current location in grid
 		GridPoint gp = grid.getLocation(this);
+		for ( Food food : this.carriedStuff )
+		{
+			space.moveTo(food, gp.getX(), gp.getY());
+			grid.moveTo(food, gp.getX(), gp.getY());
+		}
+	}
+	
+	public void MoveThere()
+	{
+		moveTowards( gp );
+	}
+	
+	public boolean IsAtDestination()
+	{
+		if ( gp == null ) return false;
+		
+		// get current location in grid
+		GridPoint currentPos = grid.getLocation(this);
+		if ( currentPos == null ) return false;
+		
+		return ( gp.getX() == currentPos.getX() && gp.getY() == currentPos.getY() );
+	}
+	
+	public void ActOnArrival()
+	{
+		switch ( this.goingWhere )
+		{
+			case Explore:
+					// wat?
+				break;
+			case ForFood:
+					// TODO
+				break;
+			case Home:
+					// TODO
+				break;
+			case HomeWithFood:
+					DropFood();
+				break;
+			case Wpierdol:
+				
+				break;
+			default: break;
+			case Uknown: break;				
+		}
+		this.gp = null;
+		this.isGoingSomewhere = false;
+		this.goingWhere = GoingWhere.Uknown;
+	}
+	
+	private void DropFood( )
+	{
+		Maw m = MawFinder.Instance().GetMaw( this.playerID );
+		for ( Food f : this.carriedStuff )
+		{
+			m.GiveFood( f );
+		}
+		this.carriedWeight = 0;
+		this.carriedStuff.clear();
+	}
+	
+	private void GoHome()
+	{
+		this.setGoingSomewhere(true);
+		gp = MawFinder.Instance().GetMawPosition( this.playerID );
+	}
+
+	@SuppressWarnings("unchecked")
+	private void PickUpFood(List<Food> foodHere) {
+		int found = 0;
+		// food with highest power-weight ratio
+		Collections.sort( foodHere );
+		
+		// iterate over foodHere
+		for ( Food food : foodHere )
+		{
+			// check if food too heavy
+			if ( food.getWeight() > ( this.carryCapacity - this.carriedWeight ) )
+			{
+				// TODO: call for bros or ignore this food
+				continue; 
+			} else
+			{
+				// lift
+				StartCarrying( food );
+				found ++;
+			}
+		}
+		
+		if ( found > 0 )
+		{
+			this.goingWhere = GoingWhere.HomeWithFood;
+			// go home.
+			GoHome();
+		}
+	}
+
+	public void Explore()
+	{
+		// get current location in grid
+		GridPoint gp = grid.getLocation(this);
+		
+		// TODO: remember food in vicinity
+	
+		List<Food> foodHere = FoodAtPoint( gp );
+		if ( foodHere.size() > 0 ) PickUpFood( foodHere );
 		
 		// get random next position
 		int randX = ( RandomHelper.nextIntFromTo(-1, 1) );
 		int randY = ( RandomHelper.nextIntFromTo(-1, 1) );
 
-		randX += gp.getX();
-		randY += gp.getY();
+		randX += gp.getX(); randY += gp.getY();
 		
 		// catch out of bounds
 		GridDimensions spaceDim = grid.getDimensions();
 		
 		// X too big
-		if ( randX >= spaceDim.getWidth() )
-		{
-			randX = spaceDim.getWidth() - 1;
-		}
+		if ( randX >= spaceDim.getWidth() ) randX = spaceDim.getWidth() - 1;
 		// Y too big
-		if ( randY >= spaceDim.getHeight() )
-		{
-			randY = spaceDim.getHeight() - 1;
-		}
+		if ( randY >= spaceDim.getHeight() ) randY = spaceDim.getHeight() - 1;
 		
 		// X too small
-		if ( randX < 1 )
-		{
-			randX = 1;
-		}
+		if ( randX < 1 ) randX = 1;
 		// Y too small
-		if ( randY < 1 )
-		{
-			randY = 1;
-		}
+		if ( randY < 1 ) randY = 1;
 		
 		GridPoint randomGP = new GridPoint( randX, randY );
 		this.moveTowards(randomGP);
 	}
-	
+
 	public void moveTowards( GridPoint gp )
 	{
 		// only move if not already there
@@ -178,6 +311,20 @@ public abstract class Mobile {
 	 */
 	public void setDiplomacySkill(int diplomacySkill) {
 		this.diplomacySkill = diplomacySkill;
+	}
+
+	/**
+	 * @return the isGoingSomewhere
+	 */
+	public boolean isGoingSomewhere() {
+		return isGoingSomewhere;
+	}
+
+	/**
+	 * @param isGoingSomewhere the isGoingSomewhere to set
+	 */
+	public void setGoingSomewhere(boolean isGoingSomewhere) {
+		this.isGoingSomewhere = isGoingSomewhere;
 	}
 	
 	

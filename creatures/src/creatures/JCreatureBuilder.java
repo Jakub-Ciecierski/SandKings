@@ -17,6 +17,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.RandomCartesianAdder;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
+import repast.simphony.space.grid.GridPoint;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StrictBorders;
 
@@ -61,10 +62,16 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		}
 		
 		// init corner coords
-		NdPoint bottomleft  = new NdPoint(  5,  5 );
-		NdPoint bottomright = new NdPoint( Constants.GRID_SIZE - 5,  5 );
-		NdPoint topleft		= new NdPoint( Constants.GRID_SIZE - 5, Constants.GRID_SIZE - 5 );
-		NdPoint topright 	= new NdPoint(  5, Constants.GRID_SIZE - 5 );
+		GridPoint bottomleft 	= new GridPoint(  5,  5 );
+		GridPoint bottomright	= new GridPoint( Constants.GRID_SIZE - 5,  5 );
+		GridPoint topleft		= new GridPoint( Constants.GRID_SIZE - 5, Constants.GRID_SIZE - 5 );
+		GridPoint topright 		= new GridPoint(  5, Constants.GRID_SIZE - 5 );
+		
+		// assign maw coords
+		player1Maw.setGridpos(topleft);
+		player2Maw.setGridpos(topright);
+		player3Maw.setGridpos(bottomleft);
+		player4Maw.setGridpos(bottomright);
 		
 		// move maw 1
 		grid.moveTo(player1Maw,  (int)topleft.getX(), (int)topleft.getY() );

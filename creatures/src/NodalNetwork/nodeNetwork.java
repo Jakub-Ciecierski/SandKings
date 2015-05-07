@@ -8,7 +8,21 @@ public class nodeNetwork
    /*************
     * VARIABLES *
 	*************/
-	ArrayList<desireNode> nodeList;
+	private ArrayList<desireNode> nodeList;
+	
+   /*****************
+    * NODAL NETWORK *
+	*****************/
+	// resources
+	private resourceNode food = new resourceNode("food");
+	private resourceNode numOfKids = new resourceNode("numOfKids");
+	private resourceNode strengthOfEnemies = new resourceNode("strengthOfEnemies");
+	
+	// desires
+	private desireNode war = new desireNode("war");
+	private desireNode goHome = new desireNode("goHome");
+	private desireNode explore = new desireNode("explore");
+	private desireNode aggression = new desireNode("aggression");	
 	
    /*****************
     * LIST ACCESORS *
@@ -39,6 +53,7 @@ public class nodeNetwork
 	public nodeNetwork()
 	{
 		nodeList = new ArrayList<desireNode>();
+		initNodeNetworkForPlayer();
 	}
 	
 	public nodeNetwork(nodeNetwork Copy)
@@ -53,7 +68,28 @@ public class nodeNetwork
 	
 	public void initNodeNetworkForPlayer()
 	{
+		// the smaller the food, the bigger the explore
+		food.addInfluence(explore, 0, true, -0.5);
 		
+		// the smaller the food, the bigger the aggression
+		food.addInfluence(aggression, 0, true, -0.5);
+		
+		// the bigger the food, the bigger the number of kids
+		food.addInfluence(numOfKids, 0, true, 0.5);
+		
+		// the bigger the strength of enemies, the bigger the desire to go home
+		strengthOfEnemies.addInfluence(goHome, 0, true, 0.5);
+		
+		// the more war the more we want to go home
+		war.addInfluence(goHome, 0, true, 0.5);	
+		
+		addToList(goHome);
+		addToList(war);
+		addToList(aggression);
+		addToList(explore);
+		addToList(strengthOfEnemies);
+		addToList(numOfKids);
+		addToList(food);
 	}
 	
 	public void initNodeNetworkForUnit()
