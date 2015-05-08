@@ -34,6 +34,8 @@ public class Worker extends Mobile {
 			this.Explore();
 			this.MoveCarriedStuff();
 		}
+		// send message
+		lookForFriends();
 	}
 	
 }

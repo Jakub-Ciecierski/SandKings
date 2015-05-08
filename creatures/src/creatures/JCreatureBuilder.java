@@ -31,7 +31,7 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		MessageQueue messageQueue = MessageQueue.Instance();
 
 		context.add(messageQueue);
-		
+
 		System.out.println(RandomHelper.getSeed());
 		context.setId("creatures");
 		
