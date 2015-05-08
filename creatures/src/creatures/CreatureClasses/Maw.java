@@ -75,7 +75,8 @@ public class Maw extends Agent {
 	{
 		this.numberOfChildren--;
 		this.numOfLostChildren++;
-		this.setPower(this.power - (this.power / this.numberOfChildren));
+		if(this.numberOfChildren != 0)
+			this.setPower(this.power - (this.power / this.numberOfChildren));
 	}
 	
 	public void GiveFood( Food f )
@@ -139,12 +140,8 @@ public class Maw extends Agent {
 			Context<Object> context = ContextUtils.getContext(this);
 			NdPoint spacePt = space.getLocation(this);
 			GridPoint gridPt = grid.getLocation(this);
-<<<<<<< HEAD
 			Worker child = new Worker( space, grid, playerID );
 			child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
-=======
-			Worker child = new Worker( space, grid, playerID);
->>>>>>> 8a16f0315f263092a038c6f42961021e7c91f841
 			children.add(child);
 			context.add(child);
 			space.moveTo(child, spacePt.getX(), spacePt.getY());

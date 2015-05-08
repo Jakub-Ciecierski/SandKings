@@ -1,6 +1,8 @@
-creatures/Repast.settings
-creatures/debug.log.1
-creatures/velocity.log.1
+/creatures/Repast.settings
+/creatures/debug.log.1
+/creatures/velocity.log.1
+/creatures/debug.log
+/creatures/velocity.log
 /Nodal Network/bin/desireNode.class
 /Nodal Network/bin/influence.class
 /Nodal Network/bin/mainClass.class
