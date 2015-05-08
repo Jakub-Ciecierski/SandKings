@@ -8,17 +8,19 @@ import communication.messages.QueryMessage;
 
 import creatures.Agent;
 import map.Food;
+import Constants.Constants;
+import repast.simphony.context.Context;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
-import repast.simphony.space.Dimensions;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 
 /**
  * @author Asmodiel
@@ -38,9 +40,11 @@ public abstract class Mobile extends Agent{
 	
 	// creature properties
 	private float strength = 0;
+	private float size = Constants.CREATURES_SIZE;
+	private float health = Constants.MOBILE_HEALTH;
 	private int experience = 0;
 	private int intelligence = 0;
-	private int carryCapacity = 1000;
+	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
 	private int carriedWeight = 0;
 	private List<Food> carriedStuff = new ArrayList<Food>();
 	private int diplomacySkill = 0;
@@ -62,7 +66,24 @@ public abstract class Mobile extends Agent{
 		this.grid = grid;
 		this.playerID = setPlayerID;
 	}
+
+	public void Damage( int dmg )
+	{
+		this.health -= dmg;
+		if(health <= 0)
+			this.Delete();		
+	}
 	
+	private void Delete()
+	{
+		Context<Object> context = ContextUtils.getContext(this);
+		  if(this != null && context != null)
+		  {
+			  MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+			  context.remove( this );	
+		  }
+	}
+
 	// are we standing on food?
 	public List<Food> FoodAtPoint(GridPoint pt)
 	{
@@ -333,6 +354,14 @@ public abstract class Mobile extends Agent{
 	 */
 	public void setGoingSomewhere(boolean isGoingSomewhere) {
 		this.isGoingSomewhere = isGoingSomewhere;
+	}
+
+	public float getSize() {
+		return this.size;
+	}
+
+	public void setSize(float size) {
+		this.size = size;
 	}
 	
 	/**

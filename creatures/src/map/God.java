@@ -38,8 +38,8 @@ public class God {
 	}
 	
 	private void DropEnemy() {		
-		int rand = RandomHelper.nextIntFromTo(0, 20);
-		if (rand == 0) //5% chance of food drop
+		int rand = RandomHelper.nextIntFromTo(0, 9);
+		if (rand == 0) //10% chance of food drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
@@ -59,8 +59,8 @@ public class God {
 	}
 	
 	private void DropFood() {		
-		int rand = RandomHelper.nextIntFromTo( 0, 3 );
-		if (rand == 0) //25% chance of food drop
+		int rand = RandomHelper.nextIntFromTo( 0, 2 );
+		if (rand == 0) //33% chance of food drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext( this );

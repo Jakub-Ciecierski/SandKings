@@ -20,7 +20,7 @@ public class Worker extends Mobile {
 		// TODO Auto-generated constructor stub
 	}
 
-	@ScheduledMethod ( start = Constants.START , interval = Constants.MOVE_INTERVAL)
+	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
 		if ( this.IsAtDestination() )
