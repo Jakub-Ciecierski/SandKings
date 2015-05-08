@@ -1,5 +1,7 @@
 package creatures;
 
+import communication.MessageQueue;
+
 import map.God;
 import map.Terrarium;
 import Constants.Constants;
@@ -26,6 +28,10 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 
 	@Override
 	public Context<Object> build(Context<Object> context) {
+		MessageQueue messageQueue = MessageQueue.Instance();
+
+		context.add(messageQueue);
+		
 		System.out.println(RandomHelper.getSeed());
 		context.setId("creatures");
 		
