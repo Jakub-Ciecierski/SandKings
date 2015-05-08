@@ -8,6 +8,7 @@ import NodalNetwork.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import creatures.Agent;
 import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -25,7 +26,7 @@ import Constants.Constants;
  * @author Asmodiel
  *	class for mother
  */
-public class Maw {
+public class Maw extends Agent {
 	private int power;
 	
 	private int playerID;
@@ -100,7 +101,7 @@ public class Maw {
 			Context<Object> context = ContextUtils.getContext(this);
 			NdPoint spacePt = space.getLocation(this);
 			GridPoint gridPt = grid.getLocation(this);
-			Worker child = new Worker( space, grid, playerID );
+			Worker child = new Worker( space, grid, playerID);
 			children.add(child);
 			context.add(child);
 			space.moveTo(child, spacePt.getX(), spacePt.getY());

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import creatures.Agent;
 import map.Food;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.random.RandomHelper;
@@ -19,7 +20,7 @@ import repast.simphony.space.grid.GridPoint;
  * @author Asmodiel
  *	base class for mobile
  */
-public abstract class Mobile {
+public abstract class Mobile extends Agent{
 	
 	public enum GoingWhere
 	{
@@ -51,7 +52,7 @@ public abstract class Mobile {
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
 	
-	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID )
+	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
 		this.space = space;
 		this.grid = grid;
