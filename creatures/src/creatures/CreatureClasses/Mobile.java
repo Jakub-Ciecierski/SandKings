@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import communication.messages.QueryMessage;
+
 import creatures.Agent;
 import map.Food;
 import Constants.Constants;
 import repast.simphony.context.Context;
 import repast.simphony.parameter.Parameter;
+import repast.simphony.query.space.grid.GridCell;
+import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -360,5 +364,29 @@ public abstract class Mobile extends Agent{
 		this.size = size;
 	}
 	
-	
+	/**
+	 * 	Sends a message to friendly mobiles in the vicinity 
+	 */
+	public void lookForFriends(){
+		// get the grid location of this Human
+		GridPoint pt = grid.getLocation ( this );
+		// use the GridCellNgh class to create GridCells for
+		// the surrounding neighborhood .
+		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
+		Mobile . class , 1 , 1);
+		
+		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
+		
+		for ( GridCell <Mobile> cell : gridCells ) {
+			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if(obj instanceof Mobile && (Mobile)obj != this){
+					QueryMessage query = new QueryMessage("Do you love me ?");
+					Mobile mobile = (Mobile)obj;
+					if(mobile.playerID == this.playerID)
+						sendMessage((Mobile)obj,query);
+				}
+			}
+			
+		}
+	}
 }
