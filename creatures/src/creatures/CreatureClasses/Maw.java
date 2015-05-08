@@ -78,7 +78,7 @@ public class Maw extends Agent {
 		if(this.numberOfChildren != 0)
 			this.setPower(this.power - (this.power / this.numberOfChildren));
 	}
-	
+			
 	public void GiveFood( Food f )
 	{
 		this.setPower( this.power + f.getPower() );

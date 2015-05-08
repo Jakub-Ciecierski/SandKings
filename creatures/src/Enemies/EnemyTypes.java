@@ -37,6 +37,9 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 			case 1:
 				iconDir = "snake.png";
 				break;
+			case 2:
+				iconDir = "scorpion.png";
+				break;
 			default:
 				break;						
 			}

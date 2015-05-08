@@ -21,6 +21,7 @@ public class God {
 
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
+	private int enemyCount = 0;
 	
 	public God (ContinuousSpace<Object> space, Grid<Object> grid) { 
 		this.space = space;
@@ -34,7 +35,8 @@ public class God {
 	public void step()
 	{
 		DropFood();
-		DropEnemy();
+		if(enemyCount <= Constants.MAX_NUMBER_OF_ENEMIES)
+			DropEnemy();
 	}
 	
 	private void DropEnemy() {		
@@ -43,7 +45,7 @@ public class God {
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
-			int enemyID = RandomHelper.nextIntFromTo( 0, 1 );
+			int enemyID = RandomHelper.nextIntFromTo( 0, 2 );
 			Enemy enemy = new Enemy( space, grid, enemyID );
 			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
 			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
@@ -54,6 +56,7 @@ public class God {
 				context.add( enemy );
 				space.moveTo( enemy, x, y );
 				grid.moveTo( enemy, x, y );
+				enemyCount++;
 			}
 		}			
 	}

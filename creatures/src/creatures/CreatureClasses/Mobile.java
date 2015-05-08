@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import communication.messages.KillMessage;
 import communication.messages.QueryMessage;
-
 import creatures.Agent;
 import map.Food;
 import Constants.Constants;
@@ -74,7 +74,7 @@ public abstract class Mobile extends Agent{
 			this.Delete();		
 	}
 	
-	private void Delete()
+	public void Delete()
 	{
 		Context<Object> context = ContextUtils.getContext(this);
 		  if(this != null && context != null)
@@ -380,10 +380,17 @@ public abstract class Mobile extends Agent{
 		for ( GridCell <Mobile> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
 				if(obj instanceof Mobile && (Mobile)obj != this){
-					QueryMessage query = new QueryMessage("Do you love me ?");
+					
 					Mobile mobile = (Mobile)obj;
-					if(mobile.playerID == this.playerID)
-						sendMessage((Mobile)obj,query);
+					if(mobile.playerID == this.playerID){
+						QueryMessage query = new QueryMessage("Do you love me ?");
+						//sendMessage( mobile, query );
+					}
+						
+					else {
+						KillMessage killMessage = new KillMessage();
+						sendMessage( mobile, killMessage );
+					}
 				}
 			}
 			

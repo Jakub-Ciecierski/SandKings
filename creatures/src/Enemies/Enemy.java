@@ -1,11 +1,8 @@
 package Enemies;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import creatures.CreatureClasses.Mobile;
 import Constants.Constants;
-import map.Food;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.query.space.grid.GridCell;
@@ -15,7 +12,6 @@ import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
-import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.SimUtilities;
 
@@ -45,6 +41,12 @@ public class Enemy implements Comparable {
 			this.setHealth(Constants.SNAKE_HEALTH);
 			this.calories = Constants.SNAKE_CALORIES;
 			this.weight = Constants.SNAKE_WEIGHT;
+			break;
+		case 2: //scorpion
+			this.strength = Constants.SCORPION_ATTACK;
+			this.setHealth(Constants.SCORPION_HEALTH);
+			this.calories = Constants.SCORPION_CALORIES;
+			this.weight = Constants.SCORPION_WEIGHT;
 			break;
 		default:
 			break;
