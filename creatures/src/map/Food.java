@@ -5,7 +5,7 @@ import repast.simphony.parameter.Parameter;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
-
+import Constants.Constants;
 
 /**
  * @author Viet Ba
@@ -28,20 +28,20 @@ public class Food implements Comparable {
 		
 		switch(this.foodID) {
 			case 0: //pizza
-				power = 25;
-				weight = 3;
+				power = Constants.PIZZA_CALORIES;
+				weight = Constants.PIZZA_WEIGHT;
 				break;
 			case 1: //donut
-				power = 20;
-				weight = 2;
+				power = Constants.DONUT_CALORIES;
+				weight = Constants.DONUT_WEIGHT;
 				break;
 			case 2: //grape
-				power = 10;
-				weight = 5;
+				power = Constants.GRAPE_CALORIES;
+				weight = Constants.GRAPE_WEIGHT;
 				break;
 			case 3: //cabbage
-				power = 5;
-				weight = 10;
+				power = Constants.CABBAGE_CALORIES;
+				weight = Constants.CABBAGE_WEIGHT;
 				break;
 			default:
 				break;

@@ -27,9 +27,11 @@ import Constants.Constants;
  */
 public class Maw {
 	private int power;
-	
+	private int maxNumOfChildren;
 	private int playerID;
 	private int numberOfChildren;
+	private int numOfLostChildren;
+	private String name;
 
 	// simulation props
 	private nodeNetwork NN;
@@ -46,11 +48,40 @@ public class Maw {
 		this.grid = grid;
 		this.playerID = setPlayerID;
 		this.power = power;
+		this.maxNumOfChildren = power;
+		
+		switch ( this.playerID )
+		{
+			case 1:
+				this.name = "Red";
+				break;
+			case 2:
+				this.name = "Blue";
+				break;
+			case 3:
+				this.name = "White";
+				break;
+			case 4:
+				this.name = "Black";
+				break;
+			default:
+				this.name = "Uknown";
+				
+		}
 	}	
+	
+	public void LostAMobile()
+	{
+		this.numberOfChildren--;
+		this.numOfLostChildren++;
+		this.setPower(this.power - (this.power / this.numberOfChildren));
+	}
 	
 	public void GiveFood( Food f )
 	{
-		this.power += f.getPower();
+		this.setPower( this.power + f.getPower() );
+		this.AddStrengthToChildren(f.getPower());
+		//add strength to children
 		f.Delete();
 	}
 	
@@ -67,12 +98,19 @@ public class Maw {
 	 */
 	public void setPower(int power) {
 		this.power = power;
+		this.maxNumOfChildren = this.numberOfChildren + ( power/Constants.CHILDREN_PER_POWER );
 	}
 	
 	/**
 	 * @return the playerID
 	 */
-	@Parameter(displayName = "Player", usageName = "playerID")
+	@Parameter(displayName = "Player", usageName = "Maw Name")
+	public String getMawName()
+	{
+		return this.name;
+	}
+	
+	
 	public int getPlayerID() {
 		return playerID;
 	}
@@ -92,46 +130,33 @@ public class Maw {
 		return numberOfChildren;
 	}
 
-	@ScheduledMethod ( start = Constants.START , interval = Constants.MOBILE_SPAWN_INTERVAL)
+	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.MOBILE_SPAWN_INTERVAL)
 	public void step()
 	{
-		if ( power > 0 )
-		{			
+		if ( numberOfChildren < this.maxNumOfChildren )
+		{	
 			Context<Object> context = ContextUtils.getContext(this);
 			NdPoint spacePt = space.getLocation(this);
 			GridPoint gridPt = grid.getLocation(this);
 			Worker child = new Worker( space, grid, playerID );
+			child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
 			children.add(child);
 			context.add(child);
 			space.moveTo(child, spacePt.getX(), spacePt.getY());
 			grid.moveTo(child, gridPt.getX(), gridPt.getY());
 			
-			numberOfChildren++;
-			power--;
-			
+			numberOfChildren++;			
 		}
-		else if (power == 0) {
-				AddStrengthToChildren();
-		}
+
 	}
 	
-	private void AddStrengthToChildren() {
-		if(RandomHelper.nextIntFromTo(0, 100) == 50) {
-			//float strength = 0;
-			float extra = (float)0.1;
-			
-			if(playerID == 1) //red one be bigger
-				extra = (float)0.5;
-			
+	private void AddStrengthToChildren(float extra) {			
 			if(children.get(0).getStrength() < 300) {
 				for(Worker child : children) {
 					child.setStrength(child.getStrength() + extra);	
-					//strength = child.getStrength();
-	
+					child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
 				}
-			}
-			//System.out.println("Strength[" + playerID + "]: " + strength);
-		}		
+			}		
 	}
 
 	/**
@@ -147,4 +172,13 @@ public class Maw {
 	public void setGridpos(GridPoint gridpos) {
 		this.gridpos = gridpos;
 	}
+
+	public int getMaxNumOfChildren() {
+		return maxNumOfChildren;
+	}
+
+	public int getNumOfLostChildren() {
+		return numOfLostChildren;
+	}
+
 }

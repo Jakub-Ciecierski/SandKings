@@ -53,7 +53,7 @@ public class ColoredCreature extends DefaultStyleOGL2D {
 		if ( agent instanceof Mobile )
 		{
 			final Mobile mob = (Mobile) agent;
-			float size = 1 + (mob.getStrength() / 100 );
+			float size = 1 + (mob.getSize() / 100 );
 			return size;		
 		}
 		
