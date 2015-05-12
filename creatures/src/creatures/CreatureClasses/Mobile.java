@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import communication.messages.AskForFoodMessage;
 import communication.messages.KillMessage;
 import communication.messages.QueryMessage;
 import creatures.Agent;
@@ -42,12 +43,18 @@ public abstract class Mobile extends Agent{
 	private float strength = 0;
 	private float size = Constants.CREATURES_SIZE;
 	private float health = Constants.MOBILE_HEALTH;
-	private int experience = 0;
-	private int intelligence = 0;
+	private int food = Constants.MOBILE_STARTING_FOOD;
+	
+	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
 	private int carriedWeight = 0;
 	private List<Food> carriedStuff = new ArrayList<Food>();
+	
+	// stats
+	private int experience = 0;
+	private int intelligence = 0;
 	private int diplomacySkill = 0;
+	private int agression = 0;
 	
 	//Moving logic
 	private boolean isGoingSomewhere = false;
@@ -67,12 +74,14 @@ public abstract class Mobile extends Agent{
 		this.playerID = setPlayerID;
 	}
 
+	
 	public void Damage( int dmg )
 	{
 		this.health -= dmg;
 		if(health <= 0)
 			this.Delete();		
 	}
+	
 	
 	public void Delete()
 	{
@@ -138,7 +147,7 @@ public abstract class Mobile extends Agent{
 					// wat?
 				break;
 			case ForFood:
-					// TODO
+					AskForFood();
 				break;
 			case Home:
 					// TODO
@@ -149,23 +158,44 @@ public abstract class Mobile extends Agent{
 			case Wpierdol:
 				
 				break;
+			case Uknown: break;
 			default: break;
-			case Uknown: break;				
 		}
 		this.goingPoint = null;
 		this.isGoingSomewhere = false;
 		this.goingWhere = GoingWhere.Uknown;
 	}
 	
+	private void AskForFood() {
+		Maw m = MawFinder.Instance().GetMaw( this.playerID );
+		AskForFoodMessage message = new AskForFoodMessage("can I haz food?");
+		sendMessage( m, message );
+	}
+
+	public void ReceiveFood()
+	{
+		this.goingPoint = null;
+		this.isGoingSomewhere = false;
+		this.goingWhere = GoingWhere.Uknown;
+		
+		// max the food ^^
+		this.food = Constants.MOBILE_STARTING_FOOD;
+	}
+
 	private void DropFood( )
 	{
 		Maw m = MawFinder.Instance().GetMaw( this.playerID );
 		for ( Food f : this.carriedStuff )
 		{
-			m.GiveFood( f );
+			m.ReceiveFood( f );
 		}
 		this.carriedWeight = 0;
 		this.carriedStuff.clear();
+	}
+	
+	public void Aggro()
+	{
+		this.agression++;
 	}
 	
 	private void GoHome()
@@ -216,6 +246,25 @@ public abstract class Mobile extends Agent{
 		List<Food> foodHere = FoodAtPoint( gp );
 		if ( foodHere.size() > 0 ) PickUpFood( foodHere );
 		
+		// calculate gohome desire
+		if ( getGoHomeDesire( gp ) > Constants.MOBILE_GO_HOME_THRESHOLD )
+		{
+			this.goingWhere = GoingWhere.ForFood;
+			GoHome();
+		}
+		
+		// move randomly
+		MoveRandomly( gp );
+	}
+	
+	private double getGoHomeDesire( GridPoint gp ) {
+		return 
+				Math.abs(Constants.MOBILE_STARTING_FOOD - food ) + 
+				MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
+	}
+
+	private void MoveRandomly( GridPoint gp )
+	{
 		// get random next position
 		int randX = ( RandomHelper.nextIntFromTo(-1, 1) );
 		int randY = ( RandomHelper.nextIntFromTo(-1, 1) );
@@ -251,6 +300,8 @@ public abstract class Mobile extends Agent{
 			thisLocation = space.getLocation(this);	
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
 			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
+			
+			food--;
 		}
 	}
 	
@@ -395,5 +446,21 @@ public abstract class Mobile extends Agent{
 			}
 			
 		}
+	}
+
+
+	/**
+	 * @return the agression
+	 */
+	public int getAgression() {
+		return agression;
+	}
+
+
+	/**
+	 * @param agression the agression to set
+	 */
+	public void setAgression(int agression) {
+		this.agression = agression;
 	}
 }

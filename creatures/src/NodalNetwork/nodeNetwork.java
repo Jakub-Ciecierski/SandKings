@@ -107,6 +107,26 @@ public class nodeNetwork
 		return 0;
 	}
 	
+	public void incrementDesire( String name )
+	{
+		for( desireNode node : nodeList ){
+			if(node.getName().equalsIgnoreCase(name)){
+				node.setInfluencedValue( node.getInfluencedValue() + 1 );
+			}
+		}
+		doStep();
+	}
+	
+	public void decrementDesire( String name )
+	{
+		for( desireNode node : nodeList ){
+			if(node.getName().equalsIgnoreCase(name)){
+				node.setInfluencedValue( node.getInfluencedValue() - 1 );
+			}
+		}
+		doStep();
+	}
+	
 	public void doStep()
 	{
 		for( desireNode node : nodeList){

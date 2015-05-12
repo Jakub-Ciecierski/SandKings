@@ -27,6 +27,7 @@ import Constants.Constants;
  *	class for mother
  */
 public class Maw extends Agent {
+	private int food;
 	private int power;
 	private int maxNumOfChildren;
 	private int playerID;
@@ -45,10 +46,12 @@ public class Maw extends Agent {
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{
 		NN = new nodeNetwork();
+		
 		this.space = space;
 		this.grid = grid;
 		this.playerID = setPlayerID;
 		this.power = power;
+		this.food = power;
 		this.maxNumOfChildren = power;
 		
 		switch ( this.playerID )
@@ -79,12 +82,21 @@ public class Maw extends Agent {
 			this.setPower(this.power - (this.power / this.numberOfChildren));
 	}
 			
-	public void GiveFood( Food f )
+	public void ReceiveFood( Food f )
 	{
+		this.setFood( this.food + f.getPower() );
 		this.setPower( this.power + f.getPower() );
 		this.AddStrengthToChildren(f.getPower());
 		//add strength to children
 		f.Delete();
+	}
+	
+	public boolean hasFood()
+	{
+		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
+			return true;
+		else	
+			return false;
 	}
 	
 	/**
@@ -135,23 +147,32 @@ public class Maw extends Agent {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.MOBILE_SPAWN_INTERVAL)
 	public void step()
 	{
+		TrySpawnMobile();
+	}
+	
+	private void TrySpawnMobile()
+	{
 		if ( numberOfChildren < this.maxNumOfChildren )
 		{	
 			Context<Object> context = ContextUtils.getContext(this);
+
+			Worker child = new Worker( space, grid, playerID );
+				child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
+				children.add(child);
+				context.add(child);
+			
 			NdPoint spacePt = space.getLocation(this);
 			GridPoint gridPt = grid.getLocation(this);
-			Worker child = new Worker( space, grid, playerID );
-			child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
-			children.add(child);
-			context.add(child);
 			space.moveTo(child, spacePt.getX(), spacePt.getY());
 			grid.moveTo(child, gridPt.getX(), gridPt.getY());
 			
-			numberOfChildren++;			
+			numberOfChildren++;		
+			food -= Constants.FOOD_PER_SPAWN;
+			NN.incrementDesire("food");
 		}
-
 	}
 	
+
 	private void AddStrengthToChildren(float extra) {			
 			if(children.get(0).getStrength() < 300) {
 				for(Worker child : children) {
@@ -181,6 +202,20 @@ public class Maw extends Agent {
 
 	public int getNumOfLostChildren() {
 		return numOfLostChildren;
+	}
+
+	/**
+	 * @return the food
+	 */
+	public int getFood() {
+		return food;
+	}
+
+	/**
+	 * @param food the food to set
+	 */
+	public void setFood(int food) {
+		this.food = food;
 	}
 
 }

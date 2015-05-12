@@ -29,6 +29,17 @@ public class MawFinder {
 		}
 		return null;
 	}
+	public double GetDistanceToMaw( int id, int x, int y )
+	{
+		int x1 = GetMawPosition( id ).getX();
+		int x2 = x;
+		
+		int y1 = GetMawPosition( id ).getY();
+		int y2 = y;
+		
+		return Math.sqrt( Math.pow(( x2-x1 ), 2) + Math.pow(( y2-y1 ), 2) );
+	}
+	
 	public void AddMaw(Maw m) 
 	{	
 		_mawList.add(m);
