@@ -3,6 +3,7 @@
  */
 package Enemies;
 
+import java.io.File;
 import java.io.IOException;
 
 import map.Food;
@@ -26,7 +27,7 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 	@Override
 	public VSpatial getVSpatial(final Object resource, VSpatial spatial)  {
 		final Enemy enemy = (Enemy)resource;
-		String projectDir = System.getProperty("user.dir") + "\\icons\\";
+		String projectDir = "icons";
 		String iconDir = "spider.png";
 		final int enemyID = enemy.getEnemyID();
 		if (spatial == null) {
@@ -45,7 +46,7 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 			}
 			
 			try {
-				spatial = factory.createImage(projectDir + iconDir);
+				spatial = factory.createImage(projectDir + File.separator + iconDir);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

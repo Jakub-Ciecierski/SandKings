@@ -4,6 +4,7 @@
 package map;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
@@ -25,8 +26,7 @@ ShapeFactory2D factory;
 		@Override
 		public VSpatial getVSpatial(final Object resource, VSpatial spatial)  {
 			final Food food = (Food)resource;
-			String projectDir = System.getProperty("user.dir") + "\\icons\\"; // THIS IS ERROR.
-			//String projectDir = "/Home/Documents/workspace/sandkings/creatures/icons/";
+			String projectDir = "icons";
 			String iconDir = "pizza.png";
 			final int foodID = food.getFoodID();
 			if (spatial == null) {
@@ -48,7 +48,7 @@ ShapeFactory2D factory;
 				}
 				
 				try {
-					spatial = factory.createImage(projectDir + iconDir);
+					spatial = factory.createImage(projectDir + File.separator + iconDir);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
