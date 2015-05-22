@@ -45,6 +45,10 @@ public abstract class Mobile extends Agent{
 	private float health = Constants.MOBILE_HEALTH;
 	private int food = Constants.MOBILE_STARTING_FOOD;
 	
+	// formation stuff
+	private boolean isInFormation = false;
+	
+	
 	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
 	private int carriedWeight = 0;
@@ -462,5 +466,21 @@ public abstract class Mobile extends Agent{
 	 */
 	public void setAgression(int agression) {
 		this.agression = agression;
+	}
+
+
+	/**
+	 * @return the isInFormation
+	 */
+	public boolean isInFormation() {
+		return isInFormation;
+	}
+
+
+	/**
+	 * @param isInFormation the isInFormation to set
+	 */
+	public void setInFormation(boolean isInFormation) {
+		this.isInFormation = isInFormation;
 	}
 }
