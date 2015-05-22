@@ -32,3 +32,5 @@
 /creatures/bin/map/Terrarium.class
 /creatures/bin/
 *.class
+/creatures/ssh_remote_model.log
+
