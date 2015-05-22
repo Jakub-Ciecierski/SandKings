@@ -80,6 +80,9 @@ public class Maw extends Agent {
 		this.numOfLostChildren++;
 		if(this.numberOfChildren != 0)
 			this.setPower(this.power - (this.power / this.numberOfChildren));
+		else {
+			this.setPower(0);
+		}
 	}
 			
 	public void ReceiveFood( Food f )
@@ -93,6 +96,9 @@ public class Maw extends Agent {
 	
 	public boolean hasFood()
 	{
+		System.out.println("?: " + NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD +" \n");
+		System.out.println(">: " +this.getFood() +" \n");
+
 		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
 			return true;
 		else	
@@ -152,7 +158,7 @@ public class Maw extends Agent {
 	
 	private void TrySpawnMobile()
 	{
-		if ( numberOfChildren < this.maxNumOfChildren )
+		if ( numberOfChildren < this.maxNumOfChildren && food > numberOfChildren  )
 		{	
 			Context<Object> context = ContextUtils.getContext(this);
 

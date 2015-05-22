@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import communication.messages.AskForFoodMessage;
+import communication.messages.AskForHelpMessage;
 import communication.messages.KillMessage;
 import communication.messages.QueryMessage;
 import creatures.Agent;
@@ -55,17 +56,19 @@ public abstract class Mobile extends Agent{
 	private int intelligence = 0;
 	private int diplomacySkill = 0;
 	private int agression = 0;
+	private boolean isStarving = false;
 	
 	//Moving logic
 	private boolean isGoingSomewhere = false;
 	private GridPoint goingPoint;
 	private GoingWhere goingWhere = GoingWhere.Uknown;
-	
-		private int playerID = 0;
+	private boolean move = true;
+	private int playerID = 0;
 
 	// simulation props
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
+	private List<Mobile> bros = new ArrayList<Mobile>();
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
@@ -166,8 +169,10 @@ public abstract class Mobile extends Agent{
 		this.goingWhere = GoingWhere.Uknown;
 	}
 	
-	private void AskForFood() {
+	private void AskForFood()
+	{
 		Maw m = MawFinder.Instance().GetMaw( this.playerID );
+		System.out.println("foood?");
 		AskForFoodMessage message = new AskForFoodMessage("can I haz food?");
 		sendMessage( m, message );
 	}
@@ -195,7 +200,17 @@ public abstract class Mobile extends Agent{
 	
 	public void Aggro()
 	{
-		this.agression++;
+		if(!isStarving) {
+			this.agression++;
+			this.food = Constants.MOBILE_STARTING_FOOD;
+			isStarving = true;
+			
+		}
+		else {
+			this.Delete();
+			MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+		}
+		
 	}
 	
 	private void GoHome()
@@ -204,6 +219,48 @@ public abstract class Mobile extends Agent{
 		goingPoint = MawFinder.Instance().GetMawPosition( this.playerID );
 	}
 
+	public void moveTowardsBro(GridPoint gp)
+	{
+		this.setGoingSomewhere(true);
+		this.goingPoint = gp;
+		if(grid.getLocation(this) == gp)
+			this.setMove(false);
+		
+	}
+	private int CallForBros(int neededBros)
+	{
+		System.out.println("bros count: " + bros.size() + " needed bros: " + neededBros);
+		GridPoint pt = grid.getLocation ( this );
+		int x = 5, y = 5;
+		//if(pt.getX() < 4) x = 5 - pt.getX() - 1;
+		//if(pt.getX() > 44) x = 50 - pt.getX() - 1;
+		//if(pt.getY() < 4) y = 5 - pt.getY() - 1;
+		//if(pt.getY() > 44) y = 50 - pt.getY() - 1;
+		
+		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
+		Mobile . class , x , y);
+		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
+		
+			for ( GridCell <Mobile> cell : gridCells ) {
+				for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+					if(obj instanceof Mobile && (Mobile)obj != this) {
+					if (bros.size() < neededBros) {
+						Mobile mobile = (Mobile)obj;
+						if(mobile.playerID == this.playerID && !bros.contains(mobile)) {
+							System.out.println("found bro!");
+							AskForHelpMessage pls = new AskForHelpMessage("halp pls", pt);
+							sendMessage(mobile, pls);
+							bros.add(mobile);
+						}
+					}
+					if(bros.size() == neededBros)
+						return bros.size();
+				}
+			}
+		}
+		return bros.size();
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void PickUpFood(List<Food> foodHere) {
 		int found = 0;
@@ -216,8 +273,13 @@ public abstract class Mobile extends Agent{
 			// check if food too heavy
 			if ( food.getWeight() > ( this.carryCapacity - this.carriedWeight ) )
 			{
-				// TODO: call for bros or ignore this food
-				continue; 
+				this.move = false;
+				int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity - this.carriedWeight));
+				if(bros.size() < neededBros) 
+					CallForBros(neededBros);
+				
+				System.out.println("Enough bros!");
+				//continue; 
 			} else
 			{
 				// lift
@@ -239,6 +301,7 @@ public abstract class Mobile extends Agent{
 	public void Explore()
 	{
 		// get current location in grid
+		//food;
 		GridPoint gp = grid.getLocation(this);
 		
 		// TODO: remember food in vicinity
@@ -462,5 +525,15 @@ public abstract class Mobile extends Agent{
 	 */
 	public void setAgression(int agression) {
 		this.agression = agression;
+	}
+
+
+	public boolean getMove() {
+		return move;
+	}
+
+
+	public void setMove(boolean move) {
+		this.move = move;
 	}
 }

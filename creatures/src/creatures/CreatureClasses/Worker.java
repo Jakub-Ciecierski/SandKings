@@ -23,19 +23,21 @@ public class Worker extends Mobile {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		if ( this.IsAtDestination() )
-		{
-			this.ActOnArrival();
-		} else if ( this.isGoingSomewhere() )
-		{
-			this.MoveThere();
-			this.MoveCarriedStuff();
-		} else {
-			this.Explore();
-			this.MoveCarriedStuff();
+		if(this.getMove()) {
+			if ( this.IsAtDestination() )
+			{
+				this.ActOnArrival();
+			} else if ( this.isGoingSomewhere() )
+			{
+				this.MoveThere();
+				this.MoveCarriedStuff();
+			} else {
+				this.Explore();
+				this.MoveCarriedStuff();
+			}
+			// send message
+			lookForFriends();
 		}
-		// send message
-		lookForFriends();
 	}
 	
 }

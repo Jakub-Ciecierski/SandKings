@@ -20,16 +20,16 @@ public final class Constants {
 	// MAW CONSTANTS
 	public static final float CREATURES_SIZE = 1;
 	public static final int CHILDREN_PER_POWER = 5;
-	public static final int MAW_FOOD_DESIRE_THRESHOLD = 10;
-	public static final int FOOD_PER_SPAWN = 5;
+	public static final int MAW_FOOD_DESIRE_THRESHOLD = 5;
+	public static final int FOOD_PER_SPAWN = 1;
 	
 	// MOBILE CONSTANTS
 	public static final int MOBILE_SIZE_MULTIPLIER = 2;
-	public static final int MOBILE_STARTING_FOOD = 1000; // 100 steps possibru
+	public static final int MOBILE_STARTING_FOOD = 500; // 100 steps possibru
 	public static final int MOBILE_HEALTH = 100;
-	public static final int MOBILE_CARRY_CAPACITY = 1000;
+	public static final int MOBILE_CARRY_CAPACITY = 5;
 	// on 50*50 grid this is [0-70] + [-inf - MOBILE_STARTING_FOOD]
-	public static final int MOBILE_GO_HOME_THRESHOLD = 100;  
+	public static final int MOBILE_GO_HOME_THRESHOLD = 500;  
 	
 	// ENEMIES CONSTANTS
 	public static final int ENEMIES_MARGIN = 3;
@@ -56,10 +56,10 @@ public final class Constants {
 	public static final int GRAPE_CALORIES = 10;
 	public static final int CABBAGE_CALORIES = 5;
 	
-	public static final int PIZZA_WEIGHT = 3;
-	public static final int DONUT_WEIGHT = 2;
-	public static final int GRAPE_WEIGHT = 5;
-	public static final int CABBAGE_WEIGHT = 10;
+	public static final int PIZZA_WEIGHT = 20;
+	public static final int DONUT_WEIGHT = 15;
+	public static final int GRAPE_WEIGHT = 10;
+	public static final int CABBAGE_WEIGHT = 5;
 
 	/**
 	 * Hidden constructor to ensure no instances are created.
