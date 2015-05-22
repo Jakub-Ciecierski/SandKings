@@ -12,6 +12,35 @@ public class MawFinder {
 	protected MawFinder() { }
 	
 	private List<Maw> _mawList = new ArrayList<Maw>();
+	
+	public enum MawRelation
+	{
+		Friend,
+		Neutral,
+		Enemy
+	}
+	
+	private MawRelation MawRelations[][] = new MawRelation[5][5];
+	
+	private void initMawRelation(){
+		for( int i = 0; i < 5; i++){
+			for( int y = 0; y < 5; y++){
+				if(i == y)
+					MawRelations[i][y] = MawRelation.Friend;
+				else
+					MawRelations[i][y] = MawRelation.Neutral;
+			}	
+		}
+	}
+	
+	public boolean areWeFriends(int ID1, int ID2)
+	{
+		if(MawRelations[ID1][ID2] == MawRelation.Friend)
+			return true;
+		else
+			return false;
+	}
+	
 	public Maw GetMaw( int id )
 	{
 		for ( Maw m : _mawList )
