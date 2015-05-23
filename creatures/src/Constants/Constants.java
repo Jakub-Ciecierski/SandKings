@@ -55,11 +55,19 @@ public final class Constants {
 	public static final int DONUT_CALORIES = 15;
 	public static final int GRAPE_CALORIES = 10;
 	public static final int CABBAGE_CALORIES = 5;
+	public static final int MEAT_CALORIES = 5;
 	
 	public static final int PIZZA_WEIGHT = 20;
 	public static final int DONUT_WEIGHT = 15;
 	public static final int GRAPE_WEIGHT = 10;
 	public static final int CABBAGE_WEIGHT = 5;
+	public static final int MEAT_WEIGHT = 5;
+	
+	// NUMBER OF DROPPED MEAT
+	public static final int SCORPION_MEAT_NO = SCORPION_CALORIES / MEAT_CALORIES;
+	public static final int SNAKE_MEAT_NO = SNAKE_CALORIES / MEAT_CALORIES;
+	public static final int SPIDER_MEAT_NO = SPIDER_CALORIES / MEAT_CALORIES;
+	public static final int MOBILE_MEAT_NO = 1;
 
 	/**
 	 * Hidden constructor to ensure no instances are created.

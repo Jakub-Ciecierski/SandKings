@@ -41,6 +41,14 @@ public class MawFinder {
 			return false;
 	}
 	
+	public boolean areWeEnemies(int ID1, int ID2)
+	{
+		if(MawRelations[ID1][ID2] == MawRelation.Enemy)
+			return true;
+		else
+			return false;
+	}
+	
 	public Maw GetMaw( int id )
 	{
 		for ( Maw m : _mawList )

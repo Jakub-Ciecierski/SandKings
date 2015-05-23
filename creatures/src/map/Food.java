@@ -43,6 +43,10 @@ public class Food implements Comparable {
 				power = Constants.CABBAGE_CALORIES;
 				weight = Constants.CABBAGE_WEIGHT;
 				break;
+			case 4: //meat
+				power = Constants.MEAT_CALORIES;
+				weight = Constants.MEAT_WEIGHT;
+				break;
 			default:
 				break;
 		}
