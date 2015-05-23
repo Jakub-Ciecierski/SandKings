@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import creatures.Agent;
+import creatures.Fightable;
 import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -26,7 +27,7 @@ import Constants.Constants;
  * @author Asmodiel
  *	class for mother
  */
-public class Maw extends Agent {
+public class Maw extends Fightable {
 	private int food;
 	private int power;
 	private int maxNumOfChildren;
@@ -45,6 +46,7 @@ public class Maw extends Agent {
 	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{
+		super(space, grid, setPlayerID, Constants.MAW_ATTACK, Constants.MAW_HEALTH, Constants.MAW_MEAT_NO);
 		NN = new nodeNetwork();
 		
 		this.space = space;
@@ -73,7 +75,7 @@ public class Maw extends Agent {
 				
 		}
 	}	
-	
+
 	public void LostAMobile()
 	{
 		this.numberOfChildren--;

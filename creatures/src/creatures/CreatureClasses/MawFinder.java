@@ -33,6 +33,22 @@ public class MawFinder {
 		}
 	}
 	
+	public void makeAlliance(int ID1, int ID2){
+		MawRelations[ID1][ID2] = MawRelation.Friend;
+		MawRelations[ID1][ID2] = MawRelation.Friend;
+		
+	}
+	public void makeWar(int ID1, int ID2){
+		MawRelations[ID1][ID2] = MawRelation.Enemy;
+		MawRelations[ID1][ID2] = MawRelation.Enemy;
+		
+	}
+	public void makeNeutral(int ID1, int ID2){
+		MawRelations[ID1][ID2] = MawRelation.Neutral;
+		MawRelations[ID1][ID2] = MawRelation.Neutral;
+		
+	}
+	
 	public boolean areWeFriends(int ID1, int ID2)
 	{
 		if(MawRelations[ID1][ID2] == MawRelation.Friend)

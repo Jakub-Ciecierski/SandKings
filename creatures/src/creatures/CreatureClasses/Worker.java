@@ -36,7 +36,7 @@ public class Worker extends Mobile {
 				this.MoveCarriedStuff();
 			}
 			// send message
-			lookForFriends();
+			Attack();
 		}
 	}
 	

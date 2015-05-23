@@ -9,6 +9,7 @@ import communication.messages.AskForHelpMessage;
 import communication.messages.KillMessage;
 import communication.messages.QueryMessage;
 import creatures.Agent;
+import creatures.Fightable;
 import map.Food;
 import Constants.Constants;
 import repast.simphony.context.Context;
@@ -28,7 +29,7 @@ import repast.simphony.util.ContextUtils;
  * @author Asmodiel
  *	base class for mobile
  */
-public abstract class Mobile extends Agent{
+public abstract class Mobile extends Fightable{
 	
 	public enum GoingWhere
 	{
@@ -43,7 +44,6 @@ public abstract class Mobile extends Agent{
 	// creature properties
 	private float strength = 0;
 	private float size = Constants.CREATURES_SIZE;
-	private float health = Constants.MOBILE_HEALTH;
 	private int food = Constants.MOBILE_STARTING_FOOD;
 	
 	// carrying stuff
@@ -72,29 +72,9 @@ public abstract class Mobile extends Agent{
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
-		this.space = space;
-		this.grid = grid;
-		this.playerID = setPlayerID;
+		super(space, grid, setPlayerID, Constants.MOBILE_ATTACK, Constants.MOBILE_HEALTH, Constants.MOBILE_MEAT_NO);
 	}
 
-	
-	public void Damage( int dmg )
-	{
-		this.health -= dmg;
-		if(health <= 0)
-			this.Delete();		
-	}
-	
-	
-	public void Delete()
-	{
-		Context<Object> context = ContextUtils.getContext(this);
-		  if(this != null && context != null)
-		  {
-			  MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
-			  context.remove( this );	
-		  }
-	}
 
 	// are we standing on food?
 	public List<Food> FoodAtPoint(GridPoint pt)
@@ -207,10 +187,8 @@ public abstract class Mobile extends Agent{
 			
 		}
 		else {
-			this.Delete();
-			MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+			Die();
 		}
-		
 	}
 	
 	private void GoHome()
@@ -300,6 +278,8 @@ public abstract class Mobile extends Agent{
 
 	public void Explore()
 	{
+		if(isFighting)
+			return;
 		// get current location in grid
 		//food;
 		GridPoint gp = grid.getLocation(this);
@@ -395,6 +375,7 @@ public abstract class Mobile extends Agent{
 	 */
 	public void setStrength(float strength) {
 		this.strength = strength;
+		setDamage(Constants.MOBILE_ATTACK + strength * Constants.STRENGTH_MULTIPLY_FACTOR );
 	}
 	
 	/**
@@ -481,35 +462,7 @@ public abstract class Mobile extends Agent{
 	/**
 	 * 	Sends a message to friendly mobiles in the vicinity 
 	 */
-	public void lookForFriends(){
-		// get the grid location of this Human
-		GridPoint pt = grid.getLocation ( this );
-		// use the GridCellNgh class to create GridCells for
-		// the surrounding neighborhood .
-		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
-		Mobile . class , 1 , 1);
-		
-		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
-		
-		for ( GridCell <Mobile> cell : gridCells ) {
-			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-				if(obj instanceof Mobile && (Mobile)obj != this){
-					
-					Mobile mobile = (Mobile)obj;
-					if(mobile.playerID == this.playerID){
-						QueryMessage query = new QueryMessage("Do you love me ?");
-						//sendMessage( mobile, query );
-					}
-						
-					else {
-						KillMessage killMessage = new KillMessage();
-						sendMessage( mobile, killMessage );
-					}
-				}
-			}
-			
-		}
-	}
+
 
 	/**
 	 * NOT DONE YET

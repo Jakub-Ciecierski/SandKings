@@ -23,9 +23,10 @@ import creatures.CreatureClasses.Mobile;
  */
 public abstract class Fightable extends Agent{
 	// simulation props
-	private ContinuousSpace < Object > space; 
-	private Grid< Object > grid;
-	private int playerID = 0;
+	protected ContinuousSpace < Object > space; 
+	protected Grid< Object > grid;
+	protected int playerID = 0;
+	protected boolean isFighting = false;
 	
 	private float damage = 0;
 	private float health = 0;
@@ -109,7 +110,7 @@ public abstract class Fightable extends Agent{
 	}
 	
 	
-	public void attack(){
+	public void Attack(){
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
@@ -129,6 +130,7 @@ public abstract class Fightable extends Agent{
 					{
 						DamageMessage damageMessage = new DamageMessage(this.damage);
 						sendMessage( mobile, damageMessage );
+						isFighting = true;
 						return;
 					}
 				}
@@ -145,11 +147,14 @@ public abstract class Fightable extends Agent{
 					{
 						DamageMessage damageMessage = new DamageMessage(this.damage);
 						sendMessage( mobile, damageMessage );
+						isFighting = true;
 						return;
 					}
 				}
 			}
 		}
+		
+		isFighting = false;
 	}
 
 }
