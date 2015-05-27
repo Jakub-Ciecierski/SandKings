@@ -224,6 +224,9 @@ public class Maw extends Fightable {
 	 */
 	public void setFood(int food) {
 		this.food = food;
+		resourceNode temp = this.NN.getResourceElement("food");
+		if( temp != null)
+			temp.setResourceCount(food);
 	}
 
 }

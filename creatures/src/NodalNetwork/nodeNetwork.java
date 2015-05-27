@@ -75,7 +75,7 @@ public class nodeNetwork
 		food.addInfluence(aggression, 0, true, -0.5);
 		
 		// the bigger the food, the bigger the number of kids
-		food.addInfluence(numOfKids, 0, true, 0.5);
+		food.addInfluence(numOfKids, 0, true, 0.1);
 		
 		// the bigger the strength of enemies, the bigger the desire to go home
 		strengthOfEnemies.addInfluence(goHome, 0, true, 0.5);
@@ -105,6 +105,26 @@ public class nodeNetwork
 			}
 		}
 		return 0;
+	}
+	
+	public desireNode getDesireElement(String name)
+	{
+		for( desireNode node : nodeList ){
+			if(node.getName().equalsIgnoreCase(name)){
+				return node;
+			}
+		}
+		return null;
+	}
+	
+	public resourceNode getResourceElement(String name)
+	{
+		for( desireNode node : nodeList ){
+			if(node.getName().equalsIgnoreCase(name) || node instanceof resourceNode){
+				return (resourceNode)node;
+			}
+		}
+		return null;
 	}
 	
 	public void incrementDesire( String name )
