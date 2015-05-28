@@ -3,6 +3,7 @@ package communication.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import Constants.Constants;
 import Enemies.Enemy;
 import map.Food;
 import creatures.Agent;

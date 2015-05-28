@@ -156,7 +156,6 @@ public abstract class Mobile extends Fightable {
 	private void AskForFood()
 	{
 		Maw m = MawFinder.Instance().GetMaw( this.playerID );
-		System.out.println("foood?");
 		AskForFoodMessage message = new AskForFoodMessage("can I haz food?");
 		sendMessage( m, message );
 	}
@@ -209,13 +208,9 @@ public abstract class Mobile extends Fightable {
 	}
 	private int CallForBros(int neededBros)
 	{
-		System.out.println("bros count: " + bros.size() + " needed bros: " + neededBros);
+		//System.out.println("bros count: " + bros.size() + " needed bros: " + neededBros);
 		GridPoint pt = grid.getLocation ( this );
 		int x = 5, y = 5;
-		//if(pt.getX() < 4) x = 5 - pt.getX() - 1;
-		//if(pt.getX() > 44) x = 50 - pt.getX() - 1;
-		//if(pt.getY() < 4) y = 5 - pt.getY() - 1;
-		//if(pt.getY() > 44) y = 50 - pt.getY() - 1;
 		
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , x , y);
@@ -466,15 +461,15 @@ public abstract class Mobile extends Fightable {
 		GridPoint pt = grid.getLocation(this);
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood .
-		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>(grid , pt,
-		Mobile.class , extentX , extentY);
+		GridCellNgh <Agent> nghCreator = new GridCellNgh <Agent>(grid , pt,
+		Agent.class , extentX , extentY);
 		
-		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood(true);
+		List <GridCell<Agent>> gridCells = nghCreator.getNeighborhood(true);
 		
-		for ( GridCell <Mobile> cell : gridCells ) {
+		for ( GridCell <Agent> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-				if(obj instanceof Agent && 
-						obj instanceof Mobile && (Mobile)obj != this){
+				if(obj instanceof Agent || 
+						(obj instanceof Mobile && (Mobile)obj != this)){
 					Agent agent = (Agent)obj;
 					vicinity.add(agent);
 				}	
@@ -491,12 +486,14 @@ public abstract class Mobile extends Fightable {
 		List<Agent> vicinity = getAgentsInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
 		
 		for(int i =0;i<vicinity.size();i++){
+		
 			Agent agent = vicinity.get(i);
 
 			InformationType infoType = KnowledgeBase.GetInfoType(agent);
 			
 			// if info is interesting add it
 			if(infoType != InformationType.GARBAGE){
+
 				GridPoint pt = grid.getLocation(this);
 				
 				// time when it knowledge was added TODO
