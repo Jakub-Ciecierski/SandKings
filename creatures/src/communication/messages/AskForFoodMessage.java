@@ -26,6 +26,12 @@ public class AskForFoodMessage extends Message {
 			return;
 		}
 		Maw m = (Maw) recipient;
+		
+//		System.out.println("*********************************************************");
+//		System.out.println("Agent #" + sender.getID() +" To Agent #" +recipient.getID() + " AskForFoodMessage \n");
+//		System.out.println("?: " + m.hasFood() +" \n");
+//		System.out.println("********************************************************* \n\n");
+		
 		if ( m.hasFood() )
 		{
 			FoodACK msg = new FoodACK();

@@ -1,6 +1,7 @@
 package creatures;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import repast.simphony.query.space.grid.GridCell;
@@ -13,8 +14,14 @@ import Constants.Constants;
 import creatures.CreatureClasses.*;
 import creatures.CreatureClasses.Mobile.GoingWhere;
 
-public class Formation {
+public class Formation extends Fightable {
 	
+	public Formation(ContinuousSpace<Object> space, Grid<Object> grid,
+			int setPlayerID) {
+		super(space, grid, setPlayerID);
+		// TODO Auto-generated constructor stub
+	}
+
 	public enum GoingWhere
 	{
 		Uknown,
@@ -24,7 +31,7 @@ public class Formation {
 		Explore,
 		Wpierdol
 	}
-	private int playerID = 0;
+	//private int playerID = 0;
 	private int neededSize = 0;
 	//private int carryCapacity = 0;
 	//private float size = Constants.CREATURES_SIZE;
@@ -43,11 +50,6 @@ public class Formation {
 	// carrying stuff
 	private int carryCapacity = 0;
 	private Food carriedStuff;	
-	
-	public Formation(ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
-	{
-		this.playerID = setPlayerID;
-	}
 	
 	// only called when we need a new member
 	public void findNewMember()
@@ -126,10 +128,11 @@ public class Formation {
 	}	
 	public void StartCarrying( Food food )
 	{
-		//this.carriedStuff.add(food);
 		this.carriedStuff = food;
-		//this.carriedWeight += food.getWeight();
 		food.setPicked(true);
+		
+		this.goingWhere = GoingWhere.HomeWithFood;
+		this.goingPoint = MawFinder.Instance().GetMawPosition(this.playerID);		
 	}	
 	public void attack( /* Fightable f */ )
 	{
@@ -144,6 +147,7 @@ public class Formation {
 		{
 			this.kickOut( m );
 		}		
+		this.Die();
 	}
 	public void MoveThere ( )
 	{
@@ -154,8 +158,52 @@ public class Formation {
 	}
 	public void ActOnArrival()
 	{
-		// TODO: figure shit out
+		switch ( this.goingWhere )
+		{
+			case Explore:
+					// wat?
+				break;
+			case ForFood:
+					//AskForFood();
+					PickupFood();
+				break;
+			case Home:
+					// TODO
+				break;
+			case HomeWithFood:
+					//DropFood();
+				break;
+			case Wpierdol:
+				
+				break;
+			case Uknown: break;
+			default: break;
+		}
 	}	
+	@SuppressWarnings("unchecked")
+	private void PickupFood() {
+		// TODO Auto-generated method stub
+		List<Food> foodHere = FoodAtPoint( grid.getLocation(this) );
+		if ( foodHere.size() <= 0 ) 
+		{
+			return;
+		}
+		
+		// food with highest power-weight ratio
+		Collections.sort( foodHere );
+		
+		// iterate over foodHere
+		for ( Food food : foodHere )
+		{
+			if ( this.getCarryCapacity() >= food.getWeight() )
+			{
+				StartCarrying( food );
+				break;
+			}
+		}
+		
+	}
+
 	public void step()
 	{
 		if ( this.getSize() < this.getNeededSize() )
@@ -173,7 +221,7 @@ public class Formation {
 		} else {
 			//this.Explore();
 			this.Disband();
-			this.MoveCarriedStuff();
+			//this.MoveCarriedStuff();
 		}
 	}
 
