@@ -449,12 +449,13 @@ public abstract class Mobile extends Agent{
 	}
 
 	/**
-	 * NOT DONE YET
+	 * Return agents in given neighborhood
 	 * @param extentX
 	 * @param extentY
 	 */
-	public void getAgentsInNeighborhood(int extentX, int extentY){
-		/*
+	public List<Agent> getAgentsInVicinity(int extentX, int extentY){
+		List<Agent> vicinity = new ArrayList<Agent>();
+		
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation(this);
 		// use the GridCellNgh class to create GridCells for
@@ -466,23 +467,13 @@ public abstract class Mobile extends Agent{
 		
 		for ( GridCell <Mobile> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-				if(obj instanceof Mobile && (Mobile)obj != this){
-					
-					Mobile mobile = (Mobile)obj;
-					if(mobile.playerID == this.playerID){
-						QueryMessage query = new QueryMessage("Do you love me ?");
-						//sendMessage( mobile, query );
-					}
-						
-					else {
-						KillMessage killMessage = new KillMessage();
-						sendMessage( mobile, killMessage );
-					}
-				}
+				if(obj instanceof Agent && (Agent)obj != this){
+					Agent agent = (Agent)obj;
+					vicinity.add(agent);
+				}	
 			}
-			
 		}
-		*/
+		return vicinity;
 	}
 
 
