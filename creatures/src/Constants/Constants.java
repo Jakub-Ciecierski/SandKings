@@ -78,6 +78,17 @@ public final class Constants {
 	public static final int SPIDER_MEAT_NO = SPIDER_CALORIES / MEAT_CALORIES;
 	public static final int MOBILE_MEAT_NO = MOBILE_CALORIES / MEAT_CALORIES;
 
+	// MOBILE VICINITY DISTANCE
+	public static final int MOBILE_VICINITY_X = 5;
+	public static final int MOBILE_VICINITY_Y = 5;
+	
+	public static final int MOBILE_MAX_KNOWLEDGE = 10;
+	
+	public static final int MAW_MAX_KNOWLEDGE = 500;
+	
+	// DISPLAY ALL DEBUG MESSAGES
+	public static final boolean DEBUG_MODE = true;
+	
 	/**
 	 * Hidden constructor to ensure no instances are created.
 	 */

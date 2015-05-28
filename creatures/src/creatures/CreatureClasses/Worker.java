@@ -37,6 +37,8 @@ public class Worker extends Mobile {
 			}
 			// send message
 			Attack();
+
+			seekForKnowledge();
 		}
 	}
 	

@@ -1,8 +1,9 @@
 package communication.knowledge;
 
+import creatures.Agent;
 import repast.simphony.space.grid.GridPoint;
 
-/*
+/**
  * The information consists of:
  * 	What - What was seen
  * 	When - time when it was seen
@@ -10,6 +11,8 @@ import repast.simphony.space.grid.GridPoint;
  */
 public class Information {
 
+	// Agent that is associated with this information
+	private Agent agent;
 	// What is this information
 	private InformationType type;
 	// When it was received
@@ -17,10 +20,25 @@ public class Information {
 	// Where it was seen
 	private GridPoint point;
 
-	public Information(InformationType type, double tickCount, GridPoint point){
+	public Information(Agent agent, InformationType type, double tickCount, GridPoint point){
 		this.type = type;
 		this.tickCount = tickCount;
 		this.point = point;
 	}
 	
+	public InformationType getType(){
+		return this.type;
+	}
+	
+	public Agent getAgent(){
+		return this.agent;
+	}
+	
+	public GridPoint getGridPoint(){
+		return this.point;
+	}
+	
+	public double getGetTickCount(){
+		return this.tickCount;
+	}
 }
