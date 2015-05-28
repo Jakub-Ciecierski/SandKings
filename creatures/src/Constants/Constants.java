@@ -29,7 +29,7 @@ public final class Constants {
 	// MOBILE CONSTANTS
 	public static final int MOBILE_SIZE_MULTIPLIER = 2;
 	public static final int MOBILE_STARTING_FOOD = 500; // 100 steps possibru
-	public static final int MOBILE_CARRY_CAPACITY = 5;
+	public static final int MOBILE_CARRY_CAPACITY = 1;
 	// on 50*50 grid this is [0-70] + [-inf - MOBILE_STARTING_FOOD]
 	public static final int MOBILE_GO_HOME_THRESHOLD = 500;  
 	
@@ -59,17 +59,17 @@ public final class Constants {
 	
 	
 	// FOOD CONSTANTS
-	public static final int PIZZA_CALORIES = 20;
-	public static final int DONUT_CALORIES = 15;
-	public static final int GRAPE_CALORIES = 10;
+	public static final int PIZZA_CALORIES = 50;
+	public static final int DONUT_CALORIES = 25;
+	public static final int GRAPE_CALORIES = 15;
 	public static final int CABBAGE_CALORIES = 5;
 	public static final int MEAT_CALORIES = 5;
 	
-	public static final int PIZZA_WEIGHT = 20;
-	public static final int DONUT_WEIGHT = 15;
-	public static final int GRAPE_WEIGHT = 10;
-	public static final int CABBAGE_WEIGHT = 5;
-	public static final int MEAT_WEIGHT = 5;
+	public static final int PIZZA_WEIGHT = 5;
+	public static final int DONUT_WEIGHT = 3;
+	public static final int GRAPE_WEIGHT = 2;
+	public static final int CABBAGE_WEIGHT = 1;
+	public static final int MEAT_WEIGHT = 1;
 	
 	// NUMBER OF DROPPED MEAT
 	public static final int MAW_MEAT_NO = MAW_CALORIES / MEAT_CALORIES;

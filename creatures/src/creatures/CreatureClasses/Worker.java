@@ -23,6 +23,8 @@ public class Worker extends Mobile {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
+		if(isInFormation)
+			return;
 		if(this.getMove()) {
 			if ( this.IsAtDestination() )
 			{
