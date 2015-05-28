@@ -2,21 +2,17 @@ package creatures;
 
 import java.util.List;
 
+import map.Food;
+import Constants.Constants;
 import repast.simphony.context.Context;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
-import communication.Message;
-import communication.MessagePacket;
-import communication.MessageQueue;
-import communication.messages.AskForFoodMessage;
 import communication.messages.DamageMessage;
-import communication.messages.KillMessage;
-import communication.messages.QueryMessage;
-import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
 
@@ -27,12 +23,14 @@ import creatures.CreatureClasses.Mobile;
  */
 public abstract class Fightable extends Agent{
 	// simulation props
-	private ContinuousSpace < Object > space; 
-	private Grid< Object > grid;
-	private int playerID = 0;
+	protected ContinuousSpace < Object > space; 
+	protected Grid< Object > grid;
+	protected int playerID = 0;
+	protected boolean isFighting = false;
 	
 	private float damage = 0;
 	private float health = 0;
+	private int droppedMeat = 0;
 	
 	public float getDamage() {
 		return damage;
@@ -40,20 +38,11 @@ public abstract class Fightable extends Agent{
 	public void setDamage(float damage) {
 		this.damage = damage;
 	}
-	public void dealDamage(float damage){
-		this.health -= damage;
-		if(this.health <= 0)
-			Delete();
+	public int getDroppedMeat() {
+		return droppedMeat;
 	}
-	
-	public void Delete()
-	{
-		Context<Object> context = ContextUtils.getContext(this);
-		  if(this != null && context != null)
-		  {
-			  MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
-			  context.remove( this );	
-		  }
+	public void setDroppedMeat(int droppedMeat) {
+		this.droppedMeat = droppedMeat;
 	}
 	
 	public float getHealth() {
@@ -72,17 +61,56 @@ public abstract class Fightable extends Agent{
 	}
 	
 	public Fightable( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID,
-			float damage, float health)
+			float damage, float health, int droppedMeat)
 	{
 		this.space = space;
 		this.grid = grid;
 		this.playerID = setPlayerID;
 		this.damage = damage;
 		this.health = health;
+		this.droppedMeat = droppedMeat;
 	}
 
+	public void dealDamage(float damage){
+		this.health -= damage;
+		if(this.health <= 0)
+			Die();
+	}
 	
-	public void attack(){
+	public void Die()
+	{
+		@SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext(this);
+		  if(this != null && context != null)
+		  {
+			  MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+			  context.remove( this );	
+		  }
+		  DropFood();
+	}
+	
+	private void DropFood() {		
+			int foodID = 4;
+			@SuppressWarnings("unchecked")
+			Context<Object> context = ContextUtils.getContext( this );
+
+			int x = grid.getLocation ( this ).getX();
+			int y = grid.getLocation ( this ).getY();
+			
+			for( int i = 0; i < droppedMeat; i++)
+				dropMeat(foodID, x, y, context);
+	}
+	
+	private void dropMeat(int foodID, int x, int y, Context<Object> context){
+		Food food = new Food( space, grid, foodID );
+
+		context.add( food );
+		space.moveTo( food, x, y );
+		grid.moveTo( food, x, y );
+	}
+	
+	
+	public void Attack(){
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
@@ -98,15 +126,35 @@ public abstract class Fightable extends Agent{
 					
 					Fightable mobile = (Fightable)obj;
 					
+					if(MawFinder.Instance().areWeEnemies(mobile.playerID, this.playerID))
+					{
+						DamageMessage damageMessage = new DamageMessage(this.damage);
+						sendMessage( mobile, damageMessage );
+						isFighting = true;
+						return;
+					}
+				}
+			}
+		}
+		
+		for ( GridCell <Mobile> cell : gridCells ) {
+			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if(obj instanceof Fightable && (Fightable)obj != this){
+					
+					Fightable mobile = (Fightable)obj;
+					
 					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
 					{
 						DamageMessage damageMessage = new DamageMessage(this.damage);
 						sendMessage( mobile, damageMessage );
+						isFighting = true;
+						return;
 					}
 				}
 			}
-			
 		}
+		
+		isFighting = false;
 	}
 
 }

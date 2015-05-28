@@ -17,7 +17,7 @@ public abstract class Agent {
 	
 	public Agent(){
 		this.id = nextID++;
-		System.out.println("Agent #"+this.id+" created");
+		//System.out.println("Agent #"+this.id+" created");
 	}
 	
 	public int getID(){
