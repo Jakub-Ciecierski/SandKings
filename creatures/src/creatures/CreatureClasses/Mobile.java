@@ -9,7 +9,6 @@ import communication.knowledge.InformationType;
 import communication.knowledge.KnowledgeBase;
 import communication.messages.AskForFoodMessage;
 import communication.messages.AskForHelpMessage;
-import communication.messages.KillMessage;
 import communication.messages.QueryMessage;
 import creatures.Agent;
 import creatures.Fightable;
@@ -52,13 +51,12 @@ public abstract class Mobile extends Fightable {
 	private int food = Constants.MOBILE_STARTING_FOOD;
 	
 	// formation stuff
-	private boolean isInFormation = false;
+	protected boolean isInFormation = false;
 	
 	
 	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
-	private int carriedWeight = 0;
-	private List<Food> carriedStuff = new ArrayList<Food>();
+	private Food carriedStuff;
 	
 	// stats
 	private int experience = 0;
@@ -101,19 +99,18 @@ public abstract class Mobile extends Fightable {
 	
 	private void StartCarrying( Food food )
 	{
-		this.carriedStuff.add(food);
-		this.carriedWeight += food.getWeight();
+		this.carriedStuff = food;
 		food.setPicked(true);
 	}
 	
 	protected void MoveCarriedStuff()
 	{
-		// get current location in grid
-		GridPoint gp = grid.getLocation(this);
-		for ( Food food : this.carriedStuff )
+		if ( carriedStuff != null )
 		{
-			space.moveTo(food, gp.getX(), gp.getY());
-			grid.moveTo(food, gp.getX(), gp.getY());
+			// get current location in grid
+			GridPoint gp = grid.getLocation(this);
+			space.moveTo(carriedStuff, gp.getX(), gp.getY());
+			grid.moveTo(carriedStuff, gp.getX(), gp.getY());
 		}
 	}
 	
@@ -180,13 +177,11 @@ public abstract class Mobile extends Fightable {
 
 	private void DropFood( )
 	{
-		Maw m = MawFinder.Instance().GetMaw( this.playerID );
-		for ( Food f : this.carriedStuff )
+		if ( carriedStuff != null )
 		{
-			m.ReceiveFood( f );
-		}
-		this.carriedWeight = 0;
-		this.carriedStuff.clear();
+			Maw m = MawFinder.Instance().GetMaw( this.playerID );
+			m.ReceiveFood( carriedStuff );
+			this.carriedStuff = null;}
 	}
 	
 	public void Aggro()
@@ -260,30 +255,23 @@ public abstract class Mobile extends Fightable {
 		for ( Food food : foodHere )
 		{
 			// check if food too heavy
-			if ( food.getWeight() > ( this.carryCapacity - this.carriedWeight ) )
-			{
-				this.move = false;
-				int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity - this.carriedWeight));
-				if(bros.size() < neededBros) 
-					CallForBros(neededBros);
-				
-				System.out.println("Enough bros!");
-				//continue; 
+			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity && !food.isPicked() )
+			{	// lift
+				StartCarrying( food );
+				this.goingWhere = GoingWhere.HomeWithFood;
+				GoHome();
+				break; 
 			} else
 			{
-				// lift
-				if(!food.isPicked()) {
-					StartCarrying( food );
-					found ++;
-				}
+				//this.move = false;
+				
+				//int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity - this.carriedWeight));
+				//if(bros.size() < neededBros) 
+				//	CallForBros(neededBros);
+				
+				//System.out.println("Enough bros!");
+				
 			}
-		}
-		
-		if ( found > 0 )
-		{
-			this.goingWhere = GoingWhere.HomeWithFood;
-			// go home.
-			GoHome();
 		}
 	}
 

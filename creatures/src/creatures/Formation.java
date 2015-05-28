@@ -49,7 +49,8 @@ public class Formation extends Fightable {
 	
 	// carrying stuff
 	private int carryCapacity = 0;
-	private Food carriedStuff;	
+	private int carriedWeight = 0;
+	private List<Food> carriedStuff = new ArrayList<Food>();	
 	
 	// only called when we need a new member
 	public void findNewMember()
@@ -128,17 +129,18 @@ public class Formation extends Fightable {
 	}	
 	public void StartCarrying( Food food )
 	{
-		this.carriedStuff = food;
+		this.carriedStuff.add(food);
 		food.setPicked(true);
-		
+		setCarryCapacity(getCarryCapacity() + food.getWeight()); 
+				
 		this.goingWhere = GoingWhere.HomeWithFood;
 		this.goingPoint = MawFinder.Instance().GetMawPosition(this.playerID);		
 	}	
-	public void attack( /* Fightable f */ )
+	public void Attack( /* Fightable f */ )
 	{
 		for( Mobile m : soldiers)
 		{
-			// ey yo, m, attack this!
+			m.Attack();
 		}
 	}
 	public void Disband()
@@ -210,6 +212,8 @@ public class Formation extends Fightable {
 		{
 			this.findNewMember();
 		}
+		if( carriedWeight > carryCapacity )
+			return;
 		
 		if ( this.IsAtDestination() )
 		{
@@ -225,11 +229,6 @@ public class Formation extends Fightable {
 		}
 	}
 
-	
-	
-	
-	
-	
 	/**
 	 * @return the carryCapacity
 	 */
