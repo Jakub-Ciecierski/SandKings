@@ -8,6 +8,8 @@ import NodalNetwork.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.knowledge.KnowledgeBase;
+
 import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
@@ -43,6 +45,7 @@ public class Maw extends Fightable {
 	private GridPoint gridpos;
 	private List<Worker> children = new ArrayList<Worker>();
 
+	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
 	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{

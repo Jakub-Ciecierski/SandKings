@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import communication.knowledge.Information;
+import communication.knowledge.InformationType;
+import communication.knowledge.KnowledgeBase;
 import communication.messages.AskForFoodMessage;
 import communication.messages.AskForHelpMessage;
 import communication.messages.QueryMessage;
@@ -11,7 +14,9 @@ import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
 import Constants.Constants;
+import Enemies.Enemy;
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -67,6 +72,8 @@ public abstract class Mobile extends Fightable {
 	private boolean move = true;
 
 	private List<Mobile> bros = new ArrayList<Mobile>();
+	
+	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MOBILE_MAX_KNOWLEDGE);
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
@@ -446,11 +453,6 @@ public abstract class Mobile extends Fightable {
 	public void setSize(float size) {
 		this.size = size;
 	}
-	
-	/**
-	 * 	Sends a message to friendly mobiles in the vicinity 
-	 */
-
 
 	/**
 	 * Return agents in given neighborhood
@@ -481,6 +483,42 @@ public abstract class Mobile extends Fightable {
 		return vicinity;
 	}
 
+	/**
+	 * Seeks for knowledge, adds interesting points in the map
+	 * and saves it in mobile's knowledge base
+	 */
+	public void seekForKnowledge(){
+		List<Agent> vicinity = getAgentsInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
+		
+		for(int i =0;i<vicinity.size();i++){
+			Agent agent = vicinity.get(i);
+
+			InformationType infoType = KnowledgeBase.GetInfoType(agent);
+			
+			// if info is interesting add it
+			if(infoType != InformationType.GARBAGE){
+				GridPoint pt = grid.getLocation(this);
+				
+				// time when it knowledge was added TODO
+				
+				double tickCount = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+				
+				Information info = new Information(agent, infoType, tickCount, pt);
+				
+				this.knowledgeBase.addInformation(info);
+				
+				if(Constants.DEBUG_MODE){
+					System.out.println("*********************************************************");
+					System.out.println("Agent #" + this.id +" Gained knowledge");
+					System.out.println("What: " + infoType.toString());
+					System.out.println("Where: [" + pt.getX() + + pt.getY() +"] ");
+					System.out.println("When: " + tickCount);
+					System.out.println("********************************************************* \n\n");
+				}
+			}
+		}
+	
+	}
 
 	/**
 	 * @return the agression

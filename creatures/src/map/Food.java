@@ -1,5 +1,6 @@
 package map;
 
+import creatures.Agent;
 import repast.simphony.context.Context;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -12,7 +13,7 @@ import Constants.Constants;
  *	class for Terrarium
  */
 
-public class Food implements Comparable {
+public class Food extends Agent implements Comparable{
 	private int foodID; //food type
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
