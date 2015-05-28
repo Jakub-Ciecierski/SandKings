@@ -487,7 +487,8 @@ public abstract class Mobile extends Fightable {
 		
 		for ( GridCell <Mobile> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-				if(obj instanceof Agent && (Agent)obj != this){
+				if(obj instanceof Agent && 
+						obj instanceof Mobile && (Mobile)obj != this){
 					Agent agent = (Agent)obj;
 					vicinity.add(agent);
 				}	
