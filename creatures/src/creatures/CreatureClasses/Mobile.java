@@ -65,11 +65,7 @@ public abstract class Mobile extends Fightable {
 	private GridPoint goingPoint;
 	private GoingWhere goingWhere = GoingWhere.Uknown;
 	private boolean move = true;
-	private int playerID = 0;
 
-	// simulation props
-	private ContinuousSpace < Object > space; 
-	private Grid< Object > grid;
 	private List<Mobile> bros = new ArrayList<Mobile>();
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)

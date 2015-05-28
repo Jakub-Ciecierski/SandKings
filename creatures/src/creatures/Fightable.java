@@ -4,6 +4,7 @@ import java.util.List;
 
 import map.Food;
 import Constants.Constants;
+import Enemies.Enemy;
 import repast.simphony.context.Context;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -13,8 +14,10 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import communication.messages.DamageMessage;
+import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
+import creatures.CreatureClasses.Worker;
 
 /**
  *	The base class of all fightable agents
@@ -81,12 +84,33 @@ public abstract class Fightable extends Agent{
 	{
 		@SuppressWarnings("unchecked")
 		Context<Object> context = ContextUtils.getContext(this);
-		  if(this != null && context != null)
-		  {
-			  MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+		
+		if(this == null || context == null)
+			return;
+		
+		if( this instanceof Maw)
+		{
+			Maw instance = (Maw)this;
+			for( Worker worker : instance.getChildren())
+			{
+				worker.Die();
+			}
+		     DropFood();
+		     context.remove( this );
+		}
+		
+		else if( this instanceof Enemy)
+		{
+			  DropFood();
 			  context.remove( this );	
-		  }
-		  DropFood();
+		}
+		
+		else
+	    {
+		     DropFood();
+		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+		     context.remove( this );	
+	    }
 	}
 	
 	private void DropFood() {		

@@ -9,7 +9,10 @@ public class MawFinder {
 	// singleton
 	private static MawFinder instance = new MawFinder();
 	public static MawFinder Instance() { return instance; }
-	protected MawFinder() { }
+	protected MawFinder() 
+	{
+		initMawRelation();
+	}
 	
 	private List<Maw> _mawList = new ArrayList<Maw>();
 	

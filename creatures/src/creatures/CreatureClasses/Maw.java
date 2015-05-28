@@ -204,6 +204,14 @@ public class Maw extends Fightable {
 		this.gridpos = gridpos;
 	}
 
+	public List<Worker> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Worker> children) {
+		this.children = children;
+	}
+
 	public int getMaxNumOfChildren() {
 		return maxNumOfChildren;
 	}
