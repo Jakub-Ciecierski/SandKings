@@ -41,6 +41,11 @@ public class Worker extends Mobile {
 			Attack();
 
 			seekForKnowledge();
+			
+			scheduler.updateSchulder();
+			
+			if(currentTask != null)
+				currentTask.execute();
 		}
 	}
 	

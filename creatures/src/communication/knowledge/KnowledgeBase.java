@@ -25,17 +25,56 @@ public class KnowledgeBase {
 		this.maxInfoCount = maxInfoCount;
 	}
 	
-	public void addInformation(Information info){
-		// Replace the oldest information with lower priority
-		if(knowledge.size() >= maxInfoCount){
-			for(int i =0;i < knowledge.size();i++){
-				if(info.getType().getPriority() <= info.getType().getPriority()){
-					knowledge.set(i, info);
-				}
+	private boolean hasInformation(Information info){
+		for(int i =0;i < knowledge.size();i++){
+			if(info.getAgent() == info.getAgent()){
+				return true;
 			}
 		}
-		else
-			knowledge.add(info);
+		return false;
+	}
+	
+	public Information getInformation(int index){
+		return knowledge.get(index);
+	}
+	
+	public int getSize(){
+		return knowledge.size();
+	}
+	
+	public List<Information> getKnowledge(){
+		// TODO copy list
+		return knowledge;
+	}
+		
+	/**
+	 * Adds information to knowledge base
+	 * @param newInfo
+	 * @return
+	 */
+	public boolean addInformation(Information newInfo){
+		synchronized (this) {
+			// dont add this info if it already exists
+			if(this.hasInformation(newInfo))
+				return false;
+			
+			// Replace the oldest information with lower priority
+			if(knowledge.size() >= maxInfoCount){
+				for(int i =0;i < knowledge.size();i++){
+					Information info = knowledge.get(i);
+					if(info == null || newInfo.getType().getPriority() >= info.getType().getPriority()){
+						knowledge.set(i, newInfo);
+					}
+				}
+			}
+			else
+				knowledge.add(newInfo);
+		}
+		return true;
+	}
+	
+	public void removeInformation(Information info){
+		this.knowledge.remove(info);
 	}
 	
 	/**

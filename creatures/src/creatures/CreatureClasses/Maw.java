@@ -1,6 +1,3 @@
-/**
- * 
- */
 package creatures.CreatureClasses;
 
 import NodalNetwork.*;
@@ -9,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
-
 import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
@@ -22,6 +18,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MawScheduler;
 import Constants.Constants;
 
 
@@ -47,7 +44,8 @@ public class Maw extends Fightable {
 	private List<Worker> children = new ArrayList<Worker>();
 
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
-	
+	private MawScheduler scheduler = new MawScheduler(this);
+
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID)
 	{
 		super(space, grid, setPlayerID, Constants.MAW_ATTACK, Constants.MAW_HEALTH, Constants.MAW_MEAT_NO);
@@ -138,6 +136,11 @@ public class Maw extends Fightable {
 	{
 		TrySpawnMobile();
 		TryIncrementStrength();
+
+		scheduler.updateSchulder();
+		
+		if(currentTask != null)
+			currentTask.execute();
 	}
 	
 	private void TrySpawnMobile()
@@ -222,4 +225,8 @@ public class Maw extends Fightable {
 		this.strength = strength;
 	}
 
+	
+	public KnowledgeBase getKnowledgeBase(){
+		return this.knowledgeBase;
+	}
 }
