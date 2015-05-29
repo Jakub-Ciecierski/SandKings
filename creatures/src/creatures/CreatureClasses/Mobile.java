@@ -28,6 +28,7 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MobileScheduler;
 
 /**
  * @author Asmodiel
@@ -74,6 +75,8 @@ public abstract class Mobile extends Fightable {
 	private List<Mobile> bros = new ArrayList<Mobile>();
 	
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MOBILE_MAX_KNOWLEDGE);
+	
+	protected MobileScheduler scheduler = new MobileScheduler(this);
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
@@ -483,6 +486,7 @@ public abstract class Mobile extends Fightable {
 	 * and saves it in mobile's knowledge base
 	 */
 	public void seekForKnowledge(){
+		// get all agents in mobiles vicinity
 		List<Agent> vicinity = getAgentsInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
 		
 		for(int i =0;i<vicinity.size();i++){
@@ -495,22 +499,21 @@ public abstract class Mobile extends Fightable {
 			if(infoType != InformationType.GARBAGE){
 
 				GridPoint pt = grid.getLocation(this);
-				
-				// time when it knowledge was added TODO
-				
+
 				double tickCount = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 				
 				Information info = new Information(agent, infoType, tickCount, pt);
 				
-				this.knowledgeBase.addInformation(info);
-				
-				if(Constants.DEBUG_MODE){
-					System.out.println("*********************************************************");
-					System.out.println("Agent #" + this.id +" Gained knowledge");
-					System.out.println("What: " + infoType.toString());
-					System.out.println("Where: [" + pt.getX() + + pt.getY() +"] ");
-					System.out.println("When: " + tickCount);
-					System.out.println("********************************************************* \n\n");
+				if(this.knowledgeBase.addInformation(info)){
+
+					if(Constants.DEBUG_MODE){
+						System.out.println("*********************************************************");
+						System.out.println("Agent #" + this.id +" Gained knowledge");
+						System.out.println("What: " + infoType.toString());
+						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
+						System.out.println("When: " + tickCount);
+						System.out.println("********************************************************* \n\n");
+					}
 				}
 			}
 		}
@@ -553,5 +556,9 @@ public abstract class Mobile extends Fightable {
 
 	public void setMove(boolean move) {
 		this.move = move;
+	}
+	
+	public KnowledgeBase getKnowledgeBase(){
+		return this.knowledgeBase;
 	}
 }

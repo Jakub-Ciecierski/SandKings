@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
-
 import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
@@ -22,6 +21,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MawScheduler;
 import Constants.Constants;
 
 
@@ -46,6 +46,8 @@ public class Maw extends Fightable {
 	private List<Worker> children = new ArrayList<Worker>();
 
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
+	
+	private MawScheduler scheduler = new MawScheduler(this);
 	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
 	{
@@ -159,6 +161,11 @@ public class Maw extends Fightable {
 	public void step()
 	{
 		TrySpawnMobile();
+		
+		scheduler.updateSchulder();
+		
+		if(currentTask != null)
+			currentTask.execute();
 	}
 	
 	private void TrySpawnMobile()
@@ -240,4 +247,8 @@ public class Maw extends Fightable {
 			temp.setResourceCount(food);
 	}
 
+	
+	public KnowledgeBase getKnowledgeBase(){
+		return this.knowledgeBase;
+	}
 }
