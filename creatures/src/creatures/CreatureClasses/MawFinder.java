@@ -23,12 +23,12 @@ public class MawFinder {
 		Enemy
 	}
 	
-	private MawRelation MawRelations[][] = new MawRelation[5][5];
+	private MawRelation MawRelations[][] = new MawRelation[6][6];
 	
 	private void initMawRelation(){
-		for( int i = 0; i < 5; i++){
-			for( int y = 0; y < 5; y++){
-				if(i == y)
+		for( int i = 0; i < 6; i++){
+			for( int y = 0; y < 6; y++){
+				if(i == y || i == 5 || y == 5)
 					MawRelations[i][y] = MawRelation.Friend;
 				else
 					MawRelations[i][y] = MawRelation.Neutral;

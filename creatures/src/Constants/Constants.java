@@ -9,7 +9,7 @@ public final class Constants {
 	// GENERAL
 	public static final int GRID_SIZE = 50;
 	public static final int BIGGEST_DISTANCE = (int) Math.sqrt(2 * GRID_SIZE * GRID_SIZE);
-
+	public static final int DISTANCE_FROM_MAW = 10;
 	// INTERVALS
 	public static final int MOVE_START = 1;
 	public static final int GOD_MODE_START = 1000;
@@ -92,7 +92,7 @@ public final class Constants {
 	public static final int MAW_MAX_KNOWLEDGE = 500;
 	
 	// DISPLAY ALL DEBUG MESSAGES
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	
 	/**
 	 * Hidden constructor to ensure no instances are created.

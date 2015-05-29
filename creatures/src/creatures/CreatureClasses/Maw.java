@@ -93,6 +93,9 @@ public class Maw extends Fightable {
 	
 	public boolean hasFood()
 	{
+		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
+			return true;
+
 		if ( this.getFood() >= Constants.MOBILE_STOMACH_SIZE * (1 + this.strength))
 			{
 				this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);

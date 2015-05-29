@@ -38,20 +38,22 @@ public class Worker extends Mobile {
 			if ( this.IsAtDestination() )
 			{
 				this.ActOnArrival();
+				return;
 			} else if ( this.isGoingSomewhere() )
 			{
 				this.MoveThere();
 				this.MoveCarriedStuff();
+				return;
 			} else {
 				this.Explore();
 				this.MoveCarriedStuff();
+				return;
 			}
+		}
 			// send message
 			Attack();
 
 			scheduler.updateSchulder();
 	
-		}
-	}
-	
+		}	
 }
