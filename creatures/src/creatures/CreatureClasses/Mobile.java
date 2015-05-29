@@ -43,7 +43,8 @@ public abstract class Mobile extends Fightable {
 		ForFood,
 		HomeWithFood,
 		Explore,
-		Wpierdol
+		Wpierdol,
+		PickUpFood
 	}
 	
 	// creature properties
@@ -54,15 +55,15 @@ public abstract class Mobile extends Fightable {
 		
 	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
-	private Food carriedStuff;
+	public Food carriedStuff;
 	
 	// stats
 	private boolean isStarving = false;
 	
 	//Moving logic
-	private boolean isGoingSomewhere = false;
-	private GridPoint goingPoint;
-	private GoingWhere goingWhere = GoingWhere.Uknown;
+	public boolean isGoingSomewhere = false;
+	public GridPoint goingPoint;
+	public GoingWhere goingWhere = GoingWhere.Uknown;
 	private boolean move = true;
 
 	private List<Mobile> bros = new ArrayList<Mobile>();
@@ -124,6 +125,7 @@ public abstract class Mobile extends Fightable {
 	
 	public void ActOnArrival()
 	{
+		boolean isNewTask = false;
 		switch ( this.goingWhere )
 		{
 			case Explore:
@@ -141,12 +143,20 @@ public abstract class Mobile extends Fightable {
 			case Wpierdol:
 				
 				break;
+			case PickUpFood:
+				List<Food> foodHere = FoodAtPoint( goingPoint );
+				if ( foodHere.size() > 0 ) PickUpFood( foodHere );
+				isNewTask = true;
+				break;
 			case Uknown: break;
 			default: break;
 		}
-		this.goingPoint = null;
-		this.isGoingSomewhere = false;
-		this.goingWhere = GoingWhere.Uknown;
+		if(!isNewTask)
+		{
+			this.goingPoint = null;
+			this.isGoingSomewhere = false;
+			this.goingWhere = GoingWhere.Uknown;
+		}
 	}
 	
 	private void AskForFood()
@@ -232,7 +242,7 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void PickUpFood(List<Food> foodHere) {
+	public void PickUpFood(List<Food> foodHere) {
 		int found = 0;
 		// food with highest power-weight ratio
 		Collections.sort( foodHere );
@@ -271,8 +281,8 @@ public abstract class Mobile extends Fightable {
 		
 		// TODO: remember food in vicinity
 	
-		List<Food> foodHere = FoodAtPoint( gp );
-		if ( foodHere.size() > 0 ) PickUpFood( foodHere );
+		//List<Food> foodHere = FoodAtPoint( gp );
+		//if ( foodHere.size() > 0 ) PickUpFood( foodHere );
 		
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) )
@@ -434,11 +444,11 @@ public abstract class Mobile extends Fightable {
 			Agent agent = vicinity.get(i);
 
 			InformationType infoType = KnowledgeBase.GetInfoType(agent);
-			
+
 			// if info is interesting add it
 			if(infoType != InformationType.GARBAGE){
 
-				GridPoint pt = grid.getLocation(this);
+				GridPoint pt = grid.getLocation(agent);
 
 				double tickCount = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 				
@@ -446,6 +456,8 @@ public abstract class Mobile extends Fightable {
 				
 				if(this.knowledgeBase.addInformation(info)){
 
+					;
+					/*
 					if(Constants.DEBUG_MODE){
 						System.out.println("*********************************************************");
 						System.out.println("Agent #" + this.id +" Gained knowledge");
@@ -453,7 +465,7 @@ public abstract class Mobile extends Fightable {
 						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
 						System.out.println("When: " + tickCount);
 						System.out.println("********************************************************* \n\n");
-					}
+					}*/
 				}
 			}
 		}

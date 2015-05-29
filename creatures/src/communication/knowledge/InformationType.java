@@ -2,7 +2,7 @@ package communication.knowledge;
 
 public enum InformationType {
 	ENEMY_CREATURE(3),
-	FOOD(2),
+	FOOD(4),
 	ENEMY_MOBILE(1), 
 	FRIEDLY_MOBILE(0), 
 	GARBAGE(-1);

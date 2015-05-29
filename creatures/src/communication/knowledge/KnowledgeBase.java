@@ -19,15 +19,27 @@ public class KnowledgeBase {
 	
 	private List<Information> knowledge = new ArrayList<Information>();
 	
+	private List<Agent> cache = new ArrayList<Agent>();
+	
 	private int maxInfoCount;
 	
 	public KnowledgeBase(int maxInfoCount){
 		this.maxInfoCount = maxInfoCount;
 	}
 	
+	private boolean isInCache(Agent agent){
+		for(int i = 0; i < cache.size(); i++){
+			Agent cachedAgent = cache.get(i);
+			if(cachedAgent !=null)
+				if(cachedAgent == agent)
+					return true;
+		}
+		return false;
+	}
+	
 	private boolean hasInformation(Information info){
 		for(int i =0;i < knowledge.size();i++){
-			if(info.getAgent() == info.getAgent()){
+			if(info.getAgent() == knowledge.get(i).getAgent()){
 				return true;
 			}
 		}
@@ -54,21 +66,30 @@ public class KnowledgeBase {
 	 */
 	public boolean addInformation(Information newInfo){
 		synchronized (this) {
-			// dont add this info if it already exists
-			if(this.hasInformation(newInfo))
+			
+			if(isInCache(newInfo.getAgent()))
 				return false;
+			
+			// dont add this info if it already exists
+			if(this.hasInformation(newInfo)) {
+				return false;
+			}
 			
 			// Replace the oldest information with lower priority
 			if(knowledge.size() >= maxInfoCount){
 				for(int i =0;i < knowledge.size();i++){
 					Information info = knowledge.get(i);
-					if(info == null || newInfo.getType().getPriority() >= info.getType().getPriority()){
+					if(info == null ||
+							!info.isUsefull ||
+							newInfo.getType().getPriority() >= info.getType().getPriority()){
 						knowledge.set(i, newInfo);
 					}
 				}
 			}
 			else
 				knowledge.add(newInfo);
+			
+			cache.add(newInfo.getAgent());
 		}
 		return true;
 	}

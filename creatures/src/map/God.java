@@ -41,12 +41,13 @@ public class God {
 	
 	private void DropEnemy() {		
 		int rand = RandomHelper.nextIntFromTo(0, 9);
-		if (rand == 0) //10% chance of food drop
+		if (rand == 0) //10% chance of enemy drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
 			int enemyID = RandomHelper.nextIntFromTo( 0, 2 );
-			
+			System.out.println("ENEMY ID: " + enemyID + "******************************");
+
 			float attack = 0;
 			float health = 0;
 			int droppedMeat = 0;
@@ -78,7 +79,7 @@ public class God {
 			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
 			Object temp = grid.getObjectAt( x, y );
 			
-			if(!(temp instanceof Enemy)) //don't add enemy where food already is
+			if(!(temp instanceof Enemy)) //don't add enemy where enemy already is
 			{ 
 				context.add( enemy );
 				space.moveTo( enemy, x, y );

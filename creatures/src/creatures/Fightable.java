@@ -27,7 +27,7 @@ import creatures.CreatureClasses.Worker;
 public abstract class Fightable extends Agent{
 	// simulation props
 	protected ContinuousSpace < Object > space; 
-	protected Grid< Object > grid;
+	public Grid< Object > grid;
 	protected int playerID = 0;
 	protected boolean isFighting = false;
 	

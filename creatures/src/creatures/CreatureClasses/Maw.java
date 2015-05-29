@@ -5,6 +5,7 @@ import NodalNetwork.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.knowledge.Information;
 import communication.knowledge.KnowledgeBase;
 import creatures.Agent;
 import creatures.Fightable;
@@ -136,11 +137,12 @@ public class Maw extends Fightable {
 	{
 		TrySpawnMobile();
 		TryIncrementStrength();
-
-		scheduler.updateSchulder();
 		
 		if(currentTask != null)
-			currentTask.execute();
+			if(!currentTask.isFinished())
+				currentTask.execute();
+		
+		scheduler.updateSchulder();
 	}
 	
 	private void TrySpawnMobile()
@@ -172,6 +174,11 @@ public class Maw extends Fightable {
 		if ( Constants.MAW_STRENGTH_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
 			&& strengthCount > Constants.MAW_STRENGTH_COUNTER) {	
 				this.strength += 0.1;
+				strengthCount = 0;
+			}
+		else if (Constants.MAW_STARVING_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) >= this.food  
+				&& strengthCount > Constants.MAW_STRENGTH_COUNTER && this.strength > 0) {
+				this.strength -= 0.2;
 				strengthCount = 0;
 			}
 			strengthCount++;

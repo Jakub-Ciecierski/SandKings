@@ -1,7 +1,7 @@
 package schedules;
 
 import schedules.tasks.Task;
-import schedules.tasks.maw.FoodNotifyTask;
+import schedules.tasks.maw.NotifyTask;
 import schedules.tasks.mobile.ReturnFoodTask;
 import communication.knowledge.Information;
 import communication.knowledge.KnowledgeBase;
@@ -23,7 +23,10 @@ public class MawScheduler extends Scheduler{
 	private Task createTask(Information info){
 		switch(info.getType()){
 			case FOOD:
-				return new FoodNotifyTask(info, this.maw);
+				return null;//return new NotifyTask(info, this.maw);
+			case ENEMY_CREATURE:
+				return new NotifyTask(info, this.maw);
+				
 			default:
 				return null;
 		}
@@ -37,7 +40,8 @@ public class MawScheduler extends Scheduler{
 		for(int i = 0;i < knowledgeSize; i++){
 			
 			Information info = knowledgeBase.getInformation(i);
-			if(info == null)
+			
+			if(info == null || !info.isUsefull)
 				continue;
 				
 			Task currentTask = maw.getCurrentTask();

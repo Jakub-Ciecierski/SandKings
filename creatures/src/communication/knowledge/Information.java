@@ -19,8 +19,12 @@ public class Information {
 	private double tickCount;
 	// Where it was seen
 	private GridPoint point;
+	
+	public boolean isUsefull = true;
 
 	public Information(Agent agent, InformationType type, double tickCount, GridPoint point){
+		this.agent = agent;
+
 		this.type = type;
 		this.tickCount = tickCount;
 		this.point = point;
