@@ -50,10 +50,10 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		God god = new God(space, grid);
 
 		// create maws for 4 players with random initial power
-		Maw player1Maw = new Maw( space, grid, 1, RandomHelper.nextIntFromTo(10, 20) );
-		Maw player2Maw = new Maw( space, grid, 2, RandomHelper.nextIntFromTo(10, 20) );
-		Maw player3Maw = new Maw( space, grid, 3, RandomHelper.nextIntFromTo(10, 20) );
-		Maw player4Maw = new Maw( space, grid, 4, RandomHelper.nextIntFromTo(10, 20) );
+		Maw player1Maw = new Maw( space, grid, 1 );
+		Maw player2Maw = new Maw( space, grid, 2 );
+		Maw player3Maw = new Maw( space, grid, 3 );
+		Maw player4Maw = new Maw( space, grid, 4 );
 		
 		// add maws to context
 		context.add( god );

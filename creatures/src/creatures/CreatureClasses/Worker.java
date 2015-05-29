@@ -44,6 +44,15 @@ public class Worker extends Mobile {
 				return;
 			}
 		}
+			// send message
+			Attack();
+
+			seekForKnowledge();
+			
+			scheduler.updateSchulder();
+			
+			if(currentTask != null)
+				currentTask.execute();
 		}
 	}
 	

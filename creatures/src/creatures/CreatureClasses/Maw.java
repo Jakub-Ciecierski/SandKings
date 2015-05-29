@@ -1,6 +1,3 @@
-/**
- * 
- */
 package creatures.CreatureClasses;
 
 import NodalNetwork.*;
@@ -9,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
-
 import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
@@ -22,6 +18,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MawScheduler;
 import Constants.Constants;
 
 
@@ -30,12 +27,13 @@ import Constants.Constants;
  *	class for mother
  */
 public class Maw extends Fightable {
-	private int food;
-	private int power;
-	private int maxNumOfChildren;
+	private float food;
 	private int playerID;
 	private int numberOfChildren;
 	private int numOfLostChildren;
+	private int childrenBornCount = 200;
+	private int strengthCount = 0;
+	private float strength;
 	private String name;
 
 	// simulation props
@@ -46,8 +44,9 @@ public class Maw extends Fightable {
 	private List<Worker> children = new ArrayList<Worker>();
 
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
-	
-	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID, int power )
+	private MawScheduler scheduler = new MawScheduler(this);
+
+	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID)
 	{
 		super(space, grid, setPlayerID, Constants.MAW_ATTACK, Constants.MAW_HEALTH, Constants.MAW_MEAT_NO);
 		NN = new nodeNetwork();
@@ -55,9 +54,8 @@ public class Maw extends Fightable {
 		this.space = space;
 		this.grid = grid;
 		this.playerID = setPlayerID;
-		this.power = power;
-		this.food = power;
-		this.maxNumOfChildren = power;
+		this.food = Constants.MAW_START_FOOD;
+		this.strength  = Constants.MAW_START_STRENGTH;
 		
 		switch ( this.playerID )
 		{
@@ -83,48 +81,29 @@ public class Maw extends Fightable {
 	{
 		this.numberOfChildren--;
 		this.numOfLostChildren++;
-		if(this.numberOfChildren != 0)
-			this.setPower(this.power - (this.power / this.numberOfChildren));
-		else {
-			this.setPower(0);
-		}
 	}
 			
 	public void ReceiveFood( Food f )
 	{
 		this.setFood( this.food + f.getPower() );
-		this.setPower( this.power + f.getPower() );
-		this.AddStrengthToChildren(f.getPower());
 		//add strength to children
 		f.Delete();
 	}
 	
 	public boolean hasFood()
 	{
-		//System.out.println("?: " + NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD +" \n");
-		//System.out.println(">: " +this.getFood() +" \n");
-
 		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
 			return true;
+
+		if ( this.getFood() >= Constants.MOBILE_STOMACH_SIZE * (1 + this.strength))
+			{
+				this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);
+				return true;
+			}
 		else	
 			return false;
 	}
 	
-	/**
-	 * @return the power
-	 */
-	@Parameter(displayName = "Power", usageName = "power")
-	public int getPower() {
-		return power;
-	}
-
-	/**
-	 * @param power the power to set
-	 */
-	public void setPower(int power) {
-		this.power = power;
-		this.maxNumOfChildren = this.numberOfChildren + ( power/Constants.CHILDREN_PER_POWER );
-	}
 	
 	/**
 	 * @return the playerID
@@ -159,16 +138,22 @@ public class Maw extends Fightable {
 	public void step()
 	{
 		TrySpawnMobile();
+		TryIncrementStrength();
+
+		scheduler.updateSchulder();
+		
+		if(currentTask != null)
+			currentTask.execute();
 	}
 	
 	private void TrySpawnMobile()
 	{
-		if ( numberOfChildren < this.maxNumOfChildren && food > numberOfChildren  )
+		if ( Constants.MAW_BIRTHING_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
+			 && childrenBornCount > Constants.MAW_CHILDPOOP_COUNTER)
 		{	
 			Context<Object> context = ContextUtils.getContext(this);
 
 			Worker child = new Worker( space, grid, playerID );
-				child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
 				children.add(child);
 				context.add(child);
 			
@@ -180,17 +165,19 @@ public class Maw extends Fightable {
 			numberOfChildren++;		
 			food -= Constants.FOOD_PER_SPAWN;
 			NN.incrementDesire("food");
+			childrenBornCount = 0;
 		}
+		childrenBornCount ++;
 	}
 	
-
-	private void AddStrengthToChildren(float extra) {			
-			if(children.get(0).getStrength() < 300) {
-				for(Worker child : children) {
-					child.setStrength(child.getStrength() + extra);	
-					child.setSize(this.getPower()/Constants.MOBILE_SIZE_MULTIPLIER);
-				}
-			}		
+	private void TryIncrementStrength()
+	{
+		if ( Constants.MAW_STRENGTH_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
+			&& strengthCount > Constants.MAW_STRENGTH_COUNTER) {	
+				this.strength += 0.1;
+				strengthCount = 0;
+			}
+			strengthCount++;
 	}
 
 	/**
@@ -215,10 +202,6 @@ public class Maw extends Fightable {
 		this.children = children;
 	}
 
-	public int getMaxNumOfChildren() {
-		return maxNumOfChildren;
-	}
-
 	public int getNumOfLostChildren() {
 		return numOfLostChildren;
 	}
@@ -226,18 +209,27 @@ public class Maw extends Fightable {
 	/**
 	 * @return the food
 	 */
-	public int getFood() {
+	public float getFood() {
 		return food;
 	}
 
 	/**
 	 * @param food the food to set
 	 */
-	public void setFood(int food) {
+	public void setFood(float food) {
 		this.food = food;
-		resourceNode temp = this.NN.getResourceElement("food");
-		if( temp != null)
-			temp.setResourceCount(food);
 	}
 
+	public float getStrength() {
+		return strength;
+	}
+
+	public void setStrength(float strength) {
+		this.strength = strength;
+	}
+
+	
+	public KnowledgeBase getKnowledgeBase(){
+		return this.knowledgeBase;
+	}
 }

@@ -8,7 +8,8 @@ package Constants;
 public final class Constants {
 	// GENERAL
 	public static final int GRID_SIZE = 50;
-	
+	public static final int BIGGEST_DISTANCE = (int) Math.sqrt(2 * GRID_SIZE * GRID_SIZE);
+	public static final int DISTANCE_FROM_MAW = 10;
 	// INTERVALS
 	public static final int MOVE_START = 1;
 	public static final int GOD_MODE_START = 1000;
@@ -21,7 +22,13 @@ public final class Constants {
 	public static final float CREATURES_SIZE = 1;
 	public static final int CHILDREN_PER_POWER = 5;
 	public static final int MAW_FOOD_DESIRE_THRESHOLD = 5;
-	public static final int FOOD_PER_SPAWN = 1;
+	public static final int FOOD_PER_SPAWN = 5;
+	public static final int MAW_START_FOOD = 100; 
+	public static final float MAW_START_STRENGTH = 0;
+	public static final int MAW_BIRTHING_FACTOR = 4;
+	public static final int MAW_STRENGTH_FACTOR = 4;
+	public static final int MAW_CHILDPOOP_COUNTER = 1;
+	public static final int MAW_STRENGTH_COUNTER = 5;
 
 	public static final float MAW_ATTACK = 0;
 	public static final float MAW_HEALTH = 5000;
@@ -29,10 +36,13 @@ public final class Constants {
 	
 	// MOBILE CONSTANTS
 	public static final int MOBILE_SIZE_MULTIPLIER = 2;
-	public static final int MOBILE_STARTING_FOOD = 500; // 100 steps possibru
 	public static final int MOBILE_CARRY_CAPACITY = 1;
 	// on 50*50 grid this is [0-70] + [-inf - MOBILE_STARTING_FOOD]
-	public static final int MOBILE_GO_HOME_THRESHOLD = 500;  
+	public static final int MOBILE_GO_HOME_THRESHOLD = 50;  
+	public static final int MOBILE_STEPS_PER_FEWD = 150;
+	public static final int MOBILE_STOMACH_SIZE = 2;
+	public static final int MOBILE_STARTING_FOOD = MOBILE_STOMACH_SIZE * MOBILE_STEPS_PER_FEWD; // 1000 steps possibru
+	public static final int MOBILE_STARTVATION_THRESHOLD = 50;
 	
 	public static final float MOBILE_ATTACK = 5;
 	public static final float MOBILE_HEALTH = 100;

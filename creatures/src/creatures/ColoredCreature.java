@@ -5,6 +5,7 @@ package creatures;
 
 import java.awt.Color;
 
+import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
 
@@ -53,8 +54,7 @@ public class ColoredCreature extends DefaultStyleOGL2D {
 		if ( agent instanceof Mobile )
 		{
 			final Mobile mob = (Mobile) agent;
-			float size = 1 + (mob.getSize() / 100 );
-			return size;		
+			return (1 + (MawFinder.Instance().GetMaw(mob.playerID).getStrength()));	
 		}
 		
 		return 1;

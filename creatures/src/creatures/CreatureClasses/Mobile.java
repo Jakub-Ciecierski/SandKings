@@ -29,6 +29,7 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MobileScheduler;
 
 /**
  * @author Asmodiel
@@ -47,23 +48,16 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	// creature properties
-	private float strength = 0;
-	private float size = Constants.CREATURES_SIZE;
 	private int food = Constants.MOBILE_STARTING_FOOD;
 	
 	// formation stuff
 	protected boolean isInFormation = false;
-	
-	
+		
 	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
 	private Food carriedStuff;
 	
 	// stats
-	private int experience = 0;
-	private int intelligence = 0;
-	private int diplomacySkill = 0;
-	private int agression = 0;
 	private boolean isStarving = false;
 	
 	//Moving logic
@@ -78,6 +72,8 @@ public abstract class Mobile extends Fightable {
 	private List<Mobile> bros = new ArrayList<Mobile>();
 	
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MOBILE_MAX_KNOWLEDGE);
+	
+	protected MobileScheduler scheduler = new MobileScheduler(this);
 	
 	public Mobile( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
@@ -185,10 +181,9 @@ public abstract class Mobile extends Fightable {
 			this.carriedStuff = null;}
 	}
 	
-	public void Aggro()
+	public void Starve()
 	{
 		if(!isStarving) {
-			this.agression++;
 			this.food = Constants.MOBILE_STARTING_FOOD;
 			isStarving = true;
 			
@@ -321,7 +316,7 @@ public abstract class Mobile extends Fightable {
 			}
 		
 		// calculate gohome desire
-		if ( getGoHomeDesire( gp ) > Constants.MOBILE_GO_HOME_THRESHOLD )
+		if ( getGoHomeDesire( gp ) )
 		{
 			this.goingWhere = GoingWhere.ForFood;
 			GoHome();
@@ -330,10 +325,17 @@ public abstract class Mobile extends Fightable {
 		MoveRandomly( gp );
 	}
 	
-	private double getGoHomeDesire( GridPoint gp ) {
-		return 
-				Math.abs(Constants.MOBILE_STARTING_FOOD - food ) + 
-				MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
+	private boolean getGoHomeDesire( GridPoint gp ) {
+		double distance = MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
+		if( food < distance + Constants.MOBILE_STARTVATION_THRESHOLD)
+			return true;
+		else if ( distance < Constants.MOBILE_GO_HOME_THRESHOLD )
+			return false;
+		int random = RandomHelper.nextIntFromTo(0, (int) ( Constants.BIGGEST_DISTANCE - Constants.MOBILE_GO_HOME_THRESHOLD ));
+		if ( distance - Constants.MOBILE_GO_HOME_THRESHOLD / 3 > random )
+			return true;
+		
+		return false;
 	}
 
 	private void MoveRandomly( GridPoint gp )
@@ -398,50 +400,13 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	/**
-	 * @return the strength
+	 * @return the strength (of Maw)
 	 */
 	@Parameter(displayName = "strength", usageName = "strength")
 	public float getStrength() {
-		return this.strength;
+		return MawFinder.Instance().GetMaw(this.playerID).getStrength(); 
 	}
-	/**
-	 * @param strength the strength to set
-	 */
-	public void setStrength(float strength) {
-		this.strength = strength;
-		setDamage(Constants.MOBILE_ATTACK + strength * Constants.STRENGTH_MULTIPLY_FACTOR );
-	}
-	
-	/**
-	 * @return the experience
-	 */
-	@Parameter(displayName = "experience", usageName = "experience")
-	public int getExperience() {
-		return experience;
-	}
-	/**
-	 * @param experience the experience to set
-	 */
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-	
-	
-	/**
-	 * @return the intelligence
-	 */
-	@Parameter(displayName = "intelligence", usageName = "intelligence")
-	public int getIntelligence() {
-		return intelligence;
-	}
-	/**
-	 * @param intelligence the intelligence to set
-	 */
-	public void setIntelligence(int intelligence) {
-		this.intelligence = intelligence;
-	}
-	
-	
+
 	/**
 	 * @return the carryCapacity
 	 */
@@ -456,20 +421,6 @@ public abstract class Mobile extends Fightable {
 		this.carryCapacity = carryCapacity;
 	}
 	
-	
-	/**
-	 * @return the diplomacySkill
-	 */
-	@Parameter(displayName = "diplomacy", usageName = "diplomacySkill")
-	public int getDiplomacySkill() {
-		return diplomacySkill;
-	}
-	/**
-	 * @param diplomacySkill the diplomacySkill to set
-	 */
-	public void setDiplomacySkill(int diplomacySkill) {
-		this.diplomacySkill = diplomacySkill;
-	}
 
 	/**
 	 * @return the isGoingSomewhere
@@ -483,14 +434,6 @@ public abstract class Mobile extends Fightable {
 	 */
 	public void setGoingSomewhere(boolean isGoingSomewhere) {
 		this.isGoingSomewhere = isGoingSomewhere;
-	}
-
-	public float getSize() {
-		return this.size;
-	}
-
-	public void setSize(float size) {
-		this.size = size;
 	}
 
 	/**
@@ -527,6 +470,7 @@ public abstract class Mobile extends Fightable {
 	 * and saves it in mobile's knowledge base
 	 */
 	public void seekForKnowledge(){
+		// get all agents in mobiles vicinity
 		List<Agent> vicinity = getAgentsInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
 		
 		for(int i =0;i<vicinity.size();i++){
@@ -539,41 +483,25 @@ public abstract class Mobile extends Fightable {
 			if(infoType != InformationType.GARBAGE){
 
 				GridPoint pt = grid.getLocation(this);
-				
-				// time when it knowledge was added TODO
-				
+
 				double tickCount = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 				
 				Information info = new Information(agent, infoType, tickCount, pt);
 				
-				this.knowledgeBase.addInformation(info);
-				
-				if(Constants.DEBUG_MODE){
-					System.out.println("*********************************************************");
-					System.out.println("Agent #" + this.id +" Gained knowledge");
-					System.out.println("What: " + infoType.toString());
-					System.out.println("Where: [" + pt.getX() + + pt.getY() +"] ");
-					System.out.println("When: " + tickCount);
-					System.out.println("********************************************************* \n\n");
+				if(this.knowledgeBase.addInformation(info)){
+
+					if(Constants.DEBUG_MODE){
+						System.out.println("*********************************************************");
+						System.out.println("Agent #" + this.id +" Gained knowledge");
+						System.out.println("What: " + infoType.toString());
+						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
+						System.out.println("When: " + tickCount);
+						System.out.println("********************************************************* \n\n");
+					}
 				}
 			}
 		}
 	
-	}
-
-	/**
-	 * @return the agression
-	 */
-	public int getAgression() {
-		return agression;
-	}
-
-
-	/**
-	 * @param agression the agression to set
-	 */
-	public void setAgression(int agression) {
-		this.agression = agression;
 	}
 
 	/**
@@ -598,8 +526,7 @@ public abstract class Mobile extends Fightable {
 	public void setMove(boolean move) {
 		this.move = move;
 	}
-	
-	
+		
 	public GridPoint getGoingPoint() {
 		return goingPoint;
 	}
@@ -617,5 +544,9 @@ public abstract class Mobile extends Fightable {
 
 	public void setMyFormation(Formation myFormation) {
 		this.myFormation = myFormation;
-	}	
+	}
+	
+	public KnowledgeBase getKnowledgeBase(){
+		return this.knowledgeBase;
+	}
 }

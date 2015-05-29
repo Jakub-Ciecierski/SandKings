@@ -271,7 +271,7 @@ public class Formation extends Fightable {
 				StartCarrying( food );
 				break;
 			}
-			System.out.println("food too heavy");
+			//System.out.println("food too heavy");
 		}
 		
 	}

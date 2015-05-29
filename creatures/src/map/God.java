@@ -8,6 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
+import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import Constants.Constants;
 import Enemies.Enemy;
@@ -40,13 +41,20 @@ public class God {
 	}
 	
 	private void DropEnemy() {		
-		int rand = RandomHelper.nextIntFromTo(0, 9);
-		if (rand == 0) //10% chance of food drop
+		
+		if (RandomHelper.nextIntFromTo(0, 9) == 0) //10% chance of enemy drop
 		{ 
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
-			int enemyID = RandomHelper.nextIntFromTo( 0, 2 );
-			
+			int enemyID;
+			int rand = RandomHelper.nextIntFromTo( 0, 5 );
+			if( rand == 5 )
+				enemyID = 1;
+			else if ( rand == 4 || rand == 3 )
+				enemyID = 2;
+			else 
+				enemyID = 0;	
+						
 			float attack = 0;
 			float health = 0;
 			int droppedMeat = 0;
@@ -74,11 +82,21 @@ public class God {
 			}
 			
 			Enemy enemy = new Enemy( space, grid, enemyID, attack, health, droppedMeat );
-			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
-			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+			boolean isCloseToMaw = true;
+			int x = 0, y = 0;
+			while(isCloseToMaw) {
+				x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+				y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
+				GridPoint thisPoint = new GridPoint(x, y);
+				if (grid.getDistance(thisPoint, new GridPoint(5, 5)) > Constants.DISTANCE_FROM_MAW &&
+					grid.getDistance(thisPoint, new GridPoint(5, 45)) > Constants.DISTANCE_FROM_MAW &&
+					grid.getDistance(thisPoint, new GridPoint(45, 5)) > Constants.DISTANCE_FROM_MAW &&
+					grid.getDistance(thisPoint, new GridPoint(45, 45)) > Constants.DISTANCE_FROM_MAW)
+					isCloseToMaw = false;				
+			}
 			Object temp = grid.getObjectAt( x, y );
 			
-			if(!(temp instanceof Enemy)) //don't add enemy where food already is
+			if(!(temp instanceof Enemy)) //don't add enemy where enemy already is
 			{ 
 				context.add( enemy );
 				space.moveTo( enemy, x, y );
