@@ -105,6 +105,11 @@ public abstract class Fightable extends Agent{
 			  context.remove( this );	
 		}
 		
+		else if( this instanceof Formation)
+		{
+			  context.remove( this );	
+		}
+		
 		else
 	    {
 		     DropFood();

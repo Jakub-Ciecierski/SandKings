@@ -25,6 +25,7 @@ public class Enemy extends Fightable implements Comparable{
 			float attack, float health, int droppedMeat) {
 		super(space, grid, 0, attack, health, droppedMeat);
 		
+		this.enemyID = enemyID;
 		this.ratio = ( droppedMeat * 5000 )/ ( health + attack );
 	}
 	

@@ -12,7 +12,7 @@ import saf.v3d.ShapeFactory2D;
 import saf.v3d.scene.VSpatial;
 
 /**
- * @author masli
+ * @author Viet Ba
  *
  */
 public class EnemyTypes extends DefaultStyleOGL2D {
@@ -26,11 +26,12 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 	
 	@Override
 	public VSpatial getVSpatial(final Object resource, VSpatial spatial)  {
+		if (spatial == null) {
 		final Enemy enemy = (Enemy)resource;
 		String projectDir = "icons";
-		String iconDir = "spider.png";
+		String iconDir = "";
 		final int enemyID = enemy.getEnemyID();
-		if (spatial == null) {
+		
 			switch (enemyID) {
 			case 0:
 				iconDir = "spider.png";

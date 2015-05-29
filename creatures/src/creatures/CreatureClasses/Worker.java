@@ -23,20 +23,27 @@ public class Worker extends Mobile {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		if(isInFormation)
-			return;
+		seekForKnowledge();
+		if( !isInFormation() )
+		{
+		// send message
+		Attack();
 		if(this.getMove()) {
 			if ( this.IsAtDestination() )
 			{
 				this.ActOnArrival();
+				return;
 			} else if ( this.isGoingSomewhere() )
 			{
 				this.MoveThere();
 				this.MoveCarriedStuff();
+				return;
 			} else {
 				this.Explore();
 				this.MoveCarriedStuff();
+				return;
 			}
+		}
 			// send message
 			Attack();
 
