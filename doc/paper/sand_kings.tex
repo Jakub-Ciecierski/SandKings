@@ -67,24 +67,21 @@
 %-------------------------------------------------------------------
 \begin{abstract}
 
-The abstract about this document
-
+This document describes the multi-agent based simulation of George R. R. Martin's \textit{Sand Kings} created for the Agents Systems and Applications course at the Warsaw University of Technology. Application's main purpose was to analyse diplomacy between profit-driven entities in hostile environment, described in the novelette above. 
 
 \end{abstract}
 
 % ******************************* </VB> ******************************* %
+Sand Kings is a science-fiction novelette written by George R.R. Martin in 1979. Simon Kress, its main protagonist, is a collector of lethally dangerous and exotic animals. Due to his prolonging business trips they often die during his absence. Eventually, when a need for replacement occurred, he stumbled upon mysterious establishment, in which he found terrarium filled with four Sand King colonies. Each colony consisted of female, immobile Maw and number of insect-like mobiles that are controlled by their Maw through telepathy. Mobile's main purpose is to hunt and collect food for the Maw to digest, which only later they are able to feed on. The shopkeeper informed him, that the colonies would start to wage wars between each others with time.
+Excited with the vision, Kress bought four Sand King colonies and decided to have them installed in his flat. With parties to show off new pupils, Simon couldn't wait for the conflicts to emerge. As Sand Kings lived peacefully for the days to come, he started to starve them so they would become desperate. From graceful and highly intelligent entities they've turned into wild and murderous creatures that sought only to find more food to grow, which eventually have broke out of the terrarium they were imprisoned in.
 
-
-
-
-
-
-
-
+%probably to change the below or somethin
+The simulating application focuses on the stage slightly after extreme starvation of Sand Kings, when the only goal driving them was to amass extreme amounts of food. In order to do so they would kill the creatures that were thrown into terrarium, but also fight with each other and potentially kill - if that would prove profitable.
 % ******************************* <JC> ******************************* %
 
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
+
 %-------------------------------------------------------------------
 \section{Introduction}
 
@@ -106,11 +103,11 @@ The abstract about this document
 %-------------------------------------------------------------------
 \section{Tools}
 
-Repast, what why etc.
+Repast Simphony is an open source agent-based modeling toolkit that simplifies model creation and use. Out of wide variety of accessible tools, we have chosen it for the development of the simulating application, mainly due to its ease of use and possibility of run-time dynamic interaction with the simulation.
+Additional perk of the Repast toolkit was the extent of tutorial materials and quality of their description.
 
 
 % ******************************* </WZ> ******************************* %
-
 
 
 
@@ -143,9 +140,16 @@ What is an agent. Mobiles, Maw, God, Monsters etc.
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
 \subsection{Environment}
-Map, food
+\subsubsection{Map}
 
+The map is a 50x50 grid consisting of different shades of yellow and grey to represent the environment described in \textit{Sand Kings}, where the terrarium was filled with sand and rocks.
+\\
+\subsubsection{Food}
 
+In the simulation there are 5 types of food with different weight and calories which are proportional. They affect respectively how many mobiles are needed to carry each and how much maw's strength is increased by eating it.
+The first four types of food are dropped by the God agent. They are represented by \textbf{pizza}, \textbf{doughnut}, \textbf{grape} and \textbf{cabbage} icons, where the first one has the highest calorie value.
+\\
+The last type of food is dropped only by a living agent (either a mobile, maw or monster) when it dies. It is shown as \textbf{meat} in the simulation. For balancing purposes meat gives lesser calorie values than any other kind of food and amounts to roughly half of the mobile price. Depending on the agent type different numbers of meat are dropped, according to rule that the stronger initially is the agent the more food it will drop when dying.
 % ******************************* </MS + VB> ******************************* %
 
 
@@ -160,7 +164,7 @@ Map, food
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
 \subsection{Desire System}
-Things about the desire system
+Alliances, formations etc.
 
 
 % ******************************* </WZ> ******************************* %
@@ -258,7 +262,7 @@ Conclusions of this paper.
 Is it even needed ?
 
 \section*{Acknowledgment}
-Some thanks to Paprzycki ?
+Some thanks to Paprzycki ? hahahahaha for what
 
 
 \begin{thebibliography}{99}
