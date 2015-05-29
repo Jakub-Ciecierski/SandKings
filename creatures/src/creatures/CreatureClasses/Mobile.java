@@ -46,23 +46,16 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	// creature properties
-	private float strength = 0;
-	private float size = Constants.CREATURES_SIZE;
 	private int food = Constants.MOBILE_STARTING_FOOD;
 	
 	// formation stuff
 	protected boolean isInFormation = false;
-	
-	
+		
 	// carrying stuff
 	private int carryCapacity = Constants.MOBILE_CARRY_CAPACITY;
 	private Food carriedStuff;
 	
 	// stats
-	private int experience = 0;
-	private int intelligence = 0;
-	private int diplomacySkill = 0;
-	private int agression = 0;
 	private boolean isStarving = false;
 	
 	//Moving logic
@@ -179,10 +172,9 @@ public abstract class Mobile extends Fightable {
 			this.carriedStuff = null;}
 	}
 	
-	public void Aggro()
+	public void Starve()
 	{
 		if(!isStarving) {
-			this.agression++;
 			this.food = Constants.MOBILE_STARTING_FOOD;
 			isStarving = true;
 			
@@ -280,7 +272,7 @@ public abstract class Mobile extends Fightable {
 		if ( foodHere.size() > 0 ) PickUpFood( foodHere );
 		
 		// calculate gohome desire
-		if ( getGoHomeDesire( gp ) > Constants.MOBILE_GO_HOME_THRESHOLD )
+		if ( getGoHomeDesire( gp ) )
 		{
 			this.goingWhere = GoingWhere.ForFood;
 			GoHome();
@@ -290,10 +282,17 @@ public abstract class Mobile extends Fightable {
 		MoveRandomly( gp );
 	}
 	
-	private double getGoHomeDesire( GridPoint gp ) {
-		return 
-				Math.abs(Constants.MOBILE_STARTING_FOOD - food ) + 
-				MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
+	private boolean getGoHomeDesire( GridPoint gp ) {
+		double distance = MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
+		if( food < distance + Constants.MOBILE_STARTVATION_THRESHOLD)
+			return true;
+		else if ( distance < Constants.MOBILE_GO_HOME_THRESHOLD )
+			return false;
+		int random = RandomHelper.nextIntFromTo(0, (int) ( Constants.BIGGEST_DISTANCE - Constants.MOBILE_GO_HOME_THRESHOLD ));
+		if ( distance - Constants.MOBILE_GO_HOME_THRESHOLD / 3 > random )
+			return true;
+		
+		return false;
 	}
 
 	private void MoveRandomly( GridPoint gp )
@@ -354,50 +353,13 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	/**
-	 * @return the strength
+	 * @return the strength (of Maw)
 	 */
 	@Parameter(displayName = "strength", usageName = "strength")
 	public float getStrength() {
-		return this.strength;
+		return MawFinder.Instance().GetMaw(this.playerID).getStrength(); 
 	}
-	/**
-	 * @param strength the strength to set
-	 */
-	public void setStrength(float strength) {
-		this.strength = strength;
-		setDamage(Constants.MOBILE_ATTACK + strength * Constants.STRENGTH_MULTIPLY_FACTOR );
-	}
-	
-	/**
-	 * @return the experience
-	 */
-	@Parameter(displayName = "experience", usageName = "experience")
-	public int getExperience() {
-		return experience;
-	}
-	/**
-	 * @param experience the experience to set
-	 */
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-	
-	
-	/**
-	 * @return the intelligence
-	 */
-	@Parameter(displayName = "intelligence", usageName = "intelligence")
-	public int getIntelligence() {
-		return intelligence;
-	}
-	/**
-	 * @param intelligence the intelligence to set
-	 */
-	public void setIntelligence(int intelligence) {
-		this.intelligence = intelligence;
-	}
-	
-	
+
 	/**
 	 * @return the carryCapacity
 	 */
@@ -412,20 +374,6 @@ public abstract class Mobile extends Fightable {
 		this.carryCapacity = carryCapacity;
 	}
 	
-	
-	/**
-	 * @return the diplomacySkill
-	 */
-	@Parameter(displayName = "diplomacy", usageName = "diplomacySkill")
-	public int getDiplomacySkill() {
-		return diplomacySkill;
-	}
-	/**
-	 * @param diplomacySkill the diplomacySkill to set
-	 */
-	public void setDiplomacySkill(int diplomacySkill) {
-		this.diplomacySkill = diplomacySkill;
-	}
 
 	/**
 	 * @return the isGoingSomewhere
@@ -439,14 +387,6 @@ public abstract class Mobile extends Fightable {
 	 */
 	public void setGoingSomewhere(boolean isGoingSomewhere) {
 		this.isGoingSomewhere = isGoingSomewhere;
-	}
-
-	public float getSize() {
-		return this.size;
-	}
-
-	public void setSize(float size) {
-		this.size = size;
 	}
 
 	/**
@@ -515,21 +455,6 @@ public abstract class Mobile extends Fightable {
 			}
 		}
 	
-	}
-
-	/**
-	 * @return the agression
-	 */
-	public int getAgression() {
-		return agression;
-	}
-
-
-	/**
-	 * @param agression the agression to set
-	 */
-	public void setAgression(int agression) {
-		this.agression = agression;
 	}
 
 	/**

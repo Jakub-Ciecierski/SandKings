@@ -11,7 +11,7 @@ public class FoodNOPE extends Message {
 		if ( recipient instanceof Mobile )
 		{
 			Mobile a = (Mobile) recipient;
-			a.Aggro();
+			a.Starve();
 		}
 	}
 
