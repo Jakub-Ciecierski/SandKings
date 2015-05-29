@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import communication.messages.DamageMessage;
+
+import repast.simphony.context.Context;
+import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
+import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
+import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import map.Food;
 import Constants.Constants;
 import creatures.CreatureClasses.*;
@@ -17,8 +24,11 @@ import creatures.CreatureClasses.Mobile.GoingWhere;
 public class Formation extends Fightable {
 	
 	public Formation(ContinuousSpace<Object> space, Grid<Object> grid,
-			int setPlayerID) {
-		super(space, grid, setPlayerID);
+			int playerID) {
+		super(space, grid, 5);
+		if ( grid == null ) System.out.println("formation grid null");
+		if ( space == null ) System.out.println("formation space null");
+		this.playerID = playerID;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -31,7 +41,9 @@ public class Formation extends Fightable {
 		Explore,
 		Wpierdol
 	}
-	//private int playerID = 0;
+	private List<Integer> owners = new ArrayList<Integer>();
+	
+	private int playerID = 0;
 	private int neededSize = 0;
 	//private int carryCapacity = 0;
 	//private float size = Constants.CREATURES_SIZE;
@@ -39,13 +51,11 @@ public class Formation extends Fightable {
 	//Moving logic
 	private boolean isGoingSomewhere = false;
 	private GridPoint goingPoint;
-	private GoingWhere goingWhere = GoingWhere.Uknown;
-	
-	// simulation props
-	private ContinuousSpace < Object > space; 
-	private Grid< Object > grid;	
+
+	private GoingWhere goingWhere = GoingWhere.Uknown;	
 	
 	List<Mobile> soldiers = new ArrayList<Mobile>();
+	List<Mobile> pendingSoldiers = new ArrayList<Mobile>();
 	
 	// carrying stuff
 	private int carryCapacity = 0;
@@ -53,8 +63,9 @@ public class Formation extends Fightable {
 	private List<Food> carriedStuff = new ArrayList<Food>();	
 	
 	// only called when we need a new member
-	public void findNewMember()
+	public void findNewMember(int ID)
 	{
+		if ( grid == null ) System.out.println("find member: formation grid null");
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for the surrounding neighborhood
@@ -68,9 +79,10 @@ public class Formation extends Fightable {
 					
 					Mobile mobile = (Mobile) obj;
 					if( 
-							 mobile.getPlayerID() == this.playerID && 
+							mobile.getPlayerID() == ID && 
 							!mobile.isInFormation() &&
-							!mobile.isGoingSomewhere()
+							!mobile.isGoingSomewhere() && 
+							this.getSize() + this.pendingSoldiers.size() < this.getNeededSize()
 						)
 					{
 						this.addToFormation( mobile );
@@ -81,14 +93,45 @@ public class Formation extends Fightable {
 	}
 	public void addToFormation( Mobile m )
 	{
-		this.soldiers.add(m);
-		this.setCarryCapacity(this.getCarryCapacity() + m.getCarryCapacity());
+		System.out.println("   found new member");
+		
+		this.pendingSoldiers.add(m);
+		
+		m.setInFormation(true);
+		m.setGoingSomewhere(true);
+		m.setGoingPoint( this.goingPoint );
+		m.setMyFormation(this);
 	}
+	
+	public void addPending()
+	{
+		GridPoint currentPos = grid.getLocation(this);
+		for( int i = 0; i < pendingSoldiers.size(); i++)
+		{
+			if(!pendingSoldiers.get(i).IsAtLocation(currentPos))
+			{
+				pendingSoldiers.get(i).moveTowards(currentPos);
+			}
+			else
+			{
+				soldiers.add(pendingSoldiers.get(i));
+				this.setCarryCapacity(this.getCarryCapacity() + pendingSoldiers.get(i).getCarryCapacity());
+				pendingSoldiers.remove(i);
+				i--;
+			}
+		}
+	}
+	
+
 	public void kickOut( Mobile m )
 	{
+		System.out.println("   kicked out member");
 		m.setInFormation(false);
+		m.setGoingSomewhere(false);
+		m.setGoingPoint(null);
+		m.setMyFormation(null);
 		this.setCarryCapacity(this.getCarryCapacity() - m.getCarryCapacity());
-		this.soldiers.remove(m);
+		//this.soldiers.remove(m);
 	}
 	
 	public int getSize()
@@ -117,22 +160,30 @@ public class Formation extends Fightable {
 		}
 		return food;
 	}
-	public void PickUpFood( Food f )
-	{
-		// TODO: do this.
-	}
+	
 	public void MoveCarriedStuff()
 	{
 		GridPoint gp = grid.getLocation(this);
-		space.moveTo(this.carriedStuff, gp.getX(), gp.getY());
-		grid.moveTo(this.carriedStuff, gp.getX(), gp.getY());
+		@SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext( this );
+		for ( Food f : carriedStuff )
+		{
+			if ( context.contains(f) )
+			{
+				space.moveTo(f, gp.getX(), gp.getY());
+				grid.moveTo( f, gp.getX(), gp.getY());
+			}
+		}
 	}	
 	public void StartCarrying( Food food )
 	{
 		this.carriedStuff.add(food);
 		food.setPicked(true);
 		setCarryCapacity(getCarryCapacity() + food.getWeight()); 
+		System.out.println("Formation " + getID() + " picked up food.");
 				
+		//this.IsAtDestination(false);
+		this.setGoingSomewhere(true);
 		this.goingWhere = GoingWhere.HomeWithFood;
 		this.goingPoint = MawFinder.Instance().GetMawPosition(this.playerID);		
 	}	
@@ -145,21 +196,32 @@ public class Formation extends Fightable {
 	}
 	public void Disband()
 	{
-		for( Mobile m : soldiers)
+		if ( soldiers.size() > 0 )
+		synchronized ( soldiers )
 		{
-			this.kickOut( m );
-		}		
+			for( Mobile m : soldiers)
+			{
+				this.kickOut( m );
+			}		
+		}
+		soldiers.clear();
 		this.Die();
 	}
 	public void MoveThere ( )
 	{
+		GridPoint gp = grid.getLocation(this);
+		@SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext( this );
 		for ( Mobile m : soldiers )
 		{
-			m.moveTowards( this.goingPoint );
+				space.moveTo(m, gp.getX(), gp.getY());
+				grid.moveTo( m, gp.getX(), gp.getY());
 		}
+		this.moveTowards( this.goingPoint );
 	}
 	public void ActOnArrival()
 	{
+		System.out.print("Formation " + getID() + " arrived");
 		switch ( this.goingWhere )
 		{
 			case Explore:
@@ -167,16 +229,18 @@ public class Formation extends Fightable {
 				break;
 			case ForFood:
 					//AskForFood();
+						System.out.println("  for food.");
 					PickupFood();
 				break;
 			case Home:
 					// TODO
 				break;
 			case HomeWithFood:
-					//DropFood();
+						System.out.println("  home with food.");
+					DropCarriedFood();
 				break;
 			case Wpierdol:
-				
+					
 				break;
 			case Uknown: break;
 			default: break;
@@ -184,10 +248,15 @@ public class Formation extends Fightable {
 	}	
 	@SuppressWarnings("unchecked")
 	private void PickupFood() {
+		
+		
+		
 		// TODO Auto-generated method stub
 		List<Food> foodHere = FoodAtPoint( grid.getLocation(this) );
 		if ( foodHere.size() <= 0 ) 
 		{
+			System.out.println("no food found");
+			this.Disband();
 			return;
 		}
 		
@@ -202,32 +271,163 @@ public class Formation extends Fightable {
 				StartCarrying( food );
 				break;
 			}
+			System.out.println("food too heavy");
 		}
 		
 	}
 
+	private void DropCarriedFood( )
+	{
+		if ( carriedStuff != null )
+		{
+			Maw m = MawFinder.Instance().GetMaw( this.playerID );
+			for( Food f : carriedStuff )
+				m.ReceiveFood( f );
+			this.carriedStuff = new ArrayList<Food>();
+		}
+		this.Disband();
+	}	
+	
+	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		if ( this.getSize() < this.getNeededSize() )
+		addPending();
+		FormationAttackCheck();
+		if(isFighting)
 		{
-			this.findNewMember();
-		}
-		if( carriedWeight > carryCapacity )
+			Attack();
 			return;
-		
+		}
+		// ARRIVED.
 		if ( this.IsAtDestination() )
 		{
 			this.ActOnArrival();
-		} else if ( this.isGoingSomewhere() )
+			return;
+		} 
+		
+		// NOT ENOUGH BROS IN FORMATION
+		if ( this.getSize() < this.getNeededSize() )
 		{
-			this.MoveThere();
-			this.MoveCarriedStuff();
-		} else {
-			//this.Explore();
-			this.Disband();
-			//this.MoveCarriedStuff();
+			System.out.println(
+				"Formation " + getID() + " ["+ this.getSize() + "/" + this.getNeededSize() + "]" + 
+					" called for bros.");
+			this.findNewMember(this.playerID);
+			return;
+		}
+		
+		// FOOD LOGIC
+		if ( this.goingWhere == GoingWhere.ForFood || this.goingWhere == GoingWhere.HomeWithFood )
+		{
+
+			// MOVE SOMEWHERE
+			if ( this.isGoingSomewhere() )
+			{
+				System.out.println(
+						"Formation " + getID() + " ["+ this.getSize() +"]" + 
+							" going somewhere: " + this.goingPoint.getX() + ":" + this.goingPoint.getY() );
+				this.MoveThere();
+				this.MoveCarriedStuff();
+			}
+		}
+		
+		// WPIERDOL LOGIC
+		if ( this.goingWhere == GoingWhere.Wpierdol )
+		{
+			// look for enemies in 5x5 NH
+			GridPoint closestEnemy = AreEnemiesNearby();
+			// if NH contains enemies
+			if( closestEnemy != null)
+			{
+				moveTowards(closestEnemy);
+				return;
+			}
+			else
+			{
+				MoveThere();
+			}
+		}
+		
+
+	}
+
+	public void FormationAttackCheck(){
+		GridPoint pt = grid.getLocation ( this );
+		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
+		Mobile . class , 1 , 1);
+		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
+		for ( GridCell <Mobile> cell : gridCells ) {
+			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if(obj instanceof Fightable && (Fightable)obj != this){
+					
+					Fightable mobile = (Fightable)obj;
+					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
+					{
+						isFighting = true;
+					}
+				}
+			}
+		}
+		isFighting = false;
+	}
+	public GridPoint AreEnemiesNearby(){
+		GridPoint pt = grid.getLocation ( this );
+		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
+		Mobile . class , 5 , 5);
+		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
+		List <GridPoint> enemies = new ArrayList<GridPoint>();
+		for ( GridCell <Mobile> cell : gridCells ) {
+			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if(obj instanceof Fightable && (Fightable)obj != this){
+					Fightable mobile = (Fightable)obj;
+					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
+					{
+						enemies.add(cell.getPoint());
+					}
+				}
+			}
+		}
+		
+		if( enemies.size() > 0)
+			return findClosest(enemies, pt);
+		
+		return null;
+	}
+	
+	public GridPoint findClosest(List <GridPoint> enemies, GridPoint here){
+		GridPoint closest = enemies.get(0);
+		for( int i = 0; i < enemies.size(); i++){
+			if(grid.getDistance(closest, here) > grid.getDistance(here, enemies.get(i)))
+			{
+				closest = enemies.get(i);
+			}
+		}
+		
+		return closest;
+	}
+	
+	public void moveTowards( GridPoint gp )
+	{
+		
+		// only move if not already there
+		if ( !gp.equals( grid.getLocation(this) ) )
+		{
+			
+			NdPoint thisLocation = space.getLocation(this);
+			NdPoint goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
+			space.moveByVector(this, 1, angle, 0);
+			thisLocation = space.getLocation(this);	
+			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
+			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
+			
+			for ( Mobile m : soldiers )
+			{
+					space.moveTo(m, thisLocation.getX(), thisLocation.getY());
+					grid.moveTo( m, (int)thisLocation.getX(), (int)thisLocation.getY());
+			}
 		}
 	}
+	
 
 	/**
 	 * @return the carryCapacity
@@ -282,6 +482,26 @@ public class Formation extends Fightable {
 	 * @param neededSize the neededSize to set
 	 */
 	public void setNeededSize(int neededSize) {
-		this.neededSize = neededSize;
+		this.neededSize = neededSize + 1;
 	}
+	
+	public GridPoint getGoingPoint() {
+		return goingPoint;
+	}
+	public void setGoingPoint(GridPoint goingPoint) {
+		this.goingPoint = goingPoint;
+	}
+	public int getCarriedWeight() {
+		return carriedWeight;
+	}
+	public void setCarriedWeight(int carriedWeight) {
+		this.carriedWeight = carriedWeight;
+	}
+	public List<Food> getCarriedStuff() {
+		return carriedStuff;
+	}
+	public void setCarriedStuff(List<Food> carriedStuff) {
+		this.carriedStuff = carriedStuff;
+	}	
+	
 }

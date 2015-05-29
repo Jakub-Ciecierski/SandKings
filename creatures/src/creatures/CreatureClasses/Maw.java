@@ -101,8 +101,8 @@ public class Maw extends Fightable {
 	
 	public boolean hasFood()
 	{
-		System.out.println("?: " + NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD +" \n");
-		System.out.println(">: " +this.getFood() +" \n");
+		//System.out.println("?: " + NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD +" \n");
+		//System.out.println(">: " +this.getFood() +" \n");
 
 		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
 			return true;

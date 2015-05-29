@@ -12,6 +12,7 @@ import communication.messages.AskForHelpMessage;
 import communication.messages.QueryMessage;
 import creatures.Agent;
 import creatures.Fightable;
+import creatures.Formation;
 import map.Food;
 import Constants.Constants;
 import Enemies.Enemy;
@@ -70,6 +71,9 @@ public abstract class Mobile extends Fightable {
 	private GridPoint goingPoint;
 	private GoingWhere goingWhere = GoingWhere.Uknown;
 	private boolean move = true;
+	
+	
+	private Formation myFormation;
 
 	private List<Mobile> bros = new ArrayList<Mobile>();
 	
@@ -115,6 +119,7 @@ public abstract class Mobile extends Fightable {
 		moveTowards( goingPoint );
 	}
 	
+	
 	public boolean IsAtDestination()
 	{
 		if ( goingPoint == null ) return false;
@@ -140,7 +145,7 @@ public abstract class Mobile extends Fightable {
 					// TODO
 				break;
 			case HomeWithFood:
-					DropFood();
+					DropCarriedFood();
 				break;
 			case Wpierdol:
 				
@@ -151,6 +156,7 @@ public abstract class Mobile extends Fightable {
 		this.goingPoint = null;
 		this.isGoingSomewhere = false;
 		this.goingWhere = GoingWhere.Uknown;
+		//System.out.println("        mobile arrived.");
 	}
 	
 	private void AskForFood()
@@ -170,7 +176,7 @@ public abstract class Mobile extends Fightable {
 		this.food = Constants.MOBILE_STARTING_FOOD;
 	}
 
-	private void DropFood( )
+	private void DropCarriedFood( )
 	{
 		if ( carriedStuff != null )
 		{
@@ -206,10 +212,20 @@ public abstract class Mobile extends Fightable {
 			this.setMove(false);
 		
 	}
+	
+	public boolean IsAtLocation(GridPoint point)
+	{
+		GridPoint currentPos = grid.getLocation(this);
+		if ( currentPos == null ) return false;
+		
+		return ( point.getX() == currentPos.getX() && point.getY() == currentPos.getY() );
+	}
+	
 	private int CallForBros(int neededBros)
 	{
 		//System.out.println("bros count: " + bros.size() + " needed bros: " + neededBros);
-		GridPoint pt = grid.getLocation ( this );
+		/*
+		 * GridPoint pt = grid.getLocation ( this );
 		int x = 5, y = 5;
 		
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
@@ -232,8 +248,25 @@ public abstract class Mobile extends Fightable {
 						return bros.size();
 				}
 			}
-		}
-		return bros.size();
+		}*/
+		Context<Object> context = ContextUtils.getContext(this);
+		Formation f = new Formation( space, grid, playerID);
+		
+		context.add(f);
+		f.addToFormation(this);
+		
+		NdPoint spacePt = space.getLocation(this);
+		GridPoint gridPt = grid.getLocation(this);
+		space.moveTo( f, spacePt.getX(), spacePt.getY());
+		grid.moveTo(  f, gridPt.getX(),  gridPt.getY() );
+		
+		f.setGoingWhere( Formation.GoingWhere.ForFood ); // what's the formation doing?
+		f.setGoingPoint(gridPt); // where's the food?
+		f.setNeededSize(neededBros);
+		
+		System.out.println("formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
+		
+		return neededBros;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -245,20 +278,24 @@ public abstract class Mobile extends Fightable {
 		// iterate over foodHere
 		for ( Food food : foodHere )
 		{
+			if(food.isPicked())
+				continue;
 			// check if food too heavy
-			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity && !food.isPicked() )
+			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity )
 			{	// lift
 				StartCarrying( food );
 				this.goingWhere = GoingWhere.HomeWithFood;
 				GoHome();
 				break; 
-			} else
+			} else 
 			{
 				//this.move = false;
 				
-				//int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity - this.carriedWeight));
+				
+				int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity));
+				System.out.println("call for bros " + neededBros );
 				//if(bros.size() < neededBros) 
-				//	CallForBros(neededBros);
+					CallForBros(neededBros);
 				
 				//System.out.println("Enough bros!");
 				
@@ -277,16 +314,19 @@ public abstract class Mobile extends Fightable {
 		// TODO: remember food in vicinity
 	
 		List<Food> foodHere = FoodAtPoint( gp );
-		if ( foodHere.size() > 0 ) PickUpFood( foodHere );
+		if ( foodHere.size() > 0 ) 
+			{
+				PickUpFood( foodHere );
+				return;
+			}
 		
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) > Constants.MOBILE_GO_HOME_THRESHOLD )
 		{
 			this.goingWhere = GoingWhere.ForFood;
 			GoHome();
+			return;
 		}
-		
-		// move randomly
 		MoveRandomly( gp );
 	}
 	
@@ -323,11 +363,15 @@ public abstract class Mobile extends Fightable {
 
 	public void moveTowards( GridPoint gp )
 	{
+		
 		// only move if not already there
 		if ( !gp.equals( grid.getLocation(this) ) )
 		{
 			NdPoint thisLocation = space.getLocation(this);
-			NdPoint goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+			NdPoint goalLocation;
+			if ( isInFormation() && this.getMyFormation() != null ) goalLocation = new NdPoint( myFormation.getGoingPoint().getX(), myFormation.getGoingPoint().getY());
+			else goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+			if ( isInFormation() ) System.out.println("      m going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
@@ -554,4 +598,24 @@ public abstract class Mobile extends Fightable {
 	public void setMove(boolean move) {
 		this.move = move;
 	}
+	
+	
+	public GridPoint getGoingPoint() {
+		return goingPoint;
+	}
+
+
+	public void setGoingPoint(GridPoint goingPoint) {
+		this.goingPoint = goingPoint;
+	}
+
+
+	public Formation getMyFormation() {
+		return myFormation;
+	}
+
+
+	public void setMyFormation(Formation myFormation) {
+		this.myFormation = myFormation;
+	}	
 }
