@@ -35,6 +35,13 @@ public abstract class Fightable extends Agent{
 	private float health = 0;
 	private int droppedMeat = 0;
 	
+	public void updateDanger(){
+		danger = damage * health;
+	}
+	public void updateProfit(){
+		//profit = droppedMeat * 
+	}
+	
 	public float getDamage() {
 		return damage;
 	}
