@@ -8,7 +8,6 @@ import Enemies.Enemy;
 import repast.simphony.context.Context;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
@@ -35,6 +34,17 @@ public abstract class Fightable extends Agent{
 	private float health = 0;
 	private int droppedMeat = 0;
 	
+	public void updateDanger(){
+		danger = damage * health;
+	}
+	public void updateProfit(){
+		profit = droppedMeat * Constants.STEAK_CALORIES;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
+	}
+	
 	public float getDamage() {
 		return damage;
 	}
@@ -46,6 +56,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setDroppedMeat(int droppedMeat) {
 		this.droppedMeat = droppedMeat;
+		updateProfit();
 	}
 	
 	public float getHealth() {
@@ -53,6 +64,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setHealth(float health) {
 		this.health = health;
+		updateDanger();
 	}
 	
 	
@@ -72,6 +84,8 @@ public abstract class Fightable extends Agent{
 		this.damage = damage;
 		this.health = health;
 		this.droppedMeat = droppedMeat;
+		updateDanger();
+		updateProfit();
 	}
 
 	public void dealDamage(float damage){

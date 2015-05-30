@@ -16,16 +16,29 @@ import repast.simphony.space.grid.GridPoint;
  * @author Viet Ba
  *
  */
+@SuppressWarnings("rawtypes")
 public class Enemy extends Fightable implements Comparable {
 	private int enemyID; //enemy type
-	private double ratio;
 	
 	public Enemy (ContinuousSpace<Object> space, Grid<Object> grid, int enemyID,
 			float attack, float health, int droppedMeat) {
 		super(space, grid, 0, attack, health, droppedMeat);
-		
+
 		this.enemyID = enemyID;
-		this.ratio = ( droppedMeat * 5000 )/ ( health + attack );
+		
+		updateDanger();
+		updateProfit();
+	}
+	
+	public void updateDanger(){
+		danger = getDamage() * getHealth();
+	}
+	public void updateProfit(){
+		profit = getDroppedMeat() * Constants.STEAK_CALORIES;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
 	}
 	
 	@Parameter(displayName = "Enemy", usageName = "enemyID")
@@ -89,10 +102,6 @@ public class Enemy extends Fightable implements Comparable {
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
 			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
 		}
-	}
-
-	public double getRatio() {
-		return ratio;
 	}
 
 	@Override

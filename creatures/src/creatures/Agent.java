@@ -16,6 +16,9 @@ public abstract class Agent {
 	static private int nextID = 0;
 	protected int id; 
 	
+	protected float danger = 0;
+	protected float profit = 0;
+	
 	protected Task currentTask;
 	
 	public Agent(){
@@ -40,5 +43,21 @@ public abstract class Agent {
 
 	public void setCurrentTask(Task task){
 		this.currentTask = task;
+	}
+
+	public float getDanger() {
+		return danger;
+	}
+
+	public void setDanger(float danger) {
+		this.danger = danger;
+	}
+
+	public float getProfit() {
+		return profit;
+	}
+
+	public void setProfit(float profit) {
+		this.profit = profit;
 	}
 }
