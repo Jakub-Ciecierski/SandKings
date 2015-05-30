@@ -55,18 +55,20 @@ public final class Constants {
 	public static final int ENEMIES_MARGIN = 3;
 	public static final int MAX_NUMBER_OF_ENEMIES = 10;
 	
-	public static final float SPIDER_ATTACK = 40;
-	public static final float SPIDER_HEALTH = 400;
-	public static final int SPIDER_MEAT_NO = 8;
+	public static final float SPIDER_ATTACK = 15;
+	public static final float SPIDER_HEALTH = 200;
+	public static final int SPIDER_MEAT_NO = 1;
 	
-	public static final float SNAKE_ATTACK = 90;
-	public static final float SNAKE_HEALTH = 1000;
-	public static final int SNAKE_MEAT_NO = 12;
+	public static final float SNAKE_ATTACK = 50;
+	public static final float SNAKE_HEALTH = 800;
+	public static final int SNAKE_MEAT_NO = 20;
 	
-	public static final float SCORPION_ATTACK = 60;
-	public static final float SCORPION_HEALTH = 800;
-	public static final int SCORPION_MEAT_NO = 10;
+	public static final float SCORPION_ATTACK = 25;
+	public static final float SCORPION_HEALTH = 400;
+	public static final int SCORPION_MEAT_NO = 4;
 	
+	public static final int HEALTH_CONSTANT = 3;
+	public static final int ATTACK_CONSTANT = 4;	
 	
 	// FOOD CONSTANTS
 	public static final int PIZZA_CALORIES = 50;
@@ -74,7 +76,8 @@ public final class Constants {
 	public static final int GRAPE_CALORIES = 15;
 	public static final int CABBAGE_CALORIES = 5;
 	public static final int MEAT_CALORIES = 3;
-	
+	public static final int ENEMY_MEAT_CALORIES = 10;
+
 	public static final int PIZZA_WEIGHT = 7;
 	public static final int DONUT_WEIGHT = 5;
 	public static final int GRAPE_WEIGHT = 3;
