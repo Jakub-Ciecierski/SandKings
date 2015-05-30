@@ -170,9 +170,11 @@ The last type of food is dropped only by a living agent (either a mobile, maw or
 %-------------------------------------------------------------------
 \subsection{Communication}
 A simply mechanism was constructed to create an inter-agent communication.
-Each agent can send a message to another by adding a packet i.e. the message, its send and 
+Each agent can send a message to another by adding a packet i.e. the message, its sender and 
 recipient to the message queue.
-The queue notified by change will process a given packet, and fire a specific handler for
+The queue notified by change will process a given packet, and fire a specific handler for the message type.
+Based on the sender's needs and the recipient's current (TODO storage ??), a response is sent.
+The usage of messages ranges from informing other agents of their findings in the environment like food or enemies, to even the combat system.
 
 
 % ******************************* </JC> ******************************* %
@@ -187,7 +189,12 @@ The queue notified by change will process a given packet, and fire a specific ha
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
 \subsection{Knowledge Base}
-Things about knowledge, communication etc.
+
+Mobiles and maws gather information about their surroundings. 
+Each of mentioned agents has a limited number of information they can remember simultaneously.
+For mobiles this number is relatively small. Since the purpose of maw is to manage the entire mobile population, its knowledge is much bigger and can easily hold all the interesting information about the entire map.
+Each gathered information can be either marked as \textit{useless} or \textit{forgotten}
+
 
 % ******************************* </JC> ******************************* %
 
@@ -195,7 +202,7 @@ Things about knowledge, communication etc.
 
 
 
-% ******************************* <WZ> ******************************* %
+% ******************************* <JC> ******************************* %
 
 
 %-------------------------------------------------------------------
@@ -204,7 +211,7 @@ Things about knowledge, communication etc.
 Agents' actions are 
 
 
-% ******************************* </WZ> ******************************* %
+% ******************************* </JC> ******************************* %
 
 
 
