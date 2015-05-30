@@ -48,7 +48,7 @@ public class InformFoodTask extends Task {
 			InformMessage informMessage = new InformMessage(newInfo);
 			mobile.sendMessage(maw, informMessage);
 			
-			//maw.getKnowledgeBase().addInformation(newInfo);
+			maw.getKnowledgeBase().addInformation(newInfo);
 			
 		}
 

@@ -20,6 +20,7 @@ import repast.simphony.util.SimUtilities;
 public class Enemy extends Fightable implements Comparable{
 	private int enemyID; //enemy type
 	private double ratio;
+	private int tickCount;
 	
 	public Enemy (ContinuousSpace<Object> space, Grid<Object> grid, int enemyID,
 			float attack, float health, int droppedMeat) {

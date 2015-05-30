@@ -12,11 +12,11 @@ public final class Constants {
 	public static final int DISTANCE_FROM_MAW = 10;
 	// INTERVALS
 	public static final int MOVE_START = 1;
-	public static final int GOD_MODE_START = 1000;
-	public static final int GOD_MODE_INTERVAL = 2000;
-	public static final int ENEMIES_MOVE_INTERVAL = 1000;
-	public static final int MOBILE_SPAWN_INTERVAL = 2000;
-	public static final int CREATURES_MOVE_INTERVAL = 100;
+	public static final int GOD_MODE_START = 10;
+	public static final int GOD_MODE_INTERVAL = 20;
+	public static final int ENEMIES_MOVE_INTERVAL = 10;
+	public static final int MOBILE_SPAWN_INTERVAL = 20;
+	public static final int CREATURES_MOVE_INTERVAL = 1;
 	
 	// MAW CONSTANTS
 	public static final float CREATURES_SIZE = 1;
@@ -48,7 +48,6 @@ public final class Constants {
 	
 	public static final float MOBILE_ATTACK = 5;
 	public static final float MOBILE_HEALTH = 100;
-	public static final int MOBILE_CALORIES = 5;
 	public static final int MOBILE_MEAT_NO = 1;
 	
 	public static final float STRENGTH_MULTIPLY_FACTOR = (float) 0.2;
@@ -56,18 +55,17 @@ public final class Constants {
 	public static final int ENEMIES_MARGIN = 3;
 	public static final int MAX_NUMBER_OF_ENEMIES = 10;
 	
-	public static final float SPIDER_ATTACK = 50;
+	public static final float SPIDER_ATTACK = 40;
 	public static final float SPIDER_HEALTH = 400;
-	public static final int SPIDER_CALORIES = 50;
-	public static final int SPIDER_MEAT_NO = 10;
+	public static final int SPIDER_MEAT_NO = 8;
 	
-	public static final float SNAKE_ATTACK = 100;
+	public static final float SNAKE_ATTACK = 90;
 	public static final float SNAKE_HEALTH = 1000;
-	public static final int SNAKE_MEAT_NO = 15;
+	public static final int SNAKE_MEAT_NO = 12;
 	
-	public static final float SCORPION_ATTACK = 75;
+	public static final float SCORPION_ATTACK = 60;
 	public static final float SCORPION_HEALTH = 800;
-	public static final int SCORPION_MEAT_NO = 12;
+	public static final int SCORPION_MEAT_NO = 10;
 	
 	
 	// FOOD CONSTANTS
@@ -77,9 +75,9 @@ public final class Constants {
 	public static final int CABBAGE_CALORIES = 5;
 	public static final int MEAT_CALORIES = 3;
 	
-	public static final int PIZZA_WEIGHT = 5;
-	public static final int DONUT_WEIGHT = 3;
-	public static final int GRAPE_WEIGHT = 2;
+	public static final int PIZZA_WEIGHT = 7;
+	public static final int DONUT_WEIGHT = 5;
+	public static final int GRAPE_WEIGHT = 3;
 	public static final int CABBAGE_WEIGHT = 1;
 	public static final int MEAT_WEIGHT = 1;
 	
