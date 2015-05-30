@@ -4,6 +4,7 @@
 package map;
 
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -22,7 +23,6 @@ public class God {
 
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
-	private int enemyCount = 0;
 	
 	public God (ContinuousSpace<Object> space, Grid<Object> grid) { 
 		this.space = space;
@@ -36,8 +36,7 @@ public class God {
 	public void step()
 	{
 		DropFood();
-		if(enemyCount <= Constants.MAX_NUMBER_OF_ENEMIES)
-			DropEnemy();
+		DropEnemy();
 	}
 	
 	private void DropEnemy() {		
@@ -59,23 +58,36 @@ public class God {
 			float health = 0;
 			int droppedMeat = 0;
 			
+			//values for increasing health and attack
+			float sqrtTickCount = (float)Math.sqrt(RunEnvironment.getInstance().getCurrentSchedule().getTickCount());
+			float healthConstant = sqrtTickCount;
+			float attackConstant = sqrtTickCount;
+			for(int i = 1; i < Constants.HEALTH_CONSTANT; i++)
+				healthConstant = (float) Math.sqrt(healthConstant);
+			
+			for(int i = 1; i < Constants.ATTACK_CONSTANT; i++)
+				attackConstant = (float) Math.sqrt(attackConstant);
+			
 			// super constructor must be first line of contructor.
 			// we have to get all variables before running it. :(
 			switch(enemyID) {
 			case 0: //spider
-				attack = Constants.SPIDER_ATTACK;
-				health = Constants.SPIDER_HEALTH;
+				attack = Constants.SPIDER_ATTACK * attackConstant;
+				health = Constants.SPIDER_HEALTH * healthConstant;
+				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
 				droppedMeat = Constants.SPIDER_MEAT_NO;
 				break;
 			case 1: //snake
-				attack = Constants.SNAKE_ATTACK;
-				health = Constants.SNAKE_HEALTH;
+				attack = Constants.SNAKE_ATTACK * attackConstant;
+				health = Constants.SNAKE_HEALTH * healthConstant;
 				droppedMeat = Constants.SNAKE_MEAT_NO;
+				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
 				break;
 			case 2: //scorpion
-				attack = Constants.SCORPION_ATTACK;
-				health = Constants.SCORPION_HEALTH;
+				attack = Constants.SCORPION_ATTACK * attackConstant;
+				health = Constants.SCORPION_HEALTH * healthConstant;
 				droppedMeat = Constants.SCORPION_MEAT_NO;
+				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
 				break;
 			default:
 				break;
@@ -101,7 +113,6 @@ public class God {
 				context.add( enemy );
 				space.moveTo( enemy, x, y );
 				grid.moveTo( enemy, x, y );
-				enemyCount++;
 			}
 		}			
 	}

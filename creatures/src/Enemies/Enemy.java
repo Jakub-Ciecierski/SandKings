@@ -1,26 +1,24 @@
 package Enemies;
 
-import java.util.List;
-
 import creatures.Fightable;
-import creatures.CreatureClasses.Mobile;
 import Constants.Constants;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
-import repast.simphony.query.space.grid.GridCell;
-import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
-import repast.simphony.util.SimUtilities;
 
-public class Enemy extends Fightable implements Comparable{
+
+/**
+ * @author Viet Ba
+ *
+ */
+public class Enemy extends Fightable implements Comparable {
 	private int enemyID; //enemy type
 	private double ratio;
-	private int tickCount;
 	
 	public Enemy (ContinuousSpace<Object> space, Grid<Object> grid, int enemyID,
 			float attack, float health, int droppedMeat) {

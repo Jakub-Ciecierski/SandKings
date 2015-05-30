@@ -6,7 +6,7 @@ package Enemies;
 import java.io.File;
 import java.io.IOException;
 
-import map.Food;
+import Constants.Constants;
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
 import saf.v3d.ShapeFactory2D;
 import saf.v3d.scene.VSpatial;
@@ -54,5 +54,16 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 			}
 		}
 		return spatial;	
+	}
+	
+	@Override
+	public float getScale(final Object agent) {
+		
+		if ( agent instanceof Enemy )
+		{
+			final Enemy enemy = (Enemy) agent;
+			return (float) (0.5 * (Math.sqrt(enemy.getDamage()/Constants.SPIDER_ATTACK)));	
+		}
+		return (float)0.5;
 	}
 }

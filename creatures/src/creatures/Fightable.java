@@ -95,13 +95,14 @@ public abstract class Fightable extends Agent{
 			{
 				worker.Die();
 			}
-		     DropFood();
+		     DropFood(5);
+		     instance.DropMawFood();
 		     context.remove( this );
 		}
 		
 		else if( this instanceof Enemy)
 		{
-			  DropFood();
+			  DropFood(5);
 			  context.remove( this );	
 		}
 		
@@ -112,14 +113,13 @@ public abstract class Fightable extends Agent{
 		
 		else
 	    {
-		     DropFood();
+		     DropFood(4);
 		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
 		     context.remove( this );	
 	    }
 	}
 	
-	private void DropFood() {		
-			int foodID = 4;
+	private void DropFood(int foodID) {		
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext( this );
 
@@ -130,7 +130,7 @@ public abstract class Fightable extends Agent{
 				dropMeat(foodID, x, y, context);
 	}
 	
-	private void dropMeat(int foodID, int x, int y, Context<Object> context){
+	protected void dropMeat(int foodID, int x, int y, Context<Object> context){
 		Food food = new Food( space, grid, foodID );
 
 		context.add( food );

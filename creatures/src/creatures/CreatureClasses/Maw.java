@@ -90,6 +90,17 @@ public class Maw extends Fightable {
 		//add strength to children
 		f.Delete();
 	}
+
+    public void DropMawFood(){
+		@SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext( this );
+
+		int x = grid.getLocation ( this ).getX();
+		int y = grid.getLocation ( this ).getY();
+		
+		for( int i = 0; i < food/Constants.STEAK_CALORIES; i++)
+			dropMeat(5, x, y, context);
+    }
 	
 	public boolean hasFood()
 	{

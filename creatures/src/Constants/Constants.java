@@ -67,8 +67,8 @@ public final class Constants {
 	public static final float SCORPION_HEALTH = 400;
 	public static final int SCORPION_MEAT_NO = 4;
 	
-	public static final int HEALTH_CONSTANT = 3;
-	public static final int ATTACK_CONSTANT = 4;	
+	public static final int HEALTH_CONSTANT = 4;
+	public static final int ATTACK_CONSTANT = 5;	
 	
 	// FOOD CONSTANTS
 	public static final int PIZZA_CALORIES = 50;
@@ -76,7 +76,7 @@ public final class Constants {
 	public static final int GRAPE_CALORIES = 15;
 	public static final int CABBAGE_CALORIES = 5;
 	public static final int MEAT_CALORIES = 3;
-	public static final int ENEMY_MEAT_CALORIES = 10;
+	public static final int STEAK_CALORIES = 10;
 
 	public static final int PIZZA_WEIGHT = 7;
 	public static final int DONUT_WEIGHT = 5;
