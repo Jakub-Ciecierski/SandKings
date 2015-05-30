@@ -28,34 +28,33 @@ public class Worker extends Mobile {
 			return;
 		}
 		
-			seekForKnowledge();
-			// send message
-			Attack();
-			
-			scheduler.updateSchulder();
-			
-			if(currentTask != null)
-				if(!currentTask.isFinished()){
-					currentTask.execute();
-					//return;
-				}
-			if(this.getMove()) {
-				if ( this.IsAtDestination() )
-				{
-					this.ActOnArrival();
-					return;
-				} else if ( this.isGoingSomewhere() )
-				{
-					this.MoveThere();
-					this.MoveCarriedStuff();
-					return;
-				} else {
-					this.Explore();
-					this.MoveCarriedStuff();
-					return;
-				}
+		seekForKnowledge();
+		// send message
+		Attack();
+		
+		scheduler.updateSchulder();
+		
+		if(currentTask != null)
+			if(!currentTask.isFinished()){
+				currentTask.execute();
+				//return;
 			}
-			
+		if(this.getMove()) {
+			if ( this.IsAtDestination() )
+			{
+				this.ActOnArrival();
+				return;
+			} else if ( this.isGoingSomewhere() )
+			{
+				this.MoveThere();
+				this.MoveCarriedStuff();
+				return;
+			} else {
+				this.Explore();
+				this.MoveCarriedStuff();
+				return;
+			}
+		}
 		
 	}
 }

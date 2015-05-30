@@ -8,7 +8,6 @@ import Enemies.Enemy;
 import repast.simphony.context.Context;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
@@ -35,6 +34,17 @@ public abstract class Fightable extends Agent{
 	private float health = 0;
 	private int droppedMeat = 0;
 	
+	public void updateDanger(){
+		danger = damage * health;
+	}
+	public void updateProfit(){
+		profit = droppedMeat * Constants.STEAK_CALORIES;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
+	}
+	
 	public float getDamage() {
 		return damage;
 	}
@@ -46,6 +56,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setDroppedMeat(int droppedMeat) {
 		this.droppedMeat = droppedMeat;
+		updateProfit();
 	}
 	
 	public float getHealth() {
@@ -53,6 +64,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setHealth(float health) {
 		this.health = health;
+		updateDanger();
 	}
 	
 	
@@ -72,6 +84,8 @@ public abstract class Fightable extends Agent{
 		this.damage = damage;
 		this.health = health;
 		this.droppedMeat = droppedMeat;
+		updateDanger();
+		updateProfit();
 	}
 
 	public void dealDamage(float damage){
@@ -95,13 +109,14 @@ public abstract class Fightable extends Agent{
 			{
 				worker.Die();
 			}
-		     DropFood();
+		     DropFood(5);
+		     instance.DropMawFood();
 		     context.remove( this );
 		}
 		
 		else if( this instanceof Enemy)
 		{
-			  DropFood();
+			  DropFood(5);
 			  context.remove( this );	
 		}
 		
@@ -112,14 +127,13 @@ public abstract class Fightable extends Agent{
 		
 		else
 	    {
-		     DropFood();
+		     DropFood(4);
 		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
 		     context.remove( this );	
 	    }
 	}
 	
-	private void DropFood() {		
-			int foodID = 4;
+	private void DropFood(int foodID) {		
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext( this );
 
@@ -130,7 +144,7 @@ public abstract class Fightable extends Agent{
 				dropMeat(foodID, x, y, context);
 	}
 	
-	private void dropMeat(int foodID, int x, int y, Context<Object> context){
+	protected void dropMeat(int foodID, int x, int y, Context<Object> context){
 		Food food = new Food( space, grid, foodID );
 
 		context.add( food );

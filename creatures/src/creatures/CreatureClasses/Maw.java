@@ -5,15 +5,12 @@ import NodalNetwork.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.knowledge.Information;
 import communication.knowledge.KnowledgeBase;
-import creatures.Agent;
 import creatures.Fightable;
 import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
@@ -76,8 +73,22 @@ public class Maw extends Fightable {
 				this.name = "Uknown";
 				
 		}
+		updateDanger();
+		updateProfit();
+		
 	}	
 
+	public void updateDanger(){
+		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH;
+	}
+	public void updateProfit(){
+		profit = numberOfChildren * Constants.MEAT_CALORIES + Constants.MAW_MEAT_NO * Constants.STEAK_CALORIES + food;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
+	}
+	
 	public void LostAMobile()
 	{
 		this.numberOfChildren--;
@@ -90,6 +101,17 @@ public class Maw extends Fightable {
 		//add strength to children
 		f.Delete();
 	}
+
+    public void DropMawFood(){
+		@SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext( this );
+
+		int x = grid.getLocation ( this ).getX();
+		int y = grid.getLocation ( this ).getY();
+		
+		for( int i = 0; i < food/Constants.STEAK_CALORIES; i++)
+			dropMeat(5, x, y, context);
+    }
 	
 	public boolean hasFood()
 	{
@@ -146,6 +168,10 @@ public class Maw extends Fightable {
 				currentTask.execute();
 		
 		scheduler.updateSchulder();
+		
+
+		updateDanger();
+		updateProfit();
 	}
 	
 	private void TrySpawnMobile()
@@ -153,6 +179,7 @@ public class Maw extends Fightable {
 		if ( Constants.MAW_BIRTHING_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
 			 && childrenBornCount > Constants.MAW_CHILDPOOP_COUNTER)
 		{	
+			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
 
 			Worker child = new Worker( space, grid, playerID );
@@ -233,6 +260,11 @@ public class Maw extends Fightable {
 
 	public void setStrength(float strength) {
 		this.strength = strength;
+		for( Mobile mobile : children){
+			float constant = 1 + getStrength();	
+			mobile.setDamage(Constants.MOBILE_ATTACK * constant);
+			mobile.setHealth(Constants.MOBILE_HEALTH * constant);
+		}
 	}
 
 	

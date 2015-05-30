@@ -13,7 +13,8 @@ import Constants.Constants;
  *	class for Terrarium
  */
 
-public class Food extends Agent implements Comparable{
+@SuppressWarnings("rawtypes")
+public class Food extends Agent implements Comparable {
 	private int foodID; //food type
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
@@ -48,6 +49,10 @@ public class Food extends Agent implements Comparable{
 				power = Constants.MEAT_CALORIES;
 				weight = Constants.MEAT_WEIGHT;
 				break;
+			case 5: //buffalo steak
+				power = Constants.STEAK_CALORIES;
+				weight = Constants.MEAT_WEIGHT;
+				break;
 			default:
 				break;
 		}
@@ -56,10 +61,19 @@ public class Food extends Agent implements Comparable{
 	}
 	
 	public void Delete() {
-		  Context<Object> context = ContextUtils.getContext(this);
+		  @SuppressWarnings("unchecked")
+		Context<Object> context = ContextUtils.getContext(this);
 		  if(this != null && context != null)
 			  context.remove( this );	
 	 }
+	
+	public void updateProfit(){
+		profit = power;
+	}
+	public float getRatio()
+	{
+		return profit/(50 * weight);
+	}
 	
 	@Parameter(displayName = "Food", usageName = "foodID")
 	public int getFoodID() {
@@ -79,16 +93,13 @@ public class Food extends Agent implements Comparable{
 	public int getWeight() {		
 		return weight;
 	}
-	public int getRatio() {
-		return ratio;
-	}
 
 	@Override
 	public int compareTo(Object o) {
 		if ( o.getClass() != Food.class )
 			return -100;
 		Food f = (Food) o;
-		return ( this.getRatio() - f.getRatio() ) ;
+		return (int) ( this.getRatio() - f.getRatio() ) ;
 	}
 
 	public boolean isPicked() {

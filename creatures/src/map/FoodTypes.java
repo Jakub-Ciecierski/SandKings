@@ -46,6 +46,9 @@ ShapeFactory2D factory;
 				case 4:
 					iconDir = "meat.png";
 					break;
+				case 5:
+					iconDir = "steak.png";
+					break;
 				default:
 					break;						
 				}

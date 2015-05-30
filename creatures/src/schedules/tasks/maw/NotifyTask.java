@@ -71,11 +71,15 @@ public class NotifyTask extends Task {
 		int neededBros = (int) Math.ceil(
 					( ( enemy.getHealth() * enemy.getDamage() ) / 
 					( 
-							maw.getStrength() * maw.getStrength() * 
-							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_HEALTH 
+							( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
+							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
 					) ) * 1.2f
-				);   
-		System.out.println( "needed bros: " + neededBros );
+				); 
+		System.out.println( " danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
+				" mobile danger: " + 
+					( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
+						Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+				+ "         needed bros: " + neededBros );
 		neededBros = 8;
 		if ( neededBros > maw.getNumberOfFreeChildren() )
 		{
@@ -160,7 +164,7 @@ public class NotifyTask extends Task {
 			f.addToFormation(m);
 			
 		}
-		System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
+		//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
 		gridPt = grid.getLocation(food);
 		//gridPt = information.getGridPoint();
@@ -170,7 +174,7 @@ public class NotifyTask extends Task {
 		f.setGoingPoint( gridPt ); // where's the food?
 		
 		
-		System.out.println("food formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
+		//System.out.println("food formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
 		stage = 1;
 	}
 

@@ -122,7 +122,7 @@ public class Formation extends Fightable {
 			{
 				
 				//pendingSoldiers.get(i).
-				System.out.println("   pending soldier arrived.");
+				//System.out.println("   pending soldier arrived.");
 				
 				this.setCarryCapacity(this.getCarryCapacity() + pendingSoldiers.get(i).getCarryCapacity());
 				soldiers.add(pendingSoldiers.get(i));
@@ -136,7 +136,7 @@ public class Formation extends Fightable {
 
 	public void kickOut( Mobile m )
 	{
-		System.out.println("   kicked out member");
+		//System.out.println("   kicked out member");
 		m.setInFormation(false);
 		m.setGoingSomewhere(false);
 		m.setGoingPoint(null);
@@ -216,12 +216,13 @@ public class Formation extends Fightable {
 				this.kickOut( m );
 			}		
 		}
+		System.out.println("   disbanded.");
 		soldiers.clear();
 		this.Die();
 	}
 	public void MoveThere ( )
 	{
-		System.out.println("formation movin'");
+		//System.out.println("formation movin'");
 		this.moveTowards( this.goingPoint );
 		GridPoint gp = grid.getLocation(this);
 		for ( Mobile m : soldiers )
@@ -247,11 +248,11 @@ public class Formation extends Fightable {
 					// TODO
 				break;
 			case HomeWithFood:
-						System.out.println("  home with food.");
+					//	System.out.println("  home with food.");
 					DropCarriedFood();
 				break;
 			case Wpierdol:
-					
+					System.out.println("  for attacking.");
 				break;
 			case Uknown: break;
 			default: break;
@@ -303,6 +304,7 @@ public class Formation extends Fightable {
 		FormationAttackCheck();
 		if(isFighting)
 		{
+			System.out.println("formation fighting.");
 			Attack();
 			return;
 		}
@@ -318,9 +320,9 @@ public class Formation extends Fightable {
 		// NOT ENOUGH BROS IN FORMATION
 		if ( this.getSize() < this.getNeededSize() )
 		{
-			System.out.println(
+			/*System.out.println(
 				"Formation " + getID() + " ["+ this.getSize() + "/" + this.getNeededSize() + "]" + 
-					" called for bros.");
+					" called for bros.");*/
 			this.findNewMember(this.playerID);
 			return;
 		} else
@@ -339,9 +341,9 @@ public class Formation extends Fightable {
 			// MOVE SOMEWHERE
 			if ( this.isGoingSomewhere() )
 			{
-				System.out.println(
+				/*System.out.println(
 						"Formation " + getID() + " ["+ this.getSize() +"]" + 
-							" going somewhere: " + this.goingPoint.getX() + ":" + this.goingPoint.getY() );
+							" going somewhere: " + this.goingPoint.getX() + ":" + this.goingPoint.getY() );*/
 				this.MoveThere();
 				this.MoveCarriedStuff();
 			}
@@ -434,7 +436,7 @@ public class Formation extends Fightable {
 			space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
 			
-			System.out.println("      f ["+ this.getID() +"] going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
+			//System.out.println("      f ["+ this.getID() +"] going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
 
 			
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
@@ -467,7 +469,7 @@ public class Formation extends Fightable {
 	 * @return the isGoingSomewhere
 	 */
 	public boolean isGoingSomewhere() {
-		return isGoingSomewhere;
+		return isGoingSomewhere && this.goingPoint != null;
 	}
 
 	/**
