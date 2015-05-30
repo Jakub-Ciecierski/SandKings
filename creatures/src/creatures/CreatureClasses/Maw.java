@@ -260,6 +260,11 @@ public class Maw extends Fightable {
 
 	public void setStrength(float strength) {
 		this.strength = strength;
+		for( Mobile mobile : children){
+			float constant = 1 + getStrength();	
+			mobile.setDamage(Constants.MOBILE_ATTACK * constant);
+			mobile.setHealth(Constants.MOBILE_HEALTH * constant);
+		}
 	}
 
 	
