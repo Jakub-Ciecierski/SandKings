@@ -33,7 +33,7 @@ public class Worker extends Mobile {
 				currentTask.execute();
 				//return;
 			}
-		
+
 		if(this.getMove()) {
 			if ( this.IsAtDestination() )
 			{
