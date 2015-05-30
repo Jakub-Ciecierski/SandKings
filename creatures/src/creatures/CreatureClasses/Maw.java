@@ -76,8 +76,22 @@ public class Maw extends Fightable {
 				this.name = "Uknown";
 				
 		}
+		updateDanger();
+		updateProfit();
+		
 	}	
 
+	public void updateDanger(){
+		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH;
+	}
+	public void updateProfit(){
+		profit = numberOfChildren * Constants.MEAT_CALORIES + Constants.MAW_MEAT_NO * Constants.ENEMY_MEAT_CALORIES + food;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
+	}
+	
 	public void LostAMobile()
 	{
 		this.numberOfChildren--;
@@ -146,6 +160,10 @@ public class Maw extends Fightable {
 				currentTask.execute();
 		
 		scheduler.updateSchulder();
+		
+
+		updateDanger();
+		updateProfit();
 	}
 	
 	private void TrySpawnMobile()

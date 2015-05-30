@@ -39,7 +39,11 @@ public abstract class Fightable extends Agent{
 		danger = damage * health;
 	}
 	public void updateProfit(){
-		//profit = droppedMeat * 
+		profit = droppedMeat * Constants.ENEMY_MEAT_CALORIES;
+	}
+	public float getRatio()
+	{
+		return profit/danger;
 	}
 	
 	public float getDamage() {
@@ -53,6 +57,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setDroppedMeat(int droppedMeat) {
 		this.droppedMeat = droppedMeat;
+		updateProfit();
 	}
 	
 	public float getHealth() {
@@ -60,6 +65,7 @@ public abstract class Fightable extends Agent{
 	}
 	public void setHealth(float health) {
 		this.health = health;
+		updateDanger();
 	}
 	
 	
@@ -79,6 +85,8 @@ public abstract class Fightable extends Agent{
 		this.damage = damage;
 		this.health = health;
 		this.droppedMeat = droppedMeat;
+		updateDanger();
+		updateProfit();
 	}
 
 	public void dealDamage(float damage){

@@ -61,6 +61,14 @@ public class Food extends Agent implements Comparable{
 			  context.remove( this );	
 	 }
 	
+	public void updateProfit(){
+		profit = power;
+	}
+	public float getRatio()
+	{
+		return profit/(50 * weight);
+	}
+	
 	@Parameter(displayName = "Food", usageName = "foodID")
 	public int getFoodID() {
 		return foodID;
@@ -79,16 +87,13 @@ public class Food extends Agent implements Comparable{
 	public int getWeight() {		
 		return weight;
 	}
-	public int getRatio() {
-		return ratio;
-	}
 
 	@Override
 	public int compareTo(Object o) {
 		if ( o.getClass() != Food.class )
 			return -100;
 		Food f = (Food) o;
-		return ( this.getRatio() - f.getRatio() ) ;
+		return (int) ( this.getRatio() - f.getRatio() ) ;
 	}
 
 	public boolean isPicked() {
