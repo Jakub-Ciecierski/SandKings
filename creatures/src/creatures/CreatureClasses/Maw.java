@@ -239,4 +239,45 @@ public class Maw extends Fightable {
 	public KnowledgeBase getKnowledgeBase(){
 		return this.knowledgeBase;
 	}
+
+	/**
+	 * @return the space
+	 */
+	public ContinuousSpace<Object> getSpace() {
+		return space;
+	}
+
+	/**
+	 * @param space the space to set
+	 */
+	public void setSpace(ContinuousSpace<Object> space) {
+		this.space = space;
+	}
+
+	/**
+	 * @return the grid
+	 */
+	public Grid<Object> getGrid() {
+		return grid;
+	}
+
+	/**
+	 * @param grid the grid to set
+	 */
+	public void setGrid(Grid<Object> grid) {
+		this.grid = grid;
+	}
+
+	public int getNumberOfFreeChildren() {
+		// TODO Auto-generated method stub
+		int free = 0;
+		for ( Mobile m : children )
+		{
+			if ( !m.isInFormation() && !m.isGoingSomewhere())
+			{
+				free++;
+			}
+		}
+		return free;
+	}
 }

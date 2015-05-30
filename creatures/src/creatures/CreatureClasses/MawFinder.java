@@ -3,6 +3,9 @@ package creatures.CreatureClasses;
 import java.util.ArrayList;
 import java.util.List;
 
+import creatures.Agent;
+import repast.simphony.query.space.grid.GridCell;
+import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.space.grid.GridPoint;
 
 public class MawFinder {
@@ -100,5 +103,50 @@ public class MawFinder {
 	{	
 		_mawList.add(m);
 	}
+	
+	/**
+	 * Return agents in given neighborhood
+	 * @param extentX
+	 * @param extentY
+	 */
+	public List<Mobile> getFreeAgentsInVicinity(int playerID, int neededSize, int extent) 
+	{
+		List<Mobile> vicinity = new ArrayList<Mobile>();
+		if ( _mawList.size() <= 0 ) return new ArrayList<Mobile>();
+		Maw thisMaw = _mawList.get(0);
+		for ( Maw m : _mawList )
+		{
+			if ( m.getPlayerID() == playerID ) 
+				thisMaw = m;
+		}
+		
+		// get the grid location of this Human
+		GridPoint pt = thisMaw.getGrid().getLocation(thisMaw);
+		// use the GridCellNgh class to create GridCells for
+		// the surrounding neighborhood .
+		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>(thisMaw.getGrid() , pt,
+				Mobile.class , extent , extent);
+		
+		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood(true);
+		
+		for ( GridCell <Mobile> cell : gridCells ) {
+			for(Object obj : thisMaw.getGrid().getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if( obj instanceof Mobile ){
+					
+					Mobile mobile = (Mobile)obj;
+					if ( 
+							mobile.getPlayerID() == playerID && 
+							!mobile.isInFormation() &&
+							!mobile.isGoingSomewhere() && 
+							vicinity.size() < neededSize
+							//agent.getPlayerID() == playerID && 
+						)
+						vicinity.add(mobile);
+					
+				}	
+			}
+		}
+		return vicinity;
+	}	
 	
 }

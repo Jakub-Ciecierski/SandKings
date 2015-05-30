@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import communication.messages.DamageMessage;
-
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
@@ -43,6 +42,7 @@ public class Formation extends Fightable {
 	}
 	private List<Integer> owners = new ArrayList<Integer>();
 	
+	private boolean isComplete = false;
 	private int playerID = 0;
 	private int neededSize = 0;
 	//private int carryCapacity = 0;
@@ -82,7 +82,7 @@ public class Formation extends Fightable {
 							mobile.getPlayerID() == ID && 
 							!mobile.isInFormation() &&
 							!mobile.isGoingSomewhere() && 
-							this.getSize() + this.pendingSoldiers.size() < this.getNeededSize()
+							this.getSize() < this.getNeededSize()
 						)
 					{
 						this.addToFormation( mobile );
@@ -93,33 +93,44 @@ public class Formation extends Fightable {
 	}
 	public void addToFormation( Mobile m )
 	{
-		System.out.println("   found new member");
+		System.out.println("   found new pending member");
+		GridPoint currentPos = grid.getLocation(this);
+		m.setInFormation(true);
+		m.setGoingSomewhere(false);
+		//m.setGoingPoint( currentPos );
+		m.setMyFormation(this);
 		
 		this.pendingSoldiers.add(m);
-		
-		m.setInFormation(true);
-		m.setGoingSomewhere(true);
-		m.setGoingPoint( this.goingPoint );
-		m.setMyFormation(this);
 	}
 	
 	public void addPending()
 	{
 		GridPoint currentPos = grid.getLocation(this);
+		
+		List<Mobile> newPendingSoldiers = new ArrayList<Mobile>();
 		for( int i = 0; i < pendingSoldiers.size(); i++)
 		{
+			
 			if(!pendingSoldiers.get(i).IsAtLocation(currentPos))
 			{
+				//System.out.println("   soldier " + i + "[#"+ pendingSoldiers.get(i).getID() +"/" + pendingSoldiers.size() + "]     moving towards me: ["+currentPos.getX()+":"+currentPos.getY()+"]");
 				pendingSoldiers.get(i).moveTowards(currentPos);
+				
+				newPendingSoldiers.add(pendingSoldiers.get(i));
 			}
 			else
 			{
-				soldiers.add(pendingSoldiers.get(i));
+				
+				//pendingSoldiers.get(i).
+				System.out.println("   pending soldier arrived.");
+				
 				this.setCarryCapacity(this.getCarryCapacity() + pendingSoldiers.get(i).getCarryCapacity());
-				pendingSoldiers.remove(i);
-				i--;
+				soldiers.add(pendingSoldiers.get(i));
+				
 			}
 		}
+		
+		pendingSoldiers = newPendingSoldiers;
 	}
 	
 
@@ -136,7 +147,7 @@ public class Formation extends Fightable {
 	
 	public int getSize()
 	{
-		return soldiers.size();
+		return soldiers.size() + pendingSoldiers.size();
 	}
 	
 	public boolean IsAtDestination()
@@ -155,7 +166,8 @@ public class Formation extends Fightable {
 		List<Food> food = new ArrayList<Food>();
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
 			if (obj instanceof Food) {
-				food.add( (Food) obj);
+				if ( !((Food) obj).isPicked() )
+					food.add( (Food) obj);
 			}
 		}
 		return food;
@@ -209,15 +221,14 @@ public class Formation extends Fightable {
 	}
 	public void MoveThere ( )
 	{
+		System.out.println("formation movin'");
+		this.moveTowards( this.goingPoint );
 		GridPoint gp = grid.getLocation(this);
-		@SuppressWarnings("unchecked")
-		Context<Object> context = ContextUtils.getContext( this );
 		for ( Mobile m : soldiers )
 		{
 				space.moveTo(m, gp.getX(), gp.getY());
 				grid.moveTo( m, gp.getX(), gp.getY());
 		}
-		this.moveTowards( this.goingPoint );
 	}
 	public void ActOnArrival()
 	{
@@ -249,9 +260,6 @@ public class Formation extends Fightable {
 	@SuppressWarnings("unchecked")
 	private void PickupFood() {
 		
-		
-		
-		// TODO Auto-generated method stub
 		List<Food> foodHere = FoodAtPoint( grid.getLocation(this) );
 		if ( foodHere.size() <= 0 ) 
 		{
@@ -305,6 +313,8 @@ public class Formation extends Fightable {
 			return;
 		} 
 		
+		//System.out.println("formation checkpoint 1");
+		
 		// NOT ENOUGH BROS IN FORMATION
 		if ( this.getSize() < this.getNeededSize() )
 		{
@@ -313,6 +323,13 @@ public class Formation extends Fightable {
 					" called for bros.");
 			this.findNewMember(this.playerID);
 			return;
+		} else
+		{
+			if ( !isComplete )
+			{
+				System.out.println("Formation " + getID() + " assembly completed. " );
+				isComplete = true;
+			}
 		}
 		
 		// FOOD LOGIC
@@ -329,6 +346,7 @@ public class Formation extends Fightable {
 				this.MoveCarriedStuff();
 			}
 		}
+		//System.out.println("formation checkpoint 2");
 		
 		// WPIERDOL LOGIC
 		if ( this.goingWhere == GoingWhere.Wpierdol )
@@ -346,8 +364,6 @@ public class Formation extends Fightable {
 				MoveThere();
 			}
 		}
-		
-
 	}
 
 	public void FormationAttackCheck(){
@@ -417,13 +433,17 @@ public class Formation extends Fightable {
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
+			
+			System.out.println("      f ["+ this.getID() +"] going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
+
+			
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
 			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
 			
 			for ( Mobile m : soldiers )
 			{
-					space.moveTo(m, thisLocation.getX(), thisLocation.getY());
-					grid.moveTo( m, (int)thisLocation.getX(), (int)thisLocation.getY());
+				space.moveTo(m, thisLocation.getX(), thisLocation.getY());
+				grid.moveTo( m, (int)thisLocation.getX(), (int)thisLocation.getY());
 			}
 		}
 	}
@@ -482,7 +502,7 @@ public class Formation extends Fightable {
 	 * @param neededSize the neededSize to set
 	 */
 	public void setNeededSize(int neededSize) {
-		this.neededSize = neededSize + 1;
+		this.neededSize = neededSize;
 	}
 	
 	public GridPoint getGoingPoint() {

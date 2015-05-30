@@ -23,7 +23,7 @@ public class MawScheduler extends Scheduler{
 	private Task createTask(Information info){
 		switch(info.getType()){
 			case FOOD:
-				return null;//return new NotifyTask(info, this.maw);
+				return new NotifyTask(info, this.maw);
 			case ENEMY_CREATURE:
 				return new NotifyTask(info, this.maw);
 				

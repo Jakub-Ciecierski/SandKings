@@ -111,7 +111,7 @@ public abstract class Mobile extends Fightable {
 		}
 	}
 	
-	public void MoveThere()
+	protected void MoveThere()
 	{
 		moveTowards( goingPoint );
 	}
@@ -208,52 +208,22 @@ public abstract class Mobile extends Fightable {
 		this.setGoingSomewhere(true);
 		goingPoint = MawFinder.Instance().GetMawPosition( this.playerID );
 	}
-
-	public void moveTowardsBro(GridPoint gp)
-	{
-		this.setGoingSomewhere(true);
-		this.goingPoint = gp;
-		if(grid.getLocation(this) == gp)
-			this.setMove(false);
-		
-	}
 	
 	public boolean IsAtLocation(GridPoint point)
 	{
+		int tolerance = 1;
 		GridPoint currentPos = grid.getLocation(this);
 		if ( currentPos == null ) return false;
 		
-		return ( point.getX() == currentPos.getX() && point.getY() == currentPos.getY() );
+		return ( 
+			Math.abs( point.getX() - currentPos.getX() ) < tolerance && 	
+			Math.abs( point.getY() - currentPos.getY() ) < tolerance 
+		);
 	}
 	
+	/*
 	private int CallForBros(int neededBros)
 	{
-		//System.out.println("bros count: " + bros.size() + " needed bros: " + neededBros);
-		/*
-		 * GridPoint pt = grid.getLocation ( this );
-		int x = 5, y = 5;
-		
-		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
-		Mobile . class , x , y);
-		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
-		
-			for ( GridCell <Mobile> cell : gridCells ) {
-				for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-					if(obj instanceof Mobile && (Mobile)obj != this) {
-					if (bros.size() < neededBros) {
-						Mobile mobile = (Mobile)obj;
-						if(mobile.playerID == this.playerID && !bros.contains(mobile)) {
-							System.out.println("found bro!");
-							AskForHelpMessage pls = new AskForHelpMessage("halp pls", pt);
-							sendMessage(mobile, pls);
-							bros.add(mobile);
-						}
-					}
-					if(bros.size() == neededBros)
-						return bros.size();
-				}
-			}
-		}*/
 		Context<Object> context = ContextUtils.getContext(this);
 		Formation f = new Formation( space, grid, playerID);
 		
@@ -272,7 +242,7 @@ public abstract class Mobile extends Fightable {
 		System.out.println("formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
 		
 		return neededBros;
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	public void PickUpFood(List<Food> foodHere) {
@@ -292,18 +262,6 @@ public abstract class Mobile extends Fightable {
 				this.goingWhere = GoingWhere.HomeWithFood;
 				GoHome();
 				break; 
-			} else 
-			{
-				//this.move = false;
-				
-				
-				int neededBros = (int) Math.ceil(food.getWeight()/(this.carryCapacity));
-				System.out.println("call for bros " + neededBros );
-				//if(bros.size() < neededBros) 
-					CallForBros(neededBros);
-				
-				//System.out.println("Enough bros!");
-				
 			}
 		}
 	}
@@ -376,17 +334,30 @@ public abstract class Mobile extends Fightable {
 
 	public void moveTowards( GridPoint gp )
 	{
+		moveTowards( gp, false );
+	}
+	public void moveTowards( GridPoint gp, boolean isMoveAway )
+	{
 		
 		// only move if not already there
-		if ( !gp.equals( grid.getLocation(this) ) )
+		if ( !IsAtLocation( gp ) )
 		{
 			NdPoint thisLocation = space.getLocation(this);
 			NdPoint goalLocation;
-			if ( isInFormation() && this.getMyFormation() != null ) goalLocation = new NdPoint( myFormation.getGoingPoint().getX(), myFormation.getGoingPoint().getY());
-			else goalLocation = new NdPoint ( gp.getX (), gp.getY ());
-			if ( isInFormation() ) System.out.println("      m going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
+			//if ( isInFormation() && this.getMyFormation() != null ) 
+			//	goalLocation = new NdPoint( myFormation.getGoingPoint().getX(), myFormation.getGoingPoint().getY());
+			//else 
+				goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+			/*
+				if ( isInFormation() ) System.out.println("      m ["+ this.getID() +"] going from: "
+					+ "" + thisLocation.getX() + ":" + thisLocation.getY() + 
+					" to: " + goalLocation.getX() + ":" + goalLocation.getY() );
+			*/
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
-			space.moveByVector(this, 1, angle, 0);
+			if ( isMoveAway) 
+				space.moveByVector(this, -1, angle, 0);
+			else 
+				space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
 			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );
@@ -501,8 +472,8 @@ public abstract class Mobile extends Fightable {
 				
 				if(this.knowledgeBase.addInformation(info)){
 
-					;
-					/*
+					
+					
 					if(Constants.DEBUG_MODE){
 						System.out.println("*********************************************************");
 						System.out.println("Agent #" + this.id +" Gained knowledge");
@@ -510,7 +481,7 @@ public abstract class Mobile extends Fightable {
 						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
 						System.out.println("When: " + tickCount);
 						System.out.println("********************************************************* \n\n");
-					}*/
+					}
 				}
 			}
 		}

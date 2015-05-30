@@ -92,7 +92,7 @@ public final class Constants {
 	public static final int MAW_MAX_KNOWLEDGE = 500;
 	
 	// DISPLAY ALL DEBUG MESSAGES
-	public static final boolean DEBUG_MODE = false;
+	public static final boolean DEBUG_MODE = true;
 	
 	/**
 	 * Hidden constructor to ensure no instances are created.

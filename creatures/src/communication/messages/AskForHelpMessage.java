@@ -25,7 +25,7 @@ public class AskForHelpMessage extends Message {
 	public void handle(Agent sender, Agent recipient) {
 		Mobile mobile = (Mobile)recipient;
 		if (gp != null) {
-			mobile.moveTowardsBro(gp);
+			//mobile.moveTowardsBro(gp);
 		}
 		System.out.println("*********************************************************");
 		System.out.println("Agent #" + sender.getID() +" To Agent #" +recipient.getID() + "\n");
