@@ -7,6 +7,7 @@ import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
 import Constants.Constants;
 import communication.knowledge.Information;
+import communication.messages.InformMessage;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
@@ -44,7 +45,10 @@ public class InformEnemyTask extends Task {
 					information.getGridPoint()
 					);
 			
-			maw.getKnowledgeBase().addInformation(newInfo);
+			InformMessage informMessage = new InformMessage(newInfo);
+			mobile.sendMessage(maw, informMessage);
+			
+			//maw.getKnowledgeBase().addInformation(newInfo);
 			
 		}
 

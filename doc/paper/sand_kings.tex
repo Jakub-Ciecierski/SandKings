@@ -72,11 +72,7 @@ This document describes the multi-agent based simulation of George R. R. Martin'
 \end{abstract}
 
 % ******************************* </VB> ******************************* %
-Sand Kings is a science-fiction novelette written by George R.R. Martin in 1979. Simon Kress, its main protagonist, is a collector of lethally dangerous and exotic animals. Due to his prolonging business trips they often die during his absence. Eventually, when a need for replacement occurred, he stumbled upon mysterious establishment, in which he found terrarium filled with four Sand King colonies. Each colony consisted of female, immobile Maw and number of insect-like mobiles that are controlled by their Maw through telepathy. Mobile's main purpose is to hunt and collect food for the Maw to digest, which only later they are able to feed on. The shopkeeper informed him, that the colonies would start to wage wars between each others with time.
-Excited with the vision, Kress bought four Sand King colonies and decided to have them installed in his flat. With parties to show off new pupils, Simon couldn't wait for the conflicts to emerge. As Sand Kings lived peacefully for the days to come, he started to starve them so they would become desperate. From graceful and highly intelligent entities they've turned into wild and murderous creatures that sought only to find more food to grow, which eventually have broke out of the terrarium they were imprisoned in.
 
-%probably to change the below or somethin
-The simulating application focuses on the stage slightly after extreme starvation of Sand Kings, when the only goal driving them was to amass extreme amounts of food. In order to do so they would kill the creatures that were thrown into terrarium, but also fight with each other and potentially kill - if that would prove profitable.
 % ******************************* <JC> ******************************* %
 
 %-------------------------------------------------------------------
@@ -85,8 +81,13 @@ The simulating application focuses on the stage slightly after extreme starvatio
 %-------------------------------------------------------------------
 \section{Introduction}
 
+\IEEEoverridecommandlockouts\IEEEPARstart{S}{and Kings} 
+is a science-fiction novelette written by George R.R. Martin in 1979. Simon Kress, its main protagonist, is a collector of lethally dangerous and exotic animals. Due to his prolonging business trips they often die during his absence. Eventually, when a need for replacement occurred, he stumbled upon mysterious establishment, in which he found terrarium filled with four Sand King colonies. Each colony consisted of female, immobile Maw and number of insect-like mobiles that are controlled by their Maw through telepathy. Mobile's main purpose is to hunt and collect food for the Maw to digest, which only later they are able to feed on. The shopkeeper informed him, that the colonies would start to wage wars between each others with time.
+Excited with the vision, Kress bought four Sand King colonies and decided to have them installed in his flat. With parties to show off new pupils, Simon couldn't wait for the conflicts to emerge. As Sand Kings lived peacefully for the days to come, he started to starve them so they would become desperate. From graceful and highly intelligent entities they've turned into wild and murderous creatures that sought only to find more food to grow, which eventually have broke out of the terrarium they were imprisoned in.
 
-\IEEEoverridecommandlockouts\IEEEPARstart{T}{he fancy} Introduction. Motivation, Objective, The book. Maybe structure
+%probably to change the below or somethin
+The simulating application focuses on the stage slightly after extreme starvation of Sand Kings, when the only goal driving them was to amass extreme amounts of food. In order to do so they would kill the creatures that were thrown into terrarium, but also fight with each other and potentially kill - if that would prove profitable.
+
 
 % ******************************* </JC> ******************************* %
 
@@ -158,17 +159,6 @@ The last type of food is dropped only by a living agent (either a mobile, maw or
 
 
 
-% ******************************* <WZ> ******************************* %
-
-
-%-------------------------------------------------------------------
-%-------------------------------------------------------------------
-\subsection{Desire System}
-Alliances, formations etc.
-
-
-% ******************************* </WZ> ******************************* %
-
 
 
 
@@ -179,10 +169,42 @@ Alliances, formations etc.
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
 \subsection{Communication}
+A simply mechanism was constructed to create an inter-agent communication.
+Each agent can send a message to another by adding a packet i.e. the message, its send and 
+recipient to the message queue.
+The queue notified by change will process a given packet, and fire a specific handler for
+
+
+% ******************************* </JC> ******************************* %
+
+
+
+
+
+
+% ******************************* <JC> ******************************* %
+
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+\subsection{Knowledge Base}
 Things about knowledge, communication etc.
 
 % ******************************* </JC> ******************************* %
 
+
+
+
+
+% ******************************* <WZ> ******************************* %
+
+
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+\subsection{Scheduler}
+Agents' actions are 
+
+
+% ******************************* </WZ> ******************************* %
 
 
 
