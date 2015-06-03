@@ -19,7 +19,13 @@ public class NotifyTask extends Task {
 
 	private Maw maw;
 	
-	private int stage = 0;
+	private Stages stage = Stages.BEGIN;
+	
+	private enum Stages {
+		BEGIN,
+		FINISH,
+		ALLIANCE
+	}
 	
 	public NotifyTask(Information information, Maw maw) {
 		super(information);
@@ -37,11 +43,12 @@ public class NotifyTask extends Task {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() {
-		if ( stage == 1 ) 
+		if ( stage == Stages.FINISH ) 
 		{
 			finish();
 			return;
-		} else if ( stage == 0 )
+		} 
+		else if ( stage == Stages.BEGIN )
 		{
 			// SPAWN FORMATION FOR THE JOB
 			
@@ -61,13 +68,17 @@ public class NotifyTask extends Task {
 		}
 		
 	}
+	
+	/***************************************************/
+	/******************* WPIERDOL  *********************/
+	/***************************************************/
 
 	private void goForWpierdol(Context<Object> context, 
 			ContinuousSpace<Object> space, Grid<Object> grid) {
 		Enemy enemy = (Enemy) information.getAgent();
 		
 		if ( enemy == null ) {
-			stage = 1;
+			stage = Stages.FINISH;
 			return;
 		}
 		
@@ -90,6 +101,7 @@ public class NotifyTask extends Task {
 		
 		if ( neededBros > maw.getNumberOfFreeChildren() )
 		{
+			askForAlliance();
 			// TODO: ask other maw.
 			return;
 		}
@@ -109,7 +121,7 @@ public class NotifyTask extends Task {
 		
 		GridPoint enemyPoint = grid.getLocation( enemy );
 		if(enemyPoint == null) {
-			stage = 1;
+			stage = Stages.FINISH;
 			return;
 		}
 		
@@ -130,24 +142,29 @@ public class NotifyTask extends Task {
 		}
 		System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
-		
-		//gridPt = information.getGridPoint();
-		
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
 		f.setGoingPoint( enemyPoint ); // where's the food?
 		
 		
 		System.out.println("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
-		stage = 1;
+		stage = Stages.FINISH;
 	}
 
+	private boolean askForAlliance(){
+		return false;
+	}
+	
+	/***************************************************/
+	/********************* FOOD ************************/
+	/***************************************************/
+	
 	private void goForFood(Context<Object> context, 
 			ContinuousSpace<Object> space, Grid<Object> grid) {
 
 		Food food = (Food) information.getAgent();
 		if ( food == null ) {
-			stage = 1;
+			stage = Stages.FINISH;
 			return;
 		}
 		
@@ -189,7 +206,7 @@ public class NotifyTask extends Task {
 		
 		gridPt = grid.getLocation(food);
 		if(gridPt == null){
-			stage = 1;
+			stage = Stages.FINISH;
 			return;
 		}
 
@@ -199,7 +216,7 @@ public class NotifyTask extends Task {
 		
 		
 		//System.out.println("food formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
-		stage = 1;
+		stage = Stages.FINISH;
 	}
 
 
