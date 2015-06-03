@@ -31,7 +31,7 @@ public final class Constants {
 	public static final int MAW_STARVING_FACTOR = 5;
 	public static final int MAW_FOOD_DECREASE_VALUE = 1;
 	public static final int MAW_EATEN_FOOD_DECREASE_VALUE = 2;
-	public static final int MAW_DAMAGE_DECREASE_VALUE = 25;	
+	public static final int MAW_DAMAGE_DECREASE_VALUE = 100;	
 
 	public static final int MAW_DISTANCE_FACTOR = 5;
 
