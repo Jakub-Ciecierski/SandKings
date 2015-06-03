@@ -44,3 +44,5 @@
 /doc/paper/sand_kings.log
 /doc/paper/sand_kings.synctex.gz
 /creatures/*.log
+
+/creatures/creatures.rs/styles/creatures.CreatureClasses.Maw.style_17.xml
