@@ -58,19 +58,20 @@ public final class Constants {
 	
 	public static final float STRENGTH_MULTIPLY_FACTOR = (float) 0.2;
 	// ENEMIES CONSTANTS
+	public static final int ENEMY_MULTIPLIER = 1;
 	public static final int ENEMIES_MARGIN = 3;
 	public static final int MAX_NUMBER_OF_ENEMIES = 10;
 	
-	public static final float SPIDER_ATTACK = 10;
-	public static final float SPIDER_HEALTH = 150;
+	public static final float SPIDER_ATTACK = 10 * ENEMY_MULTIPLIER;
+	public static final float SPIDER_HEALTH = 150 * ENEMY_MULTIPLIER;
 	public static final int SPIDER_MEAT_NO = 1;
 	
-	public static final float SNAKE_ATTACK = 40;
-	public static final float SNAKE_HEALTH = 600;
+	public static final float SNAKE_ATTACK = 40 * ENEMY_MULTIPLIER;
+	public static final float SNAKE_HEALTH = 600 * ENEMY_MULTIPLIER;
 	public static final int SNAKE_MEAT_NO = 20;
 	
-	public static final float SCORPION_ATTACK = 20;
-	public static final float SCORPION_HEALTH = 300;
+	public static final float SCORPION_ATTACK = 20 * ENEMY_MULTIPLIER;
+	public static final float SCORPION_HEALTH = 300 * ENEMY_MULTIPLIER;
 	public static final int SCORPION_MEAT_NO = 4;
 	
 	public static final int HEALTH_CONSTANT = 4;
@@ -101,6 +102,7 @@ public final class Constants {
 	
 	// DISPLAY ALL DEBUG MESSAGES
 	public static final boolean DEBUG_MODE = true;
+	public static final int FORMATION_NEEDED_FRACTION = 2;
 	
 	/**
 	 * Hidden constructor to ensure no instances are created.

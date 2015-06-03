@@ -3,12 +3,14 @@ package creatures;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import communication.messages.DamageMessage;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
@@ -40,7 +42,7 @@ public class Formation extends Fightable {
 		Explore,
 		Wpierdol
 	}
-	private List<Integer> owners = new ArrayList<Integer>();
+	//private List<Integer> owners = new ArrayList<Integer>();
 	
 	private boolean isComplete = false;
 	private int playerID = 0;
@@ -103,7 +105,7 @@ public class Formation extends Fightable {
 		this.pendingSoldiers.add(m);
 	}
 	
-	public void addPending()
+	public boolean addPending()
 	{
 		GridPoint currentPos = grid.getLocation(this);
 		
@@ -131,6 +133,10 @@ public class Formation extends Fightable {
 		}
 		
 		pendingSoldiers = newPendingSoldiers;
+		
+		if(pendingSoldiers.size() == 0)
+			return true;
+		return false;
 	}
 	
 
@@ -148,7 +154,7 @@ public class Formation extends Fightable {
 	
 	public int getSize()
 	{
-		return soldiers.size() + pendingSoldiers.size();
+		return soldiers.size();// + pendingSoldiers.size();
 	}
 	
 	public boolean IsAtDestination()
@@ -192,7 +198,7 @@ public class Formation extends Fightable {
 	{
 		this.carriedStuff.add(food);
 		food.setPicked(true);
-		setCarryCapacity(getCarryCapacity() + food.getWeight()); 
+		setCarriedWeight( getCarriedWeight() + food.getWeight() );
 		System.out.println("Formation " + getID() + " picked up food.");
 				
 		//this.IsAtDestination(false);
@@ -217,19 +223,31 @@ public class Formation extends Fightable {
 				this.kickOut( m );
 			}		
 		}
+		for( Food f : carriedStuff )
+		{
+			f.setPicked(false);
+		}
 		System.out.println("   disbanded.");
 		soldiers.clear();
+		carriedStuff.clear();
 		this.Die();
+		//context.remove(this);
 	}
 	public void MoveThere ( )
 	{
+		// Makes formation look cooler by randomizing the movement of each mobile
+		Random rnd = new Random();
+		
 		//System.out.println("formation movin'");
 		this.moveTowards( this.goingPoint );
 		GridPoint gp = grid.getLocation(this);
 		for ( Mobile m : soldiers )
 		{
-				space.moveTo(m, gp.getX(), gp.getY());
-				grid.moveTo( m, gp.getX(), gp.getY());
+			int randX = ( RandomHelper.nextIntFromTo(-1, 1) );
+			int randY = ( RandomHelper.nextIntFromTo(-1, 1) );
+			
+			space.moveTo(m, gp.getX() + randX, gp.getY() + randY);
+			grid.moveTo( m, gp.getX() + randX, gp.getY() + randY);
 		}
 	}
 	public void ActOnArrival()
@@ -310,8 +328,26 @@ public class Formation extends Fightable {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		addPending();
+		if(!addPending()) return;
 		FormationAttackCheck();
+		
+		// NOT ENOUGH BROS IN FORMATION
+		if ( this.getSize() < this.getNeededSize() / Constants.FORMATION_NEEDED_FRACTION )
+		{
+			//this.findNewMember(this.playerID);
+			this.Disband(); // TODO: emergency disband?
+			return;
+		}
+		else
+		{
+			if ( !isComplete )
+			{
+				System.out.println("Formation " + getID() + " assembly completed. " );
+				isComplete = true;
+			}
+		}		
+		
+		
 		if(isFighting)
 		{
 			System.out.println("formation fighting.");
@@ -324,25 +360,6 @@ public class Formation extends Fightable {
 			this.ActOnArrival();
 			return;
 		} 
-		
-		//System.out.println("formation checkpoint 1");
-		
-		// NOT ENOUGH BROS IN FORMATION
-		if ( this.getSize() < this.getNeededSize() )
-		{
-			/*System.out.println(
-				"Formation " + getID() + " ["+ this.getSize() + "/" + this.getNeededSize() + "]" + 
-					" called for bros.");*/
-			this.findNewMember(this.playerID);
-			return;
-		} else
-		{
-			if ( !isComplete )
-			{
-				System.out.println("Formation " + getID() + " assembly completed. " );
-				isComplete = true;
-			}
-		}
 		
 		// FOOD LOGIC
 		if ( this.goingWhere == GoingWhere.ForFood || this.goingWhere == GoingWhere.HomeWithFood )
@@ -399,7 +416,7 @@ public class Formation extends Fightable {
 	public GridPoint AreEnemiesNearby(){
 		GridPoint pt = grid.getLocation ( this );
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
-		Mobile . class , 5 , 5);
+		Mobile . class , Constants.MOBILE_VICINITY_X , Constants.MOBILE_VICINITY_Y);
 		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
 		List <GridPoint> enemies = new ArrayList<GridPoint>();
 		for ( GridCell <Mobile> cell : gridCells ) {

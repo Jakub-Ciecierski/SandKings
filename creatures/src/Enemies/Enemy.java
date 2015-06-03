@@ -20,6 +20,9 @@ import repast.simphony.space.grid.GridPoint;
 public class Enemy extends Fightable implements Comparable {
 	private int enemyID; //enemy type
 	
+	
+	private int countToMove = 0;
+	
 	public Enemy (ContinuousSpace<Object> space, Grid<Object> grid, int enemyID,
 			float attack, float health, int droppedMeat) {
 		super(space, grid, 0, attack, health, droppedMeat);
@@ -53,10 +56,15 @@ public class Enemy extends Fightable implements Comparable {
 		this.enemyID = enemyID;
 	}
 	
-	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.ENEMIES_MOVE_INTERVAL)
+	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		Move();
+		countToMove++;
+		if ( countToMove == Constants.ENEMIES_MOVE_INTERVAL )
+		{
+			Move();
+			countToMove = 0;
+		}
 		Attack();
 	}
 

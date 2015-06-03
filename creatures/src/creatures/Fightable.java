@@ -9,6 +9,7 @@ import Enemies.Enemy;
 import repast.simphony.context.Context;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
@@ -90,6 +91,12 @@ public abstract class Fightable extends Agent{
 	}
 
 	public void dealDamage(float damage){
+		int rnd = ( RandomHelper.nextIntFromTo(0, 100) );
+		if ( rnd <= 10 )
+			damage = 0;
+		if ( rnd >= 90 )
+			damage += damage;
+		
 		this.health -= damage;
 		if(this.health <= 0)
 			Die();
@@ -124,7 +131,12 @@ public abstract class Fightable extends Agent{
 		
 		else if( this instanceof Formation)
 		{
-			  context.remove( this );	
+			Formation formation = (Formation) this;
+			for( Food f : formation.getCarriedStuff() )
+			{
+				f.setPicked(false);
+			}
+			context.remove( this );	
 		}
 		
 		else
@@ -135,6 +147,8 @@ public abstract class Fightable extends Agent{
 		     if(instance.isInFormation()){
 		    	 instance.getMyFormation().soldiers.remove(this);
 		     }
+		     if ( instance.carriedStuff != null )
+		    	 instance.carriedStuff.setPicked(false);
 		     context.remove( this );	
 	    }
 	}
@@ -166,7 +180,7 @@ public abstract class Fightable extends Agent{
 		// the surrounding neighborhood .
 		if(pt == null || grid == null)
 		{
-			int a = 7;
+			System.out.println("fightable:: grid or space null. ");
 		}
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
@@ -177,11 +191,11 @@ public abstract class Fightable extends Agent{
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
 				if(obj instanceof Fightable && (Fightable)obj != this){
 					
-					Fightable mobile = (Fightable)obj;
+					Fightable f = (Fightable)obj;
 					
-					if(MawFinder.Instance().areWeEnemies(mobile.playerID, this.playerID))
+					if(MawFinder.Instance().areWeEnemies(f.playerID, this.playerID))
 					{
-						mobile.dealDamage(this.damage);
+						f.dealDamage(this.damage);
 						isFighting = true;
 						return;
 					}

@@ -34,6 +34,16 @@ public class ReturnFoodTask extends Task{
 		GridPoint destPoint = information.getGridPoint();
 		GridPoint currPoint = mobile.grid.getLocation(mobile);
 		
+		Food food = (Food)information.getAgent();
+		if(food == null || food.isPicked())  {
+			stage = 2;
+		}
+
+		if(stage == 2){
+			finish();
+			return;
+		}
+
 		if(stage == 0) {
 			mobile.moveTowards(destPoint);
 		}
@@ -48,15 +58,13 @@ public class ReturnFoodTask extends Task{
 			if ( foodHere.size() > 0 ) {
 				mobile.PickUpFood( foodHere );
 			}
+			else{
+				stage = 2;
+			}
 		}
 		
 		if(stage == 1 && mobile.carriedStuff == null){
 			stage = 2;
-		}
-		
-		if(stage == 2){
-			finish();
-			return;
 		}
 	}
 

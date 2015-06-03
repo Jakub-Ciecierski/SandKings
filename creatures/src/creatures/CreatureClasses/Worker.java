@@ -23,12 +23,15 @@ public class Worker extends Mobile {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
+		// Gain Information if in formation.
+		seekForKnowledge();
+		
 		if( isInFormation() )
 		{
 			return;
 		}
 		
-		seekForKnowledge();
+		
 		// send message
 		Attack();
 		

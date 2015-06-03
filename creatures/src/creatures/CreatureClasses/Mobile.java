@@ -69,8 +69,6 @@ public abstract class Mobile extends Fightable {
 	
 	
 	private Formation myFormation;
-
-	private List<Mobile> bros = new ArrayList<Mobile>();
 	
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MOBILE_MAX_KNOWLEDGE);
 	
@@ -85,13 +83,15 @@ public abstract class Mobile extends Fightable {
 	// are we standing on food?
 	public List<Food> FoodAtPoint(GridPoint pt)
 	{
-		List<Food> food = new ArrayList<Food>();
+		List<Food> listOfFood = new ArrayList<Food>();
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
 			if (obj instanceof Food) {
-				food.add( (Food) obj);
+				Food food = (Food) obj;
+				if(!food.isPicked())
+					listOfFood.add( food);
 			}
 		}
-		return food;
+		return listOfFood;
 	}
 	
 	private void StartCarrying( Food food )
@@ -282,17 +282,16 @@ public abstract class Mobile extends Fightable {
 		// get current location in grid
 		//food;
 		GridPoint gp = grid.getLocation(this);
-		// TODO: remember food in vicinity
-
+		
 		//List<Food> foodHere = FoodAtPoint( gp );
-		//if ( foodHere.size() > 0 ) PickUpFood( foodHere );
-		List<Food> foodHere = FoodAtPoint( gp );
+		/*
+		List<Food> foodHere = getFoodInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
 		if ( foodHere.size() > 0 ) 
 			{
 				PickUpFood( foodHere );
 				return;
 			}
-		
+		*/
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) )
 		{
@@ -360,11 +359,7 @@ public abstract class Mobile extends Fightable {
 			NdPoint thisLocation = space.getLocation(this);
 			NdPoint goalLocation;
 				goalLocation = new NdPoint ( gp.getX (), gp.getY ());
-			/*
-				if ( isInFormation() ) System.out.println("      m ["+ this.getID() +"] going from: "
-					+ "" + thisLocation.getX() + ":" + thisLocation.getY() + 
-					" to: " + goalLocation.getX() + ":" + goalLocation.getY() );
-			*/
+
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			if ( isMoveAway) 
 				space.moveByVector(this, -1, angle, 0);
@@ -459,6 +454,30 @@ public abstract class Mobile extends Fightable {
 		return vicinity;
 	}
 
+	public List<Food> getFoodInVicinity(int extentX, int extentY){
+		List<Food> vicinity = new ArrayList<Food>();
+		
+		// get the grid location of this Human
+		GridPoint pt = grid.getLocation(this);
+		// use the GridCellNgh class to create GridCells for
+		// the surrounding neighborhood .
+		GridCellNgh <Food> nghCreator = new GridCellNgh <Food>(grid , pt,
+				Food.class , extentX , extentY);
+		
+		List <GridCell<Food>> gridCells = nghCreator.getNeighborhood(true);
+		
+		for ( GridCell <Food> cell : gridCells ) {
+			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
+				if(obj instanceof Food){
+					Food food = (Food)obj;
+					if ( !food.isPicked() )
+						vicinity.add(food);
+				}	
+			}
+		}
+		return vicinity;
+	}
+	
 	/**
 	 * Seeks for knowledge, adds interesting points in the map
 	 * and saves it in mobile's knowledge base
@@ -467,10 +486,18 @@ public abstract class Mobile extends Fightable {
 		// get all agents in mobiles vicinity
 		List<Agent> vicinity = getAgentsInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
 		
-		for(int i =0;i<vicinity.size();i++){
+		for(int i = 0; i < vicinity.size(); i++){
 		
 			Agent agent = vicinity.get(i);
 
+			// Do not learn about picked up food
+			if(agent instanceof Food){
+				Food food = (Food) agent;
+				
+				if(food.isPicked())
+					continue;
+			}
+				
 			InformationType infoType = KnowledgeBase.GetInfoType(agent);
 
 			// if info is interesting add it
@@ -527,6 +554,13 @@ public abstract class Mobile extends Fightable {
 		return goingPoint;
 	}
 
+	public int getGoingpointX(){
+		return goingPoint.getX();
+	}
+	
+	public int getGoingpointY(){
+		return goingPoint.getY();
+	}
 
 	public void setGoingPoint(GridPoint goingPoint) {
 		this.goingPoint = goingPoint;
