@@ -39,6 +39,16 @@ public class MawFinder {
 		}
 	}
 	
+	
+	public float getBiggestDanger(){
+		float maxDanger = 0;
+		for(Maw maw : _mawList){
+			if(maw.getDanger()> maxDanger)
+				maxDanger += maw.getDanger();
+		}
+		
+		return maxDanger;
+	}
 	public void makeAlliance(int ID1, int ID2){
 		MawRelations[ID1][ID2] = MawRelation.Friend;
 		MawRelations[ID1][ID2] = MawRelation.Friend;

@@ -302,16 +302,22 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	private boolean getGoHomeDesire( GridPoint gp ) {
+		Maw mother = MawFinder.Instance().GetMaw(this.playerID);
+		
 		double distance = MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
 		if( food < distance + Constants.MOBILE_STARTVATION_THRESHOLD)
 			return true;
-		else if ( distance < Constants.MOBILE_GO_HOME_THRESHOLD )
+		else if ( distance < Constants.MOBILE_GO_HOME_THRESHOLD * DangerRelation(mother) )
 			return false;
 		int random = RandomHelper.nextIntFromTo(0, (int) ( Constants.BIGGEST_DISTANCE - Constants.MOBILE_GO_HOME_THRESHOLD ));
-		if ( distance - Constants.MOBILE_GO_HOME_THRESHOLD / 3 > random )
+		if ( (distance - Constants.MOBILE_GO_HOME_THRESHOLD * DangerRelation(mother))/4 > random )
 			return true;
 		
 		return false;
+	}
+	
+	private float DangerRelation(Maw maw){
+		return (MawFinder.Instance().getBiggestDanger() / maw.getDanger()) * Constants.MAW_DISTANCE_FACTOR;
 	}
 
 	private void MoveRandomly( GridPoint gp )

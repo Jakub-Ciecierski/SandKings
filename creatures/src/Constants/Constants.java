@@ -28,6 +28,9 @@ public final class Constants {
 	public static final int MAW_BIRTHING_FACTOR = 4;
 	public static final int MAW_STRENGTH_FACTOR = 10;
 	public static final int MAW_STARVING_FACTOR = 2;
+	
+
+	public static final int MAW_DISTANCE_FACTOR = 5;
 
 	public static final int MAW_CHILDPOOP_COUNTER = 1;
 	public static final int MAW_STRENGTH_COUNTER = 5;
