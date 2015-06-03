@@ -252,7 +252,14 @@ public class Formation extends Fightable {
 					DropCarriedFood();
 				break;
 			case Wpierdol:
-					System.out.println("  for attacking.");
+					if(isFighting)
+					{
+						
+					}
+					else
+					{
+						
+					}
 				break;
 			case Uknown: break;
 			default: break;
@@ -370,13 +377,13 @@ public class Formation extends Fightable {
 
 	public void FormationAttackCheck(){
 		GridPoint pt = grid.getLocation ( this );
+		isFighting = false;
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
 		List <GridCell<Mobile>> gridCells = nghCreator.getNeighborhood ( true );
 		for ( GridCell <Mobile> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
-				if(obj instanceof Fightable && (Fightable)obj != this){
-					
+				if(obj instanceof Fightable && (Fightable)obj != this){			
 					Fightable mobile = (Fightable)obj;
 					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
 					{
@@ -385,7 +392,6 @@ public class Formation extends Fightable {
 				}
 			}
 		}
-		isFighting = false;
 	}
 	public GridPoint AreEnemiesNearby(){
 		GridPoint pt = grid.getLocation ( this );

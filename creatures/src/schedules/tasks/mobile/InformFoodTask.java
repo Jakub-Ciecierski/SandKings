@@ -39,6 +39,10 @@ public class InformFoodTask extends Task {
 		if(stage == 0)
 		{
 			//System.out.println("agent goin home");
+			if(destPoint == null)
+			{
+				int a = 7;
+			}
 			mobile.moveTowards(destPoint);
 		}
 		

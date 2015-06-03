@@ -127,8 +127,12 @@ public abstract class Fightable extends Agent{
 		
 		else
 	    {
+			 Mobile instance = (Mobile)this;
 		     DropFood(4);
 		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+		     if(instance.isInFormation()){
+		    	 instance.getMyFormation().soldiers.remove(this);
+		     }
 		     context.remove( this );	
 	    }
 	}
@@ -158,6 +162,10 @@ public abstract class Fightable extends Agent{
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood .
+		if(pt == null || grid == null)
+		{
+			int a = 7;
+		}
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
 		
@@ -171,8 +179,7 @@ public abstract class Fightable extends Agent{
 					
 					if(MawFinder.Instance().areWeEnemies(mobile.playerID, this.playerID))
 					{
-						DamageMessage damageMessage = new DamageMessage(this.damage);
-						sendMessage( mobile, damageMessage );
+						mobile.dealDamage(this.damage);
 						isFighting = true;
 						return;
 					}
@@ -188,8 +195,7 @@ public abstract class Fightable extends Agent{
 					
 					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
 					{
-						DamageMessage damageMessage = new DamageMessage(this.damage);
-						sendMessage( mobile, damageMessage );
+						mobile.dealDamage(this.damage);
 						isFighting = true;
 						return;
 					}

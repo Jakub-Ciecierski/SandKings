@@ -168,8 +168,15 @@ public abstract class Mobile extends Fightable {
 	private void AskForFood()
 	{
 		Maw m = MawFinder.Instance().GetMaw( this.playerID );
-		AskForFoodMessage message = new AskForFoodMessage("can I haz food?");
-		sendMessage( m, message );
+		
+		if(m.hasFood())
+		{
+			ReceiveFood();
+		}
+		else
+		{
+			Starve();
+		}
 	}
 
 	public void ReceiveFood()

@@ -29,7 +29,7 @@ public class MessageQueue {
 	 * TODO remove busy waiting - step into function
 	 * only when message are waiting
 	 */
-	@ScheduledMethod ( start = 1 , interval = 10)
+	@ScheduledMethod ( start = 1 , interval = 1)
 	public void step(){
 		MessagePacket packet = messageQueue.poll();
 		if(packet!=null){

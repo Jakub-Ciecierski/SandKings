@@ -88,12 +88,22 @@ public class NotifyTask extends Task {
 		}
 		
 		List<Mobile> agents = new ArrayList<Mobile>();
+		int max = Constants.Constants.BIGGEST_DISTANCE;
 		int extent = 5;
 		while ( agents.size() < neededBros )
 		{
 			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), neededBros, extent);
 			extent += 1;
+			
+			if(extent > max)
+				return;
 			System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    c4attack bros in " + extent );
+		}
+		
+		GridPoint enemyPoint = grid.getLocation( enemy );
+		if(enemyPoint == null)
+		{
+			return;
 		}
 		
 		Formation f = new Formation( space, grid, maw.getPlayerID());
@@ -113,7 +123,7 @@ public class NotifyTask extends Task {
 		}
 		System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
-		gridPt = grid.getLocation( enemy );
+		
 		//gridPt = information.getGridPoint();
 		
 		f.setGoingSomewhere(true);
@@ -140,12 +150,18 @@ public class NotifyTask extends Task {
 		
 		
 		List<Mobile> agents = new ArrayList<Mobile>();
+		
 		int extent = 5;
+		int max = Constants.Constants.BIGGEST_DISTANCE;
 		while ( agents.size() < neededBros )
 		{
 			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), neededBros, extent);
 			extent += 1;
+			
 			System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    c4food bros in " + extent );
+			
+			if(extent > max)
+				return;
 		}
 		
 		
