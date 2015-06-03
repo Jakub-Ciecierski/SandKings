@@ -23,6 +23,7 @@ public class God {
 
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
+	private static int deadMawCounter = 0;
 	
 	public God (ContinuousSpace<Object> space, Grid<Object> grid) { 
 		this.space = space;
@@ -140,5 +141,30 @@ public class God {
 				grid.moveTo( food, x, y );
 			}
 		}			
+	}
+
+	public static void setDeadMawCounter() {
+		deadMawCounter += 1;
+		System.out.println("**************************************************");
+		System.out.println("***                                            ***");
+		System.out.println("***                                            ***");
+		System.out.println("***     MAW DIEDED						       ***");
+		System.out.println("***                                            ***");
+		System.out.println("***                                            ***");
+		System.out.println("**************************************************");
+		if(deadMawCounter == 3) {
+			RunEnvironment.getInstance().endRun();
+			if(Constants.DEBUG_MODE)
+			{
+				System.out.println("**************************************************");
+				System.out.println("***                                            ***");
+				System.out.println("***                                            ***");
+				System.out.println("***     END OF SIMULATION!!! 3 MAWS DIEDED     ***");
+				System.out.println("***                                            ***");
+				System.out.println("***                                            ***");
+				System.out.println("**************************************************");
+
+			}
+		}
 	}
 }
