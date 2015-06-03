@@ -55,8 +55,8 @@ public class ReturnFoodTask extends Task{
 		}
 		
 		if(stage == 2){
-			isFinished = true;
-			information.isUsefull = false;
+			finish();
+			return;
 		}
 	}
 

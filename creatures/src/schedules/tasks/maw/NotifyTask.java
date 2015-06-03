@@ -39,8 +39,7 @@ public class NotifyTask extends Task {
 	public void execute() {
 		if ( stage == 1 ) 
 		{
-			isFinished = true;
-			information.isUsefull = false;
+			finish();
 			return;
 		} else if ( stage == 0 )
 		{
@@ -65,9 +64,14 @@ public class NotifyTask extends Task {
 
 	private void goForWpierdol(Context<Object> context, 
 			ContinuousSpace<Object> space, Grid<Object> grid) {
-		// TODO Auto-generated method stub
 		Enemy enemy = (Enemy) information.getAgent();
-		if ( enemy == null )return;
+		
+		if ( enemy == null ) {
+			stage = 1;
+			return;
+		}
+		
+		// TODO fix function
 		int neededBros = (int) Math.ceil(
 					( ( enemy.getHealth() * enemy.getDamage() ) / 
 					( 
@@ -75,12 +79,15 @@ public class NotifyTask extends Task {
 							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
 					) ) * 1.2f
 				); 
+		
 		System.out.println( " danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
 				" mobile danger: " + 
 					( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
 						Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
 				+ "         needed bros: " + neededBros );
-		neededBros = 8;
+		
+		neededBros = 8; // TODO fix magic number
+		
 		if ( neededBros > maw.getNumberOfFreeChildren() )
 		{
 			// TODO: ask other maw.
@@ -101,10 +108,11 @@ public class NotifyTask extends Task {
 		}
 		
 		GridPoint enemyPoint = grid.getLocation( enemy );
-		if(enemyPoint == null)
-		{
+		if(enemyPoint == null) {
+			stage = 1;
 			return;
 		}
+		
 		
 		Formation f = new Formation( space, grid, maw.getPlayerID());
 		
@@ -119,7 +127,6 @@ public class NotifyTask extends Task {
 		for ( Mobile m : agents )
 		{
 			f.addToFormation(m);
-			
 		}
 		System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
@@ -137,17 +144,16 @@ public class NotifyTask extends Task {
 
 	private void goForFood(Context<Object> context, 
 			ContinuousSpace<Object> space, Grid<Object> grid) {
-		// TODO Auto-generated method stub
+
 		Food food = (Food) information.getAgent();
-		if ( food == null ) return;
-		int neededBros = food.getWeight();// + 3;
-		
-		if ( neededBros > maw.getNumberOfFreeChildren() ) 
-		{
+		if ( food == null ) {
+			stage = 1;
 			return;
 		}
 		
+		int neededBros = food.getWeight();
 		
+		if ( neededBros > maw.getNumberOfFreeChildren() ) return; 
 		
 		List<Mobile> agents = new ArrayList<Mobile>();
 		
@@ -163,8 +169,7 @@ public class NotifyTask extends Task {
 			if(extent > max)
 				return;
 		}
-		
-		
+
 		Formation f = new Formation( space, grid, maw.getPlayerID());
 		
 		context.add(f);
@@ -183,8 +188,11 @@ public class NotifyTask extends Task {
 		//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
 		gridPt = grid.getLocation(food);
-		//gridPt = information.getGridPoint();
-		
+		if(gridPt == null){
+			stage = 1;
+			return;
+		}
+
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.ForFood ); // what's the formation doing?
 		f.setGoingPoint( gridPt ); // where's the food?

@@ -26,4 +26,9 @@ public abstract class Task {
 	public Information getInformation(){
 		return this.information;
 	}
+	
+	protected void finish(){
+		isFinished = true;
+		information.isUsefull = false;
+	}
 }

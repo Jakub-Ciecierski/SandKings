@@ -29,20 +29,25 @@ public class InformFoodTask extends Task {
 
 	@Override
 	public void execute() {
+
+		if(stage == 1){
+			finish();
+			return;
+		}
+		
 		if ( mobile.isInFormation() ) return;
 		GridPoint currPoint = mobile.grid.getLocation(mobile);
 
 		Maw maw = MawFinder.Instance().GetMaw(mobile.getPlayerID());
+
+		GridPoint destPoint = MawFinder.Instance().GetMawPosition(mobile.getPlayerID());
 		
-		GridPoint destPoint = mobile.grid.getLocation(maw);
+		if(destPoint == null){
+			stage = 1;
+			return;
+		}
 		
-		if(stage == 0)
-		{
-			//System.out.println("agent goin home");
-			if(destPoint == null)
-			{
-				int a = 7;
-			}
+		if(stage == 0){
 			mobile.moveTowards(destPoint);
 		}
 		
@@ -64,11 +69,6 @@ public class InformFoodTask extends Task {
 
 			maw.getKnowledgeBase().addInformation(newInfo);
 			
-		}
-
-		if(stage == 1){
-			isFinished = true;
-			information.isUsefull = false;
 		}
 	}
 
