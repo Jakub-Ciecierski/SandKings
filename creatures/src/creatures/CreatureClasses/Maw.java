@@ -26,6 +26,8 @@ import Constants.Constants;
  */
 public class Maw extends Fightable {
 	private float food;
+	private float eatenFood = Constants.MOBILE_STARTING_FOOD;
+	
 	private int playerID;
 	private int numberOfChildren;
 	private int numOfLostChildren;
@@ -33,6 +35,7 @@ public class Maw extends Fightable {
 	private int strengthCount = 0;
 	private float strength;
 	private String name;
+	private int aggresion = 0;
 
 	// simulation props
 	private nodeNetwork NN;
@@ -78,8 +81,27 @@ public class Maw extends Fightable {
 		
 	}	
 
+	private void tryEat(){
+		if(eatenFood > 0)
+		{
+			eatenFood -= Constants.MAW_EATEN_FOOD_DECREASE_VALUE;
+		}
+		else
+		{
+			if(food >= Constants.MAW_FOOD_DECREASE_VALUE)
+			{
+				eatenFood = Constants.MOBILE_STARTING_FOOD;
+				food -=  Constants.MAW_FOOD_DECREASE_VALUE;
+			}
+			else
+			{
+				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE );
+			}
+		}
+	}
+	
 	public void updateDanger(){
-		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH;
+		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH + 1;
 	}
 	public void updateProfit(){
 		profit = numberOfChildren * Constants.MEAT_CALORIES + Constants.MAW_MEAT_NO * Constants.STEAK_CALORIES + food;
@@ -115,16 +137,16 @@ public class Maw extends Fightable {
 	
 	public boolean hasFood()
 	{
-		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
-			return true;
-
 		if ( this.getFood() >= Constants.MOBILE_STOMACH_SIZE * (1 + this.strength))
-			{
-				this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);
-				return true;
-			}
-		else	
+		{
+			this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);
+			return true;
+		}
+		else
+		{
+			aggresion++;
 			return false;
+		}
 	}
 	
 	
@@ -162,6 +184,7 @@ public class Maw extends Fightable {
 	{
 		TrySpawnMobile();
 		TryIncrementStrength();
+		tryEat();
 		
 		if(currentTask != null)
 			if(!currentTask.isFinished())
@@ -236,6 +259,14 @@ public class Maw extends Fightable {
 		this.children = children;
 	}
 
+	public int getAggresion() {
+		return aggresion;
+	}
+
+	public void setAggresion(int aggresion) {
+		this.aggresion = aggresion;
+	}
+
 	public int getNumOfLostChildren() {
 		return numOfLostChildren;
 	}
@@ -247,6 +278,10 @@ public class Maw extends Fightable {
 		return food;
 	}
 
+	public float getEatenFood() {
+		return eatenFood;
+	}
+	
 	/**
 	 * @param food the food to set
 	 */

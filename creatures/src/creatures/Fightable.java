@@ -3,6 +3,7 @@ package creatures;
 import java.util.List;
 
 import map.Food;
+import map.God;
 import Constants.Constants;
 import Enemies.Enemy;
 import repast.simphony.context.Context;
@@ -111,6 +112,7 @@ public abstract class Fightable extends Agent{
 			}
 		     DropFood(5);
 		     instance.DropMawFood();
+		     God.setDeadMawCounter();
 		     context.remove( this );
 		}
 		
