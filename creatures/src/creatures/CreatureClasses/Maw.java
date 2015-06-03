@@ -101,7 +101,7 @@ public class Maw extends Fightable {
 	}
 	
 	public void updateDanger(){
-		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH;
+		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH + 1;
 	}
 	public void updateProfit(){
 		profit = numberOfChildren * Constants.MEAT_CALORIES + Constants.MAW_MEAT_NO * Constants.STEAK_CALORIES + food;

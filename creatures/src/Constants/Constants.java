@@ -27,10 +27,13 @@ public final class Constants {
 	public static final float MAW_START_STRENGTH = 0;
 	public static final int MAW_BIRTHING_FACTOR = 4;
 	public static final int MAW_STRENGTH_FACTOR = 10;
+
 	public static final int MAW_STARVING_FACTOR = 5;
 	public static final int MAW_FOOD_DECREASE_VALUE = 1;
 	public static final int MAW_EATEN_FOOD_DECREASE_VALUE = 2;
-	public static final int MAW_DAMAGE_DECREASE_VALUE = 25;
+	public static final int MAW_DAMAGE_DECREASE_VALUE = 25;	
+
+	public static final int MAW_DISTANCE_FACTOR = 5;
 
 	public static final int MAW_CHILDPOOP_COUNTER = 1;
 	public static final int MAW_STRENGTH_COUNTER = 5;
