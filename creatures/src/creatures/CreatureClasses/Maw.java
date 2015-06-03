@@ -111,10 +111,11 @@ public class Maw extends Fightable {
 		return profit/danger;
 	}
 	
-	public void LostAMobile()
+	public void LostAMobile( Mobile m )
 	{
 		this.numberOfChildren--;
 		this.numOfLostChildren++;
+		this.children.remove(m);
 	}
 			
 	public void ReceiveFood( Food f )

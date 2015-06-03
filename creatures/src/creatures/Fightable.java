@@ -113,9 +113,12 @@ public abstract class Fightable extends Agent{
 		if( this instanceof Maw)
 		{
 			Maw instance = (Maw)this;
-			for( Worker worker : instance.getChildren())
+			synchronized( instance.getChildren() )
 			{
-				worker.Die();
+				for( Worker worker : instance.getChildren())
+				{
+					worker.Die();
+				}	
 			}
 		     DropFood(5);
 		     instance.DropMawFood();
@@ -143,7 +146,7 @@ public abstract class Fightable extends Agent{
 	    {
 			 Mobile instance = (Mobile)this;
 		     DropFood(4);
-		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile();
+		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile( instance );
 		     if(instance.isInFormation()){
 		    	 instance.getMyFormation().soldiers.remove(this);
 		     }
