@@ -54,7 +54,7 @@ public class NotifyTask extends Task {
 			{
 				default: return;
 				case FOOD: goForFood( context, space, grid ); break;
-				case ENEMY_CREATURE: goForWpierdol(context, space, grid); break;
+				case ENEMY_CREATURE: goForWpierdol( context, space, grid ); break;
 			}
 			
 			
@@ -135,7 +135,7 @@ public class NotifyTask extends Task {
 		
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
-		f.setGoingPoint( gridPt ); // where's the food?
+		f.setGoingPoint( enemyPoint ); // where's the food?
 		
 		
 		System.out.println("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );

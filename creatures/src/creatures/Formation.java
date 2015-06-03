@@ -253,16 +253,17 @@ public class Formation extends Fightable {
 					DropCarriedFood();
 				break;
 			case Wpierdol:
-				
-					if(isFighting)
-					{
-						System.out.println("    for wpierdol.");
-					}
-					else
-					{
-						
-					}
-				break;
+				System.out.println("    for wpierdol.");
+				// look for enemies in 5x5 NH
+				GridPoint closestEnemy = AreEnemiesNearby();
+				// if NH contains enemies
+				if( closestEnemy != null)
+				{
+					moveTowards(closestEnemy);
+					return;
+				}
+				else
+					this.Disband();
 			case Uknown: break;
 			default: break;
 		}
