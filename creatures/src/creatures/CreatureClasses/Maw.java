@@ -84,18 +84,18 @@ public class Maw extends Fightable {
 	private void tryEat(){
 		if(eatenFood > 0)
 		{
-			eatenFood--;
+			eatenFood -= Constants.MAW_EATEN_FOOD_DECREASE_VALUE;
 		}
 		else
 		{
-			if(food >= 1)
+			if(food >= Constants.MAW_FOOD_DECREASE_VALUE)
 			{
 				eatenFood = Constants.MOBILE_STARTING_FOOD;
-				food--;
+				food -=  Constants.MAW_FOOD_DECREASE_VALUE;
 			}
 			else
 			{
-				dealDamage(1);
+				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE );
 			}
 		}
 	}
@@ -278,6 +278,10 @@ public class Maw extends Fightable {
 		return food;
 	}
 
+	public float getEatenFood() {
+		return eatenFood;
+	}
+	
 	/**
 	 * @param food the food to set
 	 */

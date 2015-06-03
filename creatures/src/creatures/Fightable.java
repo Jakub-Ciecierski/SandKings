@@ -112,8 +112,8 @@ public abstract class Fightable extends Agent{
 			}
 		     DropFood(5);
 		     instance.DropMawFood();
-		     context.remove( this );
 		     God.setDeadMawCounter();
+		     context.remove( this );
 		}
 		
 		else if( this instanceof Enemy)
