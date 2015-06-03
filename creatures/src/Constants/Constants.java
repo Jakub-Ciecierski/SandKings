@@ -76,7 +76,7 @@ public final class Constants {
 	public static final int DONUT_CALORIES = 25 * FOOD_MULTIPLIER;
 	public static final int GRAPE_CALORIES = 15 * FOOD_MULTIPLIER;
 	public static final int CABBAGE_CALORIES = 5 * FOOD_MULTIPLIER;
-	public static final int MEAT_CALORIES = 3 * FOOD_MULTIPLIER;
+	public static final int MEAT_CALORIES = 3;
 	public static final int STEAK_CALORIES = 10 * FOOD_MULTIPLIER;
 
 	public static final int PIZZA_WEIGHT = 7;

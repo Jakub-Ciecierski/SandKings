@@ -26,6 +26,8 @@ import Constants.Constants;
  */
 public class Maw extends Fightable {
 	private float food;
+	private float eatenFood = Constants.MOBILE_STARTING_FOOD;
+	
 	private int playerID;
 	private int numberOfChildren;
 	private int numOfLostChildren;
@@ -33,6 +35,7 @@ public class Maw extends Fightable {
 	private int strengthCount = 0;
 	private float strength;
 	private String name;
+	private int aggresion = 0;
 
 	// simulation props
 	private nodeNetwork NN;
@@ -78,6 +81,25 @@ public class Maw extends Fightable {
 		
 	}	
 
+	private void tryEat(){
+		if(eatenFood > 0)
+		{
+			eatenFood--;
+		}
+		else
+		{
+			if(food >= 1)
+			{
+				eatenFood = Constants.MOBILE_STARTING_FOOD;
+				food--;
+			}
+			else
+			{
+				dealDamage(1);
+			}
+		}
+	}
+	
 	public void updateDanger(){
 		danger = numberOfChildren * strength * Constants.MOBILE_ATTACK * Constants.MOBILE_HEALTH;
 	}
@@ -115,16 +137,16 @@ public class Maw extends Fightable {
 	
 	public boolean hasFood()
 	{
-		if ( NN.getElementDesire("food") + Constants.MAW_FOOD_DESIRE_THRESHOLD < this.getFood()  )
-			return true;
-
 		if ( this.getFood() >= Constants.MOBILE_STOMACH_SIZE * (1 + this.strength))
-			{
-				this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);
-				return true;
-			}
-		else	
+		{
+			this.food -=  Constants.MOBILE_STOMACH_SIZE * (1 + this.strength);
+			return true;
+		}
+		else
+		{
+			aggresion++;
 			return false;
+		}
 	}
 	
 	
@@ -162,6 +184,7 @@ public class Maw extends Fightable {
 	{
 		TrySpawnMobile();
 		TryIncrementStrength();
+		tryEat();
 		
 		if(currentTask != null)
 			if(!currentTask.isFinished())
@@ -234,6 +257,14 @@ public class Maw extends Fightable {
 
 	public void setChildren(List<Worker> children) {
 		this.children = children;
+	}
+
+	public int getAggresion() {
+		return aggresion;
+	}
+
+	public void setAggresion(int aggresion) {
+		this.aggresion = aggresion;
 	}
 
 	public int getNumOfLostChildren() {
