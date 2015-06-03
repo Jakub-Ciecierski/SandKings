@@ -218,6 +218,8 @@ public abstract class Mobile extends Fightable {
 	
 	public boolean IsAtLocation(GridPoint point)
 	{
+		if ( point == null ) return false;
+
 		int tolerance = 1;
 		GridPoint currentPos = grid.getLocation(this);
 		if ( currentPos == null ) return false;
@@ -357,9 +359,6 @@ public abstract class Mobile extends Fightable {
 		{
 			NdPoint thisLocation = space.getLocation(this);
 			NdPoint goalLocation;
-			//if ( isInFormation() && this.getMyFormation() != null ) 
-			//	goalLocation = new NdPoint( myFormation.getGoingPoint().getX(), myFormation.getGoingPoint().getY());
-			//else 
 				goalLocation = new NdPoint ( gp.getX (), gp.getY ());
 			/*
 				if ( isInFormation() ) System.out.println("      m ["+ this.getID() +"] going from: "
@@ -486,7 +485,7 @@ public abstract class Mobile extends Fightable {
 				if(this.knowledgeBase.addInformation(info)){
 
 					
-					
+					/*
 					if(Constants.DEBUG_MODE){
 						System.out.println("*********************************************************");
 						System.out.println("Agent #" + this.id +" Gained knowledge");
@@ -494,7 +493,7 @@ public abstract class Mobile extends Fightable {
 						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
 						System.out.println("When: " + tickCount);
 						System.out.println("********************************************************* \n\n");
-					}
+					}*/
 				}
 			}
 		}

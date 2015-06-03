@@ -53,9 +53,8 @@ public class InformEnemyTask extends Task {
 		}
 
 		if(stage == 1){
-			isFinished = true;
-			information.isUsefull = false;
-			
+			finish();
+			return;
 		}
 	}
 

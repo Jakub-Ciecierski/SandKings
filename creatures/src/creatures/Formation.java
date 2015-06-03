@@ -139,6 +139,7 @@ public class Formation extends Fightable {
 		//System.out.println("   kicked out member");
 		m.setInFormation(false);
 		m.setGoingSomewhere(false);
+		m.setMove(true); // so that he starts moving
 		m.setGoingPoint(null);
 		m.setMyFormation(null);
 		this.setCarryCapacity(this.getCarryCapacity() - m.getCarryCapacity());
@@ -248,13 +249,14 @@ public class Formation extends Fightable {
 					// TODO
 				break;
 			case HomeWithFood:
-					//	System.out.println("  home with food.");
+						System.out.println("  home with food.");
 					DropCarriedFood();
 				break;
 			case Wpierdol:
+				
 					if(isFighting)
 					{
-						
+						System.out.println("    for wpierdol.");
 					}
 					else
 					{
@@ -429,11 +431,10 @@ public class Formation extends Fightable {
 		return closest;
 	}
 	
-	public void moveTowards( GridPoint gp )
+	public boolean moveTowards( GridPoint gp )
 	{
-		
 		// only move if not already there
-		if ( !gp.equals( grid.getLocation(this) ) )
+		if ( gp != null &&  !gp.equals( grid.getLocation(this) ) )
 		{
 			
 			NdPoint thisLocation = space.getLocation(this);
@@ -453,7 +454,9 @@ public class Formation extends Fightable {
 				space.moveTo(m, thisLocation.getX(), thisLocation.getY());
 				grid.moveTo( m, (int)thisLocation.getX(), (int)thisLocation.getY());
 			}
+			return true;
 		}
+		return false;
 	}
 	
 
