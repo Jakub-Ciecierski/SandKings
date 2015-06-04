@@ -123,7 +123,7 @@ public abstract class Fightable extends Agent{
 			}
 			*/
 			int size = instance.getChildren().size();
-			for ( int i = size; i > 0; i-- )
+			for ( int i = size - 1; i > 0; i-- )
 			{
 				instance.getChildren().get( i ).Die();
 			}

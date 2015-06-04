@@ -1,35 +1,35 @@
-<repast.simphony.visualization.engine.DefaultDisplayDescriptor>
-  <name>NewestRepastDisplay</name>
-  <type>TWO_D</type>
+<repast.simphony.visualization.engine.CartesianDisplayDescriptor>
+  <name>Display</name>
+  <type>2D</type>
   <styles>
-    <entry>
-      <string>creatures.CreatureClasses.Maw</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
-    </entry>
     <entry>
       <string>Enemies.Enemy</string>
       <string>Enemies.EnemyTypes</string>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Maw</string>
+      <string>creatures.ColoredMaws</string>
     </entry>
     <entry>
       <string>map.Food</string>
       <string>map.FoodTypes</string>
     </entry>
     <entry>
-      <string>creatures.CreatureClasses.Mobile</string>
-      <string>creatures.ColoredCreature</string>
-    </entry>
-    <entry>
       <string>map.Terrarium</string>
       <string>map.MapStyle</string>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Worker</string>
+      <string>creatures.ColoredCreature</string>
     </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>creatures.CreatureClasses.Maw</string>
-      <string>creatures.CreatureClasses.Maw.style_17.xml</string>
+      <string>Enemies.Enemy</string>
+      <null/>
     </entry>
     <entry>
-      <string>Enemies.Enemy</string>
+      <string>creatures.CreatureClasses.Maw</string>
       <null/>
     </entry>
     <entry>
@@ -37,11 +37,11 @@
       <null/>
     </entry>
     <entry>
-      <string>creatures.CreatureClasses.Mobile</string>
+      <string>map.Terrarium</string>
       <null/>
     </entry>
     <entry>
-      <string>map.Terrarium</string>
+      <string>creatures.CreatureClasses.Worker</string>
       <null/>
     </entry>
   </editedStyles>
@@ -55,7 +55,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-2143815414</hashCode>
+    <hashCode>-572984989</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -63,38 +63,37 @@
   <layerOrder>
     <entry>
       <string>Enemies.Enemy</string>
-      <int>2</int>
-    </entry>
-    <entry>
-      <string>creatures.CreatureClasses.Maw</string>
       <int>4</int>
     </entry>
     <entry>
-      <string>map.Food</string>
-      <int>1</int>
+      <string>creatures.CreatureClasses.Maw</string>
+      <int>3</int>
     </entry>
     <entry>
-      <string>creatures.CreatureClasses.Mobile</string>
-      <int>3</int>
+      <string>map.Food</string>
+      <int>2</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>
       <int>0</int>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Worker</string>
+      <int>1</int>
     </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
       <id>space</id>
       <attributes/>
-      <type>CONTINUOUS_SPACE</type>
+      <type>continuous space</type>
     </repast.simphony.scenario.data.ProjectionData>
     <repast.simphony.scenario.data.ProjectionData>
       <id>grid</id>
       <attributes/>
-      <type>GRID</type>
+      <type>grid</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
-  <valueLayers/>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
     <unitSize>15.0</unitSize>
   </visualizationProperties>
@@ -157,4 +156,5 @@
     <blue>255</blue>
     <alpha>255</alpha>
   </backgroundColor>
-</repast.simphony.visualization.engine.DefaultDisplayDescriptor>
+  <valueLayers/>
+</repast.simphony.visualization.engine.CartesianDisplayDescriptor>
