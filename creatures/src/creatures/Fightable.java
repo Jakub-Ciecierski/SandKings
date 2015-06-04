@@ -113,12 +113,19 @@ public abstract class Fightable extends Agent{
 		if( this instanceof Maw)
 		{
 			Maw instance = (Maw)this;
+			/*
 			synchronized( instance.getChildren() )
 			{
 				for( Worker worker : instance.getChildren())
 				{
 					worker.Die();
 				}	
+			}
+			*/
+			int size = instance.getChildren().size();
+			for ( int i = size; i > 0; i-- )
+			{
+				instance.getChildren().get( i ).Die();
 			}
 		     DropFood(5);
 		     instance.DropMawFood();

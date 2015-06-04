@@ -1,11 +1,7 @@
 <repast.simphony.visualization.engine.DefaultDisplayDescriptor>
-  <name>kupa</name>
+  <name>NewestRepastDisplay</name>
   <type>TWO_D</type>
   <styles>
-    <entry>
-      <string>map.God</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
-    </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
@@ -28,10 +24,6 @@
     </entry>
   </styles>
   <editedStyles>
-    <entry>
-      <string>map.God</string>
-      <null/>
-    </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <string>creatures.CreatureClasses.Maw.style_17.xml</string>
@@ -63,35 +55,31 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>271738227</hashCode>
+    <hashCode>-2143815414</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>map.God</string>
-      <int>0</int>
+      <string>Enemies.Enemy</string>
+      <int>2</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <int>4</int>
     </entry>
     <entry>
-      <string>Enemies.Enemy</string>
-      <int>5</int>
-    </entry>
-    <entry>
       <string>map.Food</string>
-      <int>3</int>
+      <int>1</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Mobile</string>
-      <int>2</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>
-      <int>1</int>
+      <int>0</int>
     </entry>
   </layerOrder>
   <projections>

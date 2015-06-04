@@ -27,8 +27,8 @@ public class InformEnemyTask extends Task {
 		GridPoint currPoint = mobile.grid.getLocation(mobile);
 
 		Maw maw = MawFinder.Instance().GetMaw(mobile.getPlayerID());
-		
-		GridPoint destPoint = mobile.grid.getLocation(maw);
+
+		GridPoint destPoint = MawFinder.Instance().GetMawPosition(mobile.getPlayerID());
 		
 		if(stage == 0)
 			mobile.moveTowards(destPoint);
