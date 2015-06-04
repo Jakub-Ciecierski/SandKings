@@ -21,7 +21,6 @@ public class Food extends Agent implements Comparable {
 	
 	private int power = 1;
 	private int weight = 1;
-	private int ratio = 1;
 	private boolean isPicked = false;
 	public Food (ContinuousSpace<Object> space, Grid<Object> grid, int foodID) {
 		this.space = space;
@@ -57,7 +56,6 @@ public class Food extends Agent implements Comparable {
 				break;
 		}
 		if ( weight == 0 ) weight = 1; // because no.
-		this.ratio = power / weight;
 	}
 	
 	public void Delete() {
