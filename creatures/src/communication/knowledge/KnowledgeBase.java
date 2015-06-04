@@ -80,7 +80,7 @@ public class KnowledgeBase {
 				for(int i =0;i < knowledge.size();i++){
 					Information info = knowledge.get(i);
 					if(info == null ||
-							!info.isUsefull ||
+							!info.isUsefull || isInCache(info.getAgent()) ||
 							newInfo.getType().getPriority() >= info.getType().getPriority()){
 						knowledge.set(i, newInfo);
 					}
@@ -92,6 +92,10 @@ public class KnowledgeBase {
 			cache.add(newInfo.getAgent());
 		}
 		return true;
+	}
+	
+	public void addToCache(Agent agent){
+		this.cache.add(agent);
 	}
 	
 	public void removeInformation(Information info){

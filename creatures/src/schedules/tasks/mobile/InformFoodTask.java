@@ -65,7 +65,6 @@ public class InformFoodTask extends Task {
 			InformMessage informMessage = new InformMessage(newInfo);
 			mobile.sendMessage(maw, informMessage);
 			SmartConsole.Print("Agent "+ mobile.getID() +" informed mother ", DebugModes.TASK);
-			//System.out.println("    agent informed mother ");
 
 			//maw.getKnowledgeBase().addInformation(newInfo);
 			

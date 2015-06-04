@@ -5,37 +5,55 @@ import schedules.tasks.maw.EnemyNotifyTask;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import communication.Message;
-import communication.messages.responses.AllianceResponseMessage;
 import creatures.Agent;
+import creatures.CreatureClasses.Maw;
 
 public class AllianceMessage extends Message {
 
 	// Task responsible for creating alliance 
 	private EnemyNotifyTask task;
 	
-	public AllianceMessage(EnemyNotifyTask task) {
+	private int neededBros;
+	
+	public AllianceMessage(EnemyNotifyTask task, int neededBros) {
 		this.task = task;
 		
+		this.neededBros = neededBros;
 	}
 	
 	@Override
 	public void handle(Agent sender, Agent recipient) {
 		SmartConsole.Print("Agent #" + recipient.getID() + " received AllianceMessage", DebugModes.MESSAGE);
 		
+		Maw maw = (Maw)recipient;
 		boolean doAlliance;
+		int numberOfFreeBros;
 		
 		// Check number of free children
-		// ... doAlliance = true ? false
-		// If yes send AllianceAck
+		// If yes Answer with number of Bros > 0
+		// if No answer with number of Bros == 0
 		
-		doAlliance = true;
-		
-		if(doAlliance)
-			SmartConsole.Print("Agent #" + recipient.getID() + " Agreed For Alliance", DebugModes.MESSAGE);
+		// If maw is already doing the agent of alliance interest, deny
+		if(maw.getCurrentTask() == null ||
+				maw.getCurrentTask().getInformation().getAgent() == task.getInformation().getAgent()){
+			numberOfFreeBros = -1;
+		}
+		else{
+			numberOfFreeBros = maw.getNumberOfFreeChildren();	
+		}
+			
+		doAlliance = numberOfFreeBros > 0;
+
+		if(doAlliance) {
+			// Add him to cache, so don't this Maw does not start other tasks with this Agent
+			maw.getKnowledgeBase().addToCache(task.getInformation().getAgent());
+			
+			SmartConsole.Print("Agent #" + recipient.getID() + " Agreed For Alliance with " + numberOfFreeBros + " Mobiles", DebugModes.MESSAGE);
+		}
 		else
 			SmartConsole.Print("Agent #" + recipient.getID() + " Decliend Alliance", DebugModes.MESSAGE);
 		
-		// this.task.Notify
+		this.task.Answer(numberOfFreeBros, maw.getPlayerID());
 		
 	}
 

@@ -1,6 +1,7 @@
 package schedules;
 
 import schedules.tasks.Task;
+import schedules.tasks.maw.EnemyNotifyTask;
 import schedules.tasks.maw.NotifyTask;
 import schedules.tasks.mobile.ReturnFoodTask;
 import communication.knowledge.Information;
@@ -25,7 +26,7 @@ public class MawScheduler extends Scheduler{
 			case FOOD:
 				return new NotifyTask(info, this.maw);
 			case ENEMY_CREATURE:
-				return new NotifyTask(info, this.maw);
+				return new EnemyNotifyTask(info, this.maw);
 				
 			default:
 				return null;
