@@ -5,6 +5,8 @@ import java.util.List;
 import map.Food;
 import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import Constants.Constants;
 import communication.knowledge.Information;
 import communication.messages.InformMessage;

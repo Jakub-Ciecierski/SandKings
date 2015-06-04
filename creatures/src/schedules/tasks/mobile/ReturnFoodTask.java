@@ -10,6 +10,8 @@ import creatures.CreatureClasses.Mobile;
 import creatures.CreatureClasses.Mobile.GoingWhere;
 import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 
 public class ReturnFoodTask extends Task{
 
@@ -21,12 +23,7 @@ public class ReturnFoodTask extends Task{
 		super(information);
 		this.mobile = mobile;
 		
-		/*
-		if(Constants.DEBUG_MODE){
-			System.out.println("*********************************************************");
-			System.out.println("Agent #" + mobile.getID() +" New ReturnFoodTask");
-			System.out.println("********************************************************* \n\n");
-		}*/
+		SmartConsole.Print("Agent #" + mobile.getID() +" New ReturnFoodTask", DebugModes.TASK);
 	}
 
 	@Override

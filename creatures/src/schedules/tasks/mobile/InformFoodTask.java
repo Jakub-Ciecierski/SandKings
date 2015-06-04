@@ -5,6 +5,8 @@ import java.util.List;
 import map.Food;
 import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import Constants.Constants;
 import communication.knowledge.Information;
 import communication.messages.InformMessage;
@@ -20,11 +22,8 @@ public class InformFoodTask extends Task {
 	public InformFoodTask (Information information, Mobile mobile) {
 		super(information);
 		this.mobile = mobile;
-		
-		System.out.println("*********************************************************");
-		System.out.println("Agent #" + mobile.getID() +" New InfoFood: " + information.getType().toString());
-		System.out.println("********************************************************* \n\n");
 	
+		SmartConsole.Print("Agent #" + mobile.getID() +" New InfoFood: " + information.getType().toString(), DebugModes.TASK);
 	}
 
 	@Override
@@ -63,11 +62,12 @@ public class InformFoodTask extends Task {
 					information.getGridPoint()
 					);
 			
-			//InformMessage informMessage = new InformMessage(newInfo);
-			//mobile.sendMessage(maw, informMessage);
+			InformMessage informMessage = new InformMessage(newInfo);
+			mobile.sendMessage(maw, informMessage);
+			SmartConsole.Print("Agent "+ mobile.getID() +" informed mother ", DebugModes.TASK);
 			//System.out.println("    agent informed mother ");
 
-			maw.getKnowledgeBase().addInformation(newInfo);
+			//maw.getKnowledgeBase().addInformation(newInfo);
 			
 		}
 	}
