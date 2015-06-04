@@ -33,12 +33,7 @@ public class NotifyTask extends Task {
 		super(information);
 		
 		this.maw = maw;
-		
-
-		System.out.println("*********************************************************");
-		System.out.println("Agent #" + maw.getID() +" New NotifyTask: " + information.getType().toString());
-		System.out.println("********************************************************* \n\n");
-	
+			
 		SmartConsole.Print("Agent #" + maw.getID() +" New NotifyTask: " + information.getType().toString(), DebugModes.TASK);
 	}
 
@@ -57,16 +52,14 @@ public class NotifyTask extends Task {
 			Context<Object> context = ContextUtils.getContext(maw);
 			ContinuousSpace<Object> space = maw.getSpace(); 
 			Grid<Object> grid = maw.getGrid();
-			
-			
+						
 			switch ( information.getType() )
 			{
 				default: return;
 				case FOOD: goForFood( context, space, grid ); break;
 				case ENEMY_CREATURE: goForWpierdol( context, space, grid ); break;
 			}
-			
-			
+	
 		}
 		
 	}
@@ -93,11 +86,11 @@ public class NotifyTask extends Task {
 					) ) * 1.2f
 				); 
 		
-		System.out.println( " danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
-				" mobile danger: " + 
-					( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
-						Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
-				+ "         needed bros: " + neededBros );
+		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
+								" mobile danger: " + 
+								( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
+								Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+								+ "         needed bros: " + neededBros , DebugModes.TASK);
 		
 		neededBros = 8; // TODO fix magic number
 		
@@ -120,7 +113,6 @@ public class NotifyTask extends Task {
 			
 			if(extent > max)
 				return;
-			//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    c4attack bros in " + extent );
 		}
 		
 		GridPoint enemyPoint = grid.getLocation( enemy );
@@ -143,14 +135,11 @@ public class NotifyTask extends Task {
 		{
 			f.addToFormation(m);
 		}
-		//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
 		f.setGoingPoint( enemyPoint ); // where's the food?
-
-		//System.out.println("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
-		
+	
 		stage = Stages.FINISH;
 	}
 
@@ -186,9 +175,7 @@ public class NotifyTask extends Task {
 		{
 			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), neededBros, extent);
 			extent += 1;
-			
-			System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    c4food bros in " + extent );
-			
+
 			if(extent > max)
 				return;
 		}
@@ -208,7 +195,6 @@ public class NotifyTask extends Task {
 			f.addToFormation(m);
 			
 		}
-		//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
 		
 		gridPt = grid.getLocation(food);
 		if(gridPt == null){
@@ -219,9 +205,7 @@ public class NotifyTask extends Task {
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.ForFood ); // what's the formation doing?
 		f.setGoingPoint( gridPt ); // where's the food?
-		
-		
-		//System.out.println("food formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
+
 		stage = Stages.FINISH;
 	}
 

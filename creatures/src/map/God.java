@@ -15,6 +15,8 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import util.GSC;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import Constants.Constants;
 import Enemies.Enemy;
 
@@ -80,20 +82,20 @@ public class God {
 			case 0: //spider
 				attack = Constants.SPIDER_ATTACK * attackConstant;
 				health = Constants.SPIDER_HEALTH * healthConstant;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Spider. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				droppedMeat = Constants.SPIDER_MEAT_NO;
 				break;
 			case 1: //snake
 				attack = Constants.SNAKE_ATTACK * attackConstant;
 				health = Constants.SNAKE_HEALTH * healthConstant;
 				droppedMeat = Constants.SNAKE_MEAT_NO;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Snake. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				break;
 			case 2: //scorpion
 				attack = Constants.SCORPION_ATTACK * attackConstant;
 				health = Constants.SCORPION_HEALTH * healthConstant;
 				droppedMeat = Constants.SCORPION_MEAT_NO;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Scorpion. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				break;
 			default:
 				break;

@@ -157,5 +157,8 @@ public class MawFinder {
 		}
 		return vicinity;
 	}	
-	
+
+	public List<Maw> getMaws(){
+		return this._mawList;
+	}
 }
