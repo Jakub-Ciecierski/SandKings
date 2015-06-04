@@ -346,8 +346,7 @@ public class Formation extends Fightable {
 				isComplete = true;
 			}
 		}		
-		
-		
+	
 		if(isFighting)
 		{
 			System.out.println("formation fighting.");
