@@ -56,7 +56,7 @@ public class NotifyTask extends Task {
 			switch ( information.getType() )
 			{
 				default: return;
-				case FOOD: goForFood( context, space, grid ); break;
+				case FOOD: goForFood2( context, space, grid ); break;
 				case ENEMY_CREATURE: goForWpierdol( context, space, grid ); break;
 			}
 	
@@ -209,6 +209,26 @@ public class NotifyTask extends Task {
 		stage = Stages.FINISH;
 	}
 
+
+	
+	private void goForFood2(Context<Object> context, 
+			ContinuousSpace<Object> space, Grid<Object> grid) {
+
+		Food food = (Food) information.getAgent();
+		if ( food == null ) {
+			stage = Stages.FINISH;
+			return;
+		}
+
+		int neededBros = food.getWeight();
+		
+		FormationCreator formationCreator = new FormationCreator(maw, 
+												neededBros, 
+												information.getGridPoint());
+		maw.addPendingFormation(formationCreator);
+
+		stage = Stages.FINISH;
+	}
 
 
 

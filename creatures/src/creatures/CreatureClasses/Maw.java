@@ -7,6 +7,7 @@ import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
 import creatures.Fightable;
+import creatures.Formation;
 import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -17,6 +18,8 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.MawScheduler;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import Constants.Constants;
 
 
@@ -47,6 +50,10 @@ public class Maw extends Fightable {
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
 	private MawScheduler scheduler = new MawScheduler(this);
 
+	//private int pendingFormations = 0;
+	
+	private List<FormationCreator> pendingFormations = new ArrayList<FormationCreator>();
+	
 	public Maw( ContinuousSpace<Object> space, Grid<Object> grid, int setPlayerID)
 	{
 		super(space, grid, setPlayerID, Constants.MAW_ATTACK, Constants.MAW_HEALTH, Constants.MAW_MEAT_NO);
@@ -196,6 +203,8 @@ public class Maw extends Fightable {
 
 		updateDanger();
 		updateProfit();
+		
+		createFormation();
 	}
 	
 	private void TrySpawnMobile()
@@ -347,5 +356,22 @@ public class Maw extends Fightable {
 			}
 		}
 		return free;
+	}
+	
+	public void addPendingFormation(FormationCreator formationCreator){
+		pendingFormations.add(formationCreator);
+	}
+	
+	public boolean createFormation(){
+		if(pendingFormations.size() > 0){
+			FormationCreator pendingFormation = pendingFormations.get(0);
+			SmartConsole.Print("Maw #" + this.getPlayerID() + "Attempting FromationCreator", DebugModes.FORMATION);
+			
+			if(pendingFormation.AttemptFormation()){
+				pendingFormations.remove(0);
+				return true;
+			}
+		}
+		return false;
 	}
 }

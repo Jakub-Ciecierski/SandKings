@@ -28,7 +28,8 @@ public class EnemyNotifyTask extends Task {
 	private enum Stages {
 		BEGIN,
 		FINISH,
-		ALLIANCE
+		FORM_ALLIANCE,
+		FORM_FORMATION
 	}
 	
 	// ALLIANCE STUFF
@@ -96,26 +97,11 @@ public class EnemyNotifyTask extends Task {
 			stage = Stages.FINISH;
 			return;
 		}
-		
-		// TODO fix function
-		int neededBros = (int) Math.ceil(
-					( ( enemy.getHealth() * enemy.getDamage() ) / 
-					( 
-							( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
-							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
-					) ) * 1.2f
-				); 
 
-		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
-											" mobile danger: " +	 
-											( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
-											Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
-											+ "         needed bros: " + neededBros , DebugModes.TASK);
-		
+		int neededBros = neededBros(enemy);
 		neededBros = 20; // TODO fix magic number
 		
 		allianceChecker[myAllianceIndex] = maw.getNumberOfFreeChildren();
-		
 		printCurrentAlliances();
 		
 		if ( neededBros > getAllianceBrosCount() )
@@ -126,6 +112,8 @@ public class EnemyNotifyTask extends Task {
 		}
 		
 		SmartConsole.Print("Maw #" + maw.getPlayerID() + " Finished creating Alliance... Starting Formations", DebugModes.TASK);
+		
+		createFormations();
 		
 		/******* CRAETE FORMATION SECTION *********/
 		
@@ -224,7 +212,30 @@ public class EnemyNotifyTask extends Task {
 		
 		return false;
 	}
+	
+	private boolean createFormations(){
+		return true;
+	}
 
+	private int neededBros(Enemy enemy){
+
+		// TODO fix function
+		int neededBros = (int) Math.ceil(
+					( ( enemy.getHealth() * enemy.getDamage() ) / 
+					( 
+							( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
+							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+					) ) * 1.2f
+				); 
+
+		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
+											" mobile danger: " +	 
+											( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
+											Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+											+ "         needed bros: " + neededBros , DebugModes.TASK);
+		return neededBros;
+	}
+	
 	public void Answer(int numberOfChildren, int mawID) {
 		int mawIndex = -1;
 		for(int i = 0;i < mawIDMapper.length; i++){

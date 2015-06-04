@@ -33,8 +33,7 @@ public abstract class Agent {
 	
 	public void sendMessage(Agent agent, Message message){
 		MessagePacket packet = new MessagePacket(this, agent, message);
-		MessageQueue.Instance().addPacket(packet);	
-		
+		MessageQueue.Instance().addPacket(packet);
 	}
 
 	public Task getCurrentTask(){
