@@ -89,9 +89,9 @@ public class Enemy extends Fightable implements Comparable {
 		if ( randY >= Constants.GRID_SIZE - margin ) randY = Constants.GRID_SIZE - margin;
 		
 		// X too small
-		if ( randX < 10 ) randX = 10;
+		if ( randX < margin ) randX = margin;
 		// Y too small
-		if ( randY < 10 ) randY = 10;
+		if ( randY < margin ) randY = margin;
 		
 		GridPoint randomGP = new GridPoint( randX, randY );
 		this.moveTowards(randomGP);

@@ -3,8 +3,16 @@
   <type>2D</type>
   <styles>
     <entry>
+      <string>map.EndGameInfo</string>
+      <string>map.EndGameType</string>
+    </entry>
+    <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <string>creatures.ColoredMaws</string>
+    </entry>
+    <entry>
+      <string>map.GraveStone</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
@@ -13,6 +21,10 @@
     <entry>
       <string>map.Food</string>
       <string>map.FoodTypes</string>
+    </entry>
+    <entry>
+      <string>map.EventsInfo</string>
+      <string>map.EventsInfoTypes</string>
     </entry>
     <entry>
       <string>map.Terrarium</string>
@@ -25,8 +37,16 @@
   </styles>
   <editedStyles>
     <entry>
+      <string>map.EndGameInfo</string>
+      <null/>
+    </entry>
+    <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <null/>
+    </entry>
+    <entry>
+      <string>map.GraveStone</string>
+      <string>map.GraveStone.style_0.xml</string>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
@@ -34,6 +54,10 @@
     </entry>
     <entry>
       <string>map.Food</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>map.EventsInfo</string>
       <null/>
     </entry>
     <entry>
@@ -55,23 +79,35 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-572984989</hashCode>
+    <hashCode>-739749972</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
+      <string>map.EndGameInfo</string>
+      <int>7</int>
+    </entry>
+    <entry>
       <string>creatures.CreatureClasses.Maw</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>map.GraveStone</string>
       <int>3</int>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
-      <int>4</int>
+      <int>5</int>
     </entry>
     <entry>
       <string>map.Food</string>
-      <int>2</int>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>map.EventsInfo</string>
+      <int>6</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>

@@ -10,6 +10,7 @@ public final class Constants {
 	public static final int GRID_SIZE = 50;
 	public static final int BIGGEST_DISTANCE = (int) Math.sqrt(2 * GRID_SIZE * GRID_SIZE);
 	public static final int DISTANCE_FROM_MAW = 10;
+
 	// INTERVALS
 	public static final int MOVE_START = 1;
 	public static final int GOD_MODE_START = 10;
@@ -91,6 +92,11 @@ public final class Constants {
 	public static final int GRAPE_WEIGHT = 3;
 	public static final int CABBAGE_WEIGHT = 1;
 	public static final int MEAT_WEIGHT = 1;
+	
+	// EVENT CONSTANTS
+	public static final int EVENTINFO_TIMEOUT = 100;
+	public static final int EVENT_DISTANCE = 1;
+	public static final int STARVATION_TIMEOUT = 200;
 	
 	// MOBILE VICINITY DISTANCE
 	public static final int MOBILE_VICINITY_X = 5;

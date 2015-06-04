@@ -1,7 +1,6 @@
 package creatures;
 
 import communication.MessageQueue;
-
 import map.God;
 import map.Terrarium;
 import Constants.Constants;
@@ -23,13 +22,13 @@ import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StrictBorders;
+import util.GSC;
 
 public class JCreatureBuilder implements ContextBuilder<Object> {
-
+	
 	@Override
 	public Context<Object> build(Context<Object> context) {
 		MessageQueue messageQueue = MessageQueue.Instance();
-
 		context.add(messageQueue);
 
 		System.out.println(RandomHelper.getSeed());
@@ -125,6 +124,12 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 			RunEnvironment.getInstance().endAt(200);
 		}
 		
+		GSC.Instance().setContext( context );
+		GSC.Instance().setGrid( grid );
+		GSC.Instance().setSpace( space );
+
 		return context;
 	}
+	
+
 }

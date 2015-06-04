@@ -7,6 +7,7 @@ import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
 import creatures.Fightable;
+import map.EventType;
 import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -17,6 +18,7 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.MawScheduler;
+import util.GSC;
 import Constants.Constants;
 
 
@@ -96,6 +98,8 @@ public class Maw extends Fightable {
 			else
 			{
 				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE );
+				
+				GSC.Instance().AddEventInfo(EventType.Starvation, Constants.STARVATION_TIMEOUT, this.getGridpos());	
 			}
 		}
 	}
