@@ -4,6 +4,7 @@ import java.util.List;
 
 import map.Food;
 import map.God;
+import map.GraveStone;
 import Constants.Constants;
 import Enemies.Enemy;
 import repast.simphony.context.Context;
@@ -14,11 +15,9 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
-import communication.messages.DamageMessage;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
-import creatures.CreatureClasses.Worker;
 
 /**
  *	The base class of all fightable agents
@@ -123,14 +122,23 @@ public abstract class Fightable extends Agent{
 			}
 			*/
 			int size = instance.getChildren().size();
-			for ( int i = size; i > 0; i-- )
-			{
+			for ( int i = size - 1; i > 0; i-- ) {
 				instance.getChildren().get( i ).Die();
 			}
 		     DropFood(5);
 		     instance.DropMawFood();
-		     God.setDeadMawCounter();
+
+		     //create grave stone on the map
+		     GraveStone grave = new GraveStone(this.space, this.grid);
+		     GridPoint gp = instance.getGridpos();
+		     context.add(grave);
+		     
+		     grid.moveTo(grave, (int)gp.getX(), (int)gp.getY());
+		     space.moveTo(grave,  (int)gp.getX(), (int)gp.getY());
+		     
+		     God.setDeadMawCounter(this.playerID);
 		     context.remove( this );
+
 		}
 		
 		else if( this instanceof Enemy)

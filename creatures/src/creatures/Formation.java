@@ -17,6 +17,8 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import map.Food;
 import Constants.Constants;
 import creatures.CreatureClasses.*;
@@ -27,8 +29,8 @@ public class Formation extends Fightable {
 	public Formation(ContinuousSpace<Object> space, Grid<Object> grid,
 			int playerID) {
 		super(space, grid, 5);
-		if ( grid == null ) System.out.println("formation grid null");
-		if ( space == null ) System.out.println("formation space null");
+		if ( grid == null ) SmartConsole.Print("formation grid null", DebugModes.FORMATION);
+		if ( space == null ) SmartConsole.Print("formation space null", DebugModes.FORMATION);
 		this.playerID = playerID;
 		// TODO Auto-generated constructor stub
 	}
@@ -67,7 +69,7 @@ public class Formation extends Fightable {
 	// only called when we need a new member
 	public void findNewMember(int ID)
 	{
-		if ( grid == null ) System.out.println("find member: formation grid null");
+		if ( grid == null ) SmartConsole.Print("find member: formation grid null", DebugModes.FORMATION);
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for the surrounding neighborhood
@@ -95,7 +97,7 @@ public class Formation extends Fightable {
 	}
 	public void addToFormation( Mobile m )
 	{
-		System.out.println("   found new pending member");
+		SmartConsole.Print("found new pending member", DebugModes.FORMATION);
 		GridPoint currentPos = grid.getLocation(this);
 		m.setInFormation(true);
 		m.setGoingSomewhere(false);
@@ -115,20 +117,14 @@ public class Formation extends Fightable {
 			
 			if(!pendingSoldiers.get(i).IsAtLocation(currentPos))
 			{
-				//System.out.println("   soldier " + i + "[#"+ pendingSoldiers.get(i).getID() +"/" + pendingSoldiers.size() + "]     moving towards me: ["+currentPos.getX()+":"+currentPos.getY()+"]");
 				pendingSoldiers.get(i).moveTowards(currentPos);
 				
 				newPendingSoldiers.add(pendingSoldiers.get(i));
 			}
 			else
 			{
-				
-				//pendingSoldiers.get(i).
-				//System.out.println("   pending soldier arrived.");
-				
 				this.setCarryCapacity(this.getCarryCapacity() + pendingSoldiers.get(i).getCarryCapacity());
 				soldiers.add(pendingSoldiers.get(i));
-				
 			}
 		}
 		
@@ -142,7 +138,6 @@ public class Formation extends Fightable {
 
 	public void kickOut( Mobile m )
 	{
-		//System.out.println("   kicked out member");
 		m.setInFormation(false);
 		m.setGoingSomewhere(false);
 		m.setMove(true); // so that he starts moving
@@ -199,7 +194,7 @@ public class Formation extends Fightable {
 		this.carriedStuff.add(food);
 		food.setPicked(true);
 		setCarriedWeight( getCarriedWeight() + food.getWeight() );
-		System.out.println("Formation " + getID() + " picked up food.");
+		SmartConsole.Print("Formation " + getID() + " picked up food.", DebugModes.FORMATION);
 				
 		//this.IsAtDestination(false);
 		this.setGoingSomewhere(true);
@@ -227,7 +222,8 @@ public class Formation extends Fightable {
 		{
 			f.setPicked(false);
 		}
-		System.out.println("   disbanded.");
+		
+		SmartConsole.Print("Formation " + getID() + " disbanded.", DebugModes.FORMATION);
 		soldiers.clear();
 		carriedStuff.clear();
 		this.Die();
@@ -238,7 +234,6 @@ public class Formation extends Fightable {
 		// Makes formation look cooler by randomizing the movement of each mobile
 		Random rnd = new Random();
 		
-		//System.out.println("formation movin'");
 		this.moveTowards( this.goingPoint );
 		GridPoint gp = grid.getLocation(this);
 		for ( Mobile m : soldiers )
@@ -252,7 +247,7 @@ public class Formation extends Fightable {
 	}
 	public void ActOnArrival()
 	{
-		System.out.print("Formation " + getID() + " arrived");
+		SmartConsole.Print("Formation " + getID() + " arrived.", DebugModes.FORMATION);
 		switch ( this.goingWhere )
 		{
 			case Explore:
@@ -260,18 +255,18 @@ public class Formation extends Fightable {
 				break;
 			case ForFood:
 					//AskForFood();
-						System.out.println("  for food.");
+					SmartConsole.Print("Formation " + getID() + " for food.", DebugModes.FORMATION);
 					PickupFood();
 				break;
 			case Home:
 					// TODO
 				break;
 			case HomeWithFood:
-						System.out.println("  home with food.");
+					SmartConsole.Print("Formation " + getID() + " home with food.", DebugModes.FORMATION);
 					DropCarriedFood();
 				break;
 			case Wpierdol:
-				System.out.println("    for wpierdol.");
+				SmartConsole.Print("Formation " + getID() + " for wpierdol.", DebugModes.FORMATION);
 				// look for enemies in 5x5 NH
 				GridPoint closestEnemy = AreEnemiesNearby();
 				// if NH contains enemies
@@ -292,7 +287,7 @@ public class Formation extends Fightable {
 		List<Food> foodHere = FoodAtPoint( grid.getLocation(this) );
 		if ( foodHere.size() <= 0 ) 
 		{
-			System.out.println("no food found");
+			SmartConsole.Print("Formation " + getID() + " no food found.", DebugModes.FORMATION);
 			this.Disband();
 			return;
 		}
@@ -308,7 +303,6 @@ public class Formation extends Fightable {
 				StartCarrying( food );
 				break;
 			}
-			//System.out.println("food too heavy");
 		}
 		
 	}
@@ -342,14 +336,15 @@ public class Formation extends Fightable {
 		{
 			if ( !isComplete )
 			{
-				System.out.println("Formation " + getID() + " assembly completed. " );
+				SmartConsole.Print("Formation " + getID() + " assembly completed.", DebugModes.FORMATION);
 				isComplete = true;
 			}
 		}		
 	
 		if(isFighting)
 		{
-			System.out.println("formation fighting.");
+			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
+
 			Attack();
 			return;
 		}
@@ -367,14 +362,10 @@ public class Formation extends Fightable {
 			// MOVE SOMEWHERE
 			if ( this.isGoingSomewhere() )
 			{
-				/*System.out.println(
-						"Formation " + getID() + " ["+ this.getSize() +"]" + 
-							" going somewhere: " + this.goingPoint.getX() + ":" + this.goingPoint.getY() );*/
 				this.MoveThere();
 				this.MoveCarriedStuff();
 			}
 		}
-		//System.out.println("formation checkpoint 2");
 		
 		// WPIERDOL LOGIC
 		if ( this.goingWhere == GoingWhere.Wpierdol )
@@ -459,9 +450,6 @@ public class Formation extends Fightable {
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			space.moveByVector(this, 1, angle, 0);
 			thisLocation = space.getLocation(this);	
-			
-			//System.out.println("      f ["+ this.getID() +"] going from: " + thisLocation.getX() + ":" + thisLocation.getY() + " to: " + gp.getX() + ":" + gp.getY() );
-
 			
 			// WARNING: without Math.round this gets cut and has a converging behavior when running randomly around
 			grid.moveTo(this, (int)Math.round(thisLocation.getX()), (int)Math.round(thisLocation.getY()) );

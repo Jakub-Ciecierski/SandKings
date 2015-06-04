@@ -3,6 +3,9 @@
  */
 package map;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -11,6 +14,9 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import util.GSC;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 import Constants.Constants;
 import Enemies.Enemy;
 
@@ -24,10 +30,13 @@ public class God {
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
 	private static int deadMawCounter = 0;
+	private static List<Integer> mawIDlist = new ArrayList<>();
 	
 	public God (ContinuousSpace<Object> space, Grid<Object> grid) { 
 		this.space = space;
 		this.grid = grid;
+		for (int i = 1; i <= 4; i++)
+				mawIDlist.add(i);
 	}
 	
 	/*
@@ -44,8 +53,6 @@ public class God {
 		
 		if (RandomHelper.nextIntFromTo(0, 9) == 0) //10% chance of enemy drop
 		{ 
-			@SuppressWarnings("unchecked")
-			Context<Object> context = ContextUtils.getContext(this);
 			int enemyID;
 			int rand = RandomHelper.nextIntFromTo( 0, 5 );
 			if( rand == 5 )
@@ -69,32 +76,31 @@ public class God {
 			for(int i = 1; i < Constants.ATTACK_CONSTANT; i++)
 				attackConstant = (float) Math.sqrt(attackConstant);
 			
-			// super constructor must be first line of contructor.
+			// super constructor must be first line of constructor.
 			// we have to get all variables before running it. :(
 			switch(enemyID) {
 			case 0: //spider
 				attack = Constants.SPIDER_ATTACK * attackConstant;
 				health = Constants.SPIDER_HEALTH * healthConstant;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Spider. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				droppedMeat = Constants.SPIDER_MEAT_NO;
 				break;
 			case 1: //snake
 				attack = Constants.SNAKE_ATTACK * attackConstant;
 				health = Constants.SNAKE_HEALTH * healthConstant;
 				droppedMeat = Constants.SNAKE_MEAT_NO;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Snake. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				break;
 			case 2: //scorpion
 				attack = Constants.SCORPION_ATTACK * attackConstant;
 				health = Constants.SCORPION_HEALTH * healthConstant;
 				droppedMeat = Constants.SCORPION_MEAT_NO;
-				System.out.println("*** Health: " + health + " Attack: " + attack + "***");
+				SmartConsole.Print("Scorpion. Health: " + health + " Attack: " + attack, DebugModes.GOD);
 				break;
 			default:
 				break;
 			}
 			
-			Enemy enemy = new Enemy( space, grid, enemyID, attack, health, droppedMeat );
 			boolean isCloseToMaw = true;
 			int x = 0, y = 0;
 			while(isCloseToMaw) {
@@ -111,6 +117,9 @@ public class God {
 			
 			if(!(temp instanceof Enemy)) //don't add enemy where enemy already is
 			{ 
+				@SuppressWarnings("unchecked")
+				Context<Object> context = ContextUtils.getContext(this);
+				Enemy enemy = new Enemy( space, grid, enemyID, attack, health, droppedMeat );
 				context.add( enemy );
 				space.moveTo( enemy, x, y );
 				grid.moveTo( enemy, x, y );
@@ -127,15 +136,16 @@ public class God {
 				foodID = 0;
 			else
 				foodID = RandomHelper.nextIntFromTo( 1, 3 );
-			@SuppressWarnings("unchecked")
-			Context<Object> context = ContextUtils.getContext( this );
-			Food food = new Food( space, grid, foodID );
+
 			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
 			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
 			Object temp = grid.getObjectAt( x, y );
 			
 			if(!(temp instanceof Food)) //don't add food where food already is
 			{ 
+				@SuppressWarnings("unchecked")
+				Context<Object> context = ContextUtils.getContext( this );
+				Food food = new Food( space, grid, foodID );
 				context.add( food );
 				space.moveTo( food, x, y );
 				grid.moveTo( food, x, y );
@@ -143,23 +153,29 @@ public class God {
 		}			
 	}
 
-	public static void setDeadMawCounter() {
+	public static void setDeadMawCounter(int deadMawID) {
 		deadMawCounter += 1;
-		System.out.println("**************************************************");
-		System.out.println("***                                            ***");
-		System.out.println("***                                            ***");
-		System.out.println("***     MAW DIEDED						       ***");
-		System.out.println("***                                            ***");
-		System.out.println("***                                            ***");
-		System.out.println("**************************************************");
+		mawIDlist.remove(Integer.valueOf(deadMawID));
+
 		if(deadMawCounter == 3) {
+			int coordinate = (int)Constants.GRID_SIZE/2;
+			if (!(GSC.Instance().getGrid().getObjectsAt(coordinate, coordinate) instanceof EndGameInfo)) {
+				Context<Object> context = GSC.Instance().getContext();
+				if (context != null) {
+					EndGameInfo endInfo = new EndGameInfo( mawIDlist.get(0) );
+					context.add(endInfo);
+					GSC.Instance().getGrid().moveTo(endInfo, coordinate, coordinate);
+					GSC.Instance().getSpace().moveTo(context, coordinate, coordinate);
+				}
+				
+			}
 			RunEnvironment.getInstance().endRun();
 			if(Constants.DEBUG_MODE)
 			{
 				System.out.println("**************************************************");
 				System.out.println("***                                            ***");
 				System.out.println("***                                            ***");
-				System.out.println("***     END OF SIMULATION!!! 3 MAWS DIEDED     ***");
+				System.out.println("  END OF SIMULATION!!! MAW ID " + mawIDlist.get(0) + " WON");
 				System.out.println("***                                            ***");
 				System.out.println("***                                            ***");
 				System.out.println("**************************************************");

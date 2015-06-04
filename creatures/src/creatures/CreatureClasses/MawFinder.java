@@ -3,7 +3,6 @@ package creatures.CreatureClasses;
 import java.util.ArrayList;
 import java.util.List;
 
-import creatures.Agent;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.space.grid.GridPoint;
@@ -158,5 +157,8 @@ public class MawFinder {
 		}
 		return vicinity;
 	}	
-	
+
+	public List<Maw> getMaws(){
+		return this._mawList;
+	}
 }

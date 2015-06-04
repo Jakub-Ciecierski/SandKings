@@ -3,35 +3,8 @@
 /creatures/velocity.log.1
 /creatures/debug.log
 /creatures/velocity.log
-/creatures/creatures.rs/
-/Nodal Network/bin/desireNode.class
-/Nodal Network/bin/influence.class
-/Nodal Network/bin/mainClass.class
-/Nodal Network/bin/nodeNetwork.classTask
-/Nodal Network/bin/resourceNode.class
-/creatures/bin/Constants/Constants.class
-/creatures/bin/NodalNetwork/desireNode.class
-/creatures/bin/NodalNetwork/influence.class
-/creatures/bin/NodalNetwork/nodeNetwork.class
-/creatures/bin/NodalNetwork/resourceNode.class
-/communication/bin/communication/*.class
-/communication/bin/communication/messages/*.class
-/communication/bin/communication/rules/*.class
-/communication/bin/jzombies/*.class
-/communication/bin/jzombies/*.agent
-/communication/bin/jzombies/*.groovy
-/creatures/bin/creatures/ColoredCreature.class
-/creatures/bin/creatures/CreatureClasses/Fighter.class
-/creatures/bin/creatures/CreatureClasses/FoodGatherer.class
-/creatures/bin/creatures/CreatureClasses/Maw.class
-/creatures/bin/creatures/CreatureClasses/Mobile.class
-/creatures/bin/creatures/CreatureClasses/Worker.class
-/creatures/bin/creatures/JCreatureBuilder.class
-/creatures/bin/map/Food.class
-/creatures/bin/map/God.class
-/creatures/bin/map/MapStyle.class
-/creatures/bin/map/Terrarium.class
-/creatures/bin/
+*/bin/*
+
 *.class
 /creatures/ssh_remote_model.log
 /creatures/core
@@ -46,5 +19,4 @@
 /doc/paper/sand_kings.synctex.gz
 /creatures/*.log
 
-/creatures/creatures.rs/styles/creatures.CreatureClasses.Maw.style_17.xml
 .project
