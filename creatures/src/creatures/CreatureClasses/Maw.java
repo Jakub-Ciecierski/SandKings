@@ -97,7 +97,7 @@ public class Maw extends Fightable {
 			}
 			else
 			{
-				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE );
+				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE, 0 );
 				
 				GSC.Instance().AddEventInfo(EventType.Starvation, Constants.STARVATION_TIMEOUT, this.getGridpos());	
 			}
@@ -130,14 +130,15 @@ public class Maw extends Fightable {
 	}
 
     public void DropMawFood(){
-		@SuppressWarnings("unchecked")
+		/*@SuppressWarnings("unchecked")
 		Context<Object> context = ContextUtils.getContext( this );
 
 		int x = grid.getLocation ( this ).getX();
 		int y = grid.getLocation ( this ).getY();
-		
+		*/
 		for( int i = 0; i < food/Constants.STEAK_CALORIES; i++)
-			dropMeat(5, x, y, context);
+			//dropMeat(5, x, y, context);
+			DropFood(5);
     }
 	
 	public boolean hasFood()

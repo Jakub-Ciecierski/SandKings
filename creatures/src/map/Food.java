@@ -1,6 +1,7 @@
 package map;
 
 import creatures.Agent;
+import creatures.CreatureClasses.MawFinder;
 import repast.simphony.context.Context;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -19,8 +20,9 @@ public class Food extends Agent implements Comparable {
 	private ContinuousSpace < Object > space; 
 	private Grid< Object > grid;
 	
-	private int power = 1;
-	private int weight = 1;
+	private int ownerID = 0;
+	
+	private int power = 1;	private int weight = 1;
 	private boolean isPicked = false;
 	public Food (ContinuousSpace<Object> space, Grid<Object> grid, int foodID) {
 		this.space = space;
@@ -99,13 +101,25 @@ public class Food extends Agent implements Comparable {
 		Food f = (Food) o;
 		return (int) ( this.getRatio() - f.getRatio() ) ;
 	}
-
+	
+	public boolean isPickingBlocked( int fractionID ) {
+		return isPicked || MawFinder.Instance().areWeFriends( this.getOwnerID(), fractionID );
+	}
+	
 	public boolean isPicked() {
 		return isPicked;
 	}
 
 	public void setPicked(boolean isPicked) {
 		this.isPicked = isPicked;
+	}
+
+	public int getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(int ownerID) {
+		this.ownerID = ownerID;
 	}
 	
 	

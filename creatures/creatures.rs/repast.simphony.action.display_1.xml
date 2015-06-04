@@ -1,6 +1,6 @@
-<repast.simphony.visualization.engine.CartesianDisplayDescriptor>
-  <name>Display</name>
-  <type>2D</type>
+<repast.simphony.visualization.engine.DefaultDisplayDescriptor>
+  <name>A Display</name>
+  <type>TWO_D</type>
   <styles>
     <entry>
       <string>map.EndGameInfo</string>
@@ -46,7 +46,7 @@
     </entry>
     <entry>
       <string>map.GraveStone</string>
-      <string>map.GraveStone.style_0.xml</string>
+      <string>map.GraveStone.style_1.xml</string>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
@@ -79,7 +79,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-739749972</hashCode>
+    <hashCode>1501589223</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -87,27 +87,27 @@
   <layerOrder>
     <entry>
       <string>map.EndGameInfo</string>
-      <int>7</int>
+      <int>6</int>
     </entry>
     <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <int>2</int>
     </entry>
     <entry>
-      <string>map.GraveStone</string>
-      <int>3</int>
-    </entry>
-    <entry>
       <string>Enemies.Enemy</string>
-      <int>5</int>
-    </entry>
-    <entry>
-      <string>map.Food</string>
       <int>4</int>
     </entry>
     <entry>
+      <string>map.GraveStone</string>
+      <int>7</int>
+    </entry>
+    <entry>
+      <string>map.Food</string>
+      <int>3</int>
+    </entry>
+    <entry>
       <string>map.EventsInfo</string>
-      <int>6</int>
+      <int>5</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>
@@ -122,14 +122,15 @@
     <repast.simphony.scenario.data.ProjectionData>
       <id>space</id>
       <attributes/>
-      <type>continuous space</type>
+      <type>CONTINUOUS_SPACE</type>
     </repast.simphony.scenario.data.ProjectionData>
     <repast.simphony.scenario.data.ProjectionData>
       <id>grid</id>
       <attributes/>
-      <type>grid</type>
+      <type>GRID</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
+  <valueLayers/>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
     <unitSize>15.0</unitSize>
   </visualizationProperties>
@@ -192,5 +193,4 @@
     <blue>255</blue>
     <alpha>255</alpha>
   </backgroundColor>
-  <valueLayers/>
-</repast.simphony.visualization.engine.CartesianDisplayDescriptor>
+</repast.simphony.visualization.engine.DefaultDisplayDescriptor>

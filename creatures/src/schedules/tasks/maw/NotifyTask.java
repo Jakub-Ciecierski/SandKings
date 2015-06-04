@@ -86,11 +86,11 @@ public class NotifyTask extends Task {
 					) ) * 1.2f
 				); 
 		
-		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
+		/*SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
 								" mobile danger: " + 
 								( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
 								Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
-								+ "         needed bros: " + neededBros , DebugModes.TASK);
+								+ "         needed bros: " + neededBros , DebugModes.TASK);*/
 		
 		neededBros = 8; // TODO fix magic number
 		
