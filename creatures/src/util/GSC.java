@@ -49,7 +49,7 @@ public class GSC {
 			if (this.context != null) {
 				EventsInfo starvationInfo = new EventsInfo(this.space, this.grid, type, timeout);
 				int distance = Constants.EVENT_DISTANCE;
-			    context.add(starvationInfo);			     
+			    context.add(starvationInfo);
 			    this.grid.moveTo(starvationInfo, (int)gp.getX() + distance, (int)gp.getY() + distance);
 			    this.space.moveTo(starvationInfo,  (int)gp.getX() + distance, (int)gp.getY() + distance);
 			}
