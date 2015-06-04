@@ -3,12 +3,12 @@
   <type>2D</type>
   <styles>
     <entry>
-      <string>Enemies.Enemy</string>
-      <string>Enemies.EnemyTypes</string>
-    </entry>
-    <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <string>creatures.ColoredMaws</string>
+    </entry>
+    <entry>
+      <string>Enemies.Enemy</string>
+      <string>Enemies.EnemyTypes</string>
     </entry>
     <entry>
       <string>map.Food</string>
@@ -25,11 +25,11 @@
   </styles>
   <editedStyles>
     <entry>
-      <string>Enemies.Enemy</string>
+      <string>creatures.CreatureClasses.Maw</string>
       <null/>
     </entry>
     <entry>
-      <string>creatures.CreatureClasses.Maw</string>
+      <string>Enemies.Enemy</string>
       <null/>
     </entry>
     <entry>
@@ -62,12 +62,12 @@
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>Enemies.Enemy</string>
-      <int>4</int>
-    </entry>
-    <entry>
       <string>creatures.CreatureClasses.Maw</string>
       <int>3</int>
+    </entry>
+    <entry>
+      <string>Enemies.Enemy</string>
+      <int>4</int>
     </entry>
     <entry>
       <string>map.Food</string>
