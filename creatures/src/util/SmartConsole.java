@@ -4,12 +4,44 @@ public class SmartConsole {
 
 	private static String PREFIX = " >> ";
 	
+	private static String SUFFIX = "\n";
+	
 	static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED};  
 	
 	public enum DebugModes {
 		BASIC,
 		ADVANCED,
-		ERROR
+		TASK,
+		ERROR,
+		MESSAGE,
+		KB,
+		SCHEDULER;
+		
+		public String toString(){
+			if(this == ADVANCED){
+				return "Advanced";
+			}
+			if(this == BASIC){
+				return "Basic";
+			}
+			if(this == TASK){
+				return "Task";
+			}
+			if(this == ERROR){
+				return "Error";
+			}
+			if(this == MESSAGE){
+				return "Message";
+			}
+			if(this == KB){
+				return "KB";
+			}
+			if(this == SCHEDULER){
+				return "Scheduler";
+			}
+			
+			return "";
+		}
 	}
 	
 	public static void Print(String msg, DebugModes debugMode){
@@ -24,7 +56,7 @@ public class SmartConsole {
 		}
 		
 		if(doPrint){
-			System.out.println(PREFIX + msg);
+			System.out.println("["+debugMode.toString()+ "]"+ PREFIX + msg + SUFFIX);
 		}
 	}
 	

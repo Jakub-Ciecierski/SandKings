@@ -14,6 +14,8 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.tasks.Task;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 
 public class EnemyNotifyTask extends Task {
 
@@ -27,15 +29,15 @@ public class EnemyNotifyTask extends Task {
 		ALLIANCE
 	}
 	
+	private int currentAskMawID;
+	private boolean doAlliance;
+	
 	public EnemyNotifyTask(Information information, Maw maw) {
 		super(information);
 		
 		this.maw = maw;
 		
-
-		System.out.println("*********************************************************");
-		System.out.println("Agent #" + maw.getID() +" New EnemyNotifyTask: " + information.getType().toString());
-		System.out.println("********************************************************* \n\n");
+		SmartConsole.Print("Agent #" + maw.getID() +" New EnemyNotifyTask: " + information.getType().toString(), DebugModes.TASK);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -107,7 +109,7 @@ public class EnemyNotifyTask extends Task {
 			
 			if(extent > max)
 				return;
-			//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    c4attack bros in " + extent );
+			SmartConsole.Print("maw [" + agents.size() + "/" + neededBros + "]    c4attack bros in " + extent, DebugModes.BASIC);
 		}
 		
 		GridPoint enemyPoint = grid.getLocation( enemy );
@@ -130,13 +132,13 @@ public class EnemyNotifyTask extends Task {
 		{
 			f.addToFormation(m);
 		}
-		//System.out.println( "maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID() );
+		SmartConsole.Print("maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID(), DebugModes.BASIC);
 		
 		f.setGoingSomewhere(true);
 		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
 		f.setGoingPoint( enemyPoint ); // where's the food?
 
-		//System.out.println("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
+		SmartConsole.Print("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + ".", DebugModes.BASIC);
 		
 		stage = Stages.FINISH;
 	}

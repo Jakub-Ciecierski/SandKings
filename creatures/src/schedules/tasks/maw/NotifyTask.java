@@ -14,6 +14,8 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.tasks.Task;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 
 public class NotifyTask extends Task {
 
@@ -37,7 +39,7 @@ public class NotifyTask extends Task {
 		System.out.println("Agent #" + maw.getID() +" New NotifyTask: " + information.getType().toString());
 		System.out.println("********************************************************* \n\n");
 	
-		
+		SmartConsole.Print("Agent #" + maw.getID() +" New NotifyTask: " + information.getType().toString(), DebugModes.TASK);
 	}
 
 	@SuppressWarnings("unchecked")

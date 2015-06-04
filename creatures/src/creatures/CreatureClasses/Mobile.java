@@ -30,6 +30,8 @@ import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.MobileScheduler;
+import util.SmartConsole;
+import util.SmartConsole.DebugModes;
 
 /**
  * @author Asmodiel
@@ -511,16 +513,10 @@ public abstract class Mobile extends Fightable {
 				
 				if(this.knowledgeBase.addInformation(info)){
 
-					
-					/*
-					if(Constants.DEBUG_MODE){
-						System.out.println("*********************************************************");
-						System.out.println("Agent #" + this.id +" Gained knowledge");
-						System.out.println("What: " + infoType.toString());
-						System.out.println("Where: [" + pt.getX() + ", " + pt.getY() +"] ");
-						System.out.println("When: " + tickCount);
-						System.out.println("********************************************************* \n\n");
-					}*/
+					SmartConsole.Print("Agent #" + this.id +" Gained knowledge", DebugModes.KB);
+					SmartConsole.Print("What: " + infoType.toString(), DebugModes.KB);
+					SmartConsole.Print("Where: [" + pt.getX() + ", " + pt.getY() +"] ", DebugModes.KB);
+					SmartConsole.Print("When: " + tickCount, DebugModes.KB);
 				}
 			}
 		}
