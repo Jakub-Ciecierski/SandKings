@@ -550,14 +550,6 @@ public abstract class Mobile extends Fightable {
 		return goingPoint;
 	}
 
-	public int getGoingpointX(){
-		return goingPoint.getX();
-	}
-	
-	public int getGoingpointY(){
-		return goingPoint.getY();
-	}
-
 	public void setGoingPoint(GridPoint goingPoint) {
 		this.goingPoint = goingPoint;
 	}

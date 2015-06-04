@@ -34,12 +34,12 @@ public class ColoredCreature extends DefaultStyleOGL2D {
 			
 			if ( playerID == 3 )
 			{
-				return new Color( 0xff, 0xff, 0xff ); // green
+				return new Color( 0xff, 0xff, 0xff ); // white
 			}
 			
 			if ( playerID == 4 )
 			{
-				return new Color( 0x00, 0x00, 0x00 ); // something
+				return new Color( 0x00, 0x00, 0x00 ); // black
 			}
 			
 			return new Color( 0x00, 0x00, 0x00 );
