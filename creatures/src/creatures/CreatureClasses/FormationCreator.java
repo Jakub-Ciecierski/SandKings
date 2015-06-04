@@ -19,20 +19,24 @@ public class FormationCreator {
 	
 	private int size;
 	private GridPoint goingPoint;
+	private Formation.GoingWhere goingWhere;
 	
-	public FormationCreator(Maw maw, int size, GridPoint goingPoint){
+	public FormationCreator(Maw maw, int size, 
+							Formation.GoingWhere goingWhere,
+							GridPoint goingPoint){
 		this.size = size;
 		this.goingPoint = goingPoint;
 		
 		this.maw = maw;
+		
+		this.goingWhere = goingWhere;
 	}
 	
 	public boolean AttemptFormation(){
 		Context<Object> context = ContextUtils.getContext(maw);
 		ContinuousSpace<Object> space = maw.getSpace(); 
 		Grid<Object> grid = maw.getGrid();
-		
-		
+
 		List<Mobile> agents = new ArrayList<Mobile>();
 		int max = Constants.Constants.BIGGEST_DISTANCE;
 		int extent = 5;
@@ -68,7 +72,7 @@ public class FormationCreator {
 		SmartConsole.Print("maw [" + agents.size() + "/" + size + "]    added bros " + agents.size() + " to f #" + f.getID(), DebugModes.BASIC);
 		
 		f.setGoingSomewhere(true);
-		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
+		f.setGoingWhere( goingWhere ); // what's the formation doing?
 		f.setGoingPoint( goingPoint ); // where's the food?
 
 		SmartConsole.Print("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + ".", DebugModes.BASIC);

@@ -137,8 +137,9 @@ public abstract class Fightable extends Agent{
 		     space.moveTo(grave,  (int)gp.getX(), (int)gp.getY());
 		     
 		     God.setDeadMawCounter(this.playerID);
+		     MawFinder.Instance().removeMaw(instance);
 		     context.remove( this );
-
+		     
 		}
 		
 		else if( this instanceof Enemy)

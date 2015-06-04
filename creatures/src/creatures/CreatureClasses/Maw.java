@@ -103,7 +103,8 @@ public class Maw extends Fightable {
 			{
 				dealDamage( Constants.MAW_DAMAGE_DECREASE_VALUE );
 				
-				GSC.Instance().AddEventInfo(EventType.Starvation, Constants.STARVATION_TIMEOUT, this.getGridpos());	
+				GSC.Instance().AddEventInfo(EventType.Starvation, Constants.STARVATION_TIMEOUT, 
+						new GridPoint(this.getGridpos().getX() + Constants.EVENT_DISTANCE, this.getGridpos().getY() + Constants.EVENT_DISTANCE));	
 			}
 		}
 	}

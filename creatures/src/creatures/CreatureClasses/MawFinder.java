@@ -161,4 +161,8 @@ public class MawFinder {
 	public List<Maw> getMaws(){
 		return this._mawList;
 	}
+	public void removeMaw(Maw maw) {
+		this._mawList.remove(maw);
+		
+	}
 }

@@ -97,6 +97,7 @@ public final class Constants {
 	public static final int EVENTINFO_TIMEOUT = 100;
 	public static final int EVENT_DISTANCE = 1;
 	public static final int STARVATION_TIMEOUT = 200;
+	public static final int EVENT_ALLIANCE_TIMEOUT = 50;
 	
 	// MOBILE VICINITY DISTANCE
 	public static final int MOBILE_VICINITY_X = 5;

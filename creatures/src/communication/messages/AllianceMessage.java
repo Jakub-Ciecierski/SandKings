@@ -34,12 +34,13 @@ public class AllianceMessage extends Message {
 		// if No answer with number of Bros == 0
 		
 		// If maw is already doing the agent of alliance interest, deny
-		if(maw.getCurrentTask() == null ||
+		if(maw.getCurrentTask() != null &&
 				maw.getCurrentTask().getInformation().getAgent() == task.getInformation().getAgent()){
-			numberOfFreeBros = -1;
+			numberOfFreeBros = 0;
 		}
 		else{
-			numberOfFreeBros = maw.getNumberOfFreeChildren();	
+			//numberOfFreeBros = maw.getNumberOfFreeChildren();
+			numberOfFreeBros = maw.getNumberOfChildren();
 		}
 			
 		doAlliance = numberOfFreeBros > 0;

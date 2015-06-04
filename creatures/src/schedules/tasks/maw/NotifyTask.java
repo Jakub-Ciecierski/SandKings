@@ -96,7 +96,6 @@ public class NotifyTask extends Task {
 		
 		if ( neededBros > maw.getNumberOfFreeChildren() )
 		{
-			askForAlliance();
 			// TODO: ask other maw.
 			return;
 		}
@@ -143,12 +142,6 @@ public class NotifyTask extends Task {
 		stage = Stages.FINISH;
 	}
 
-	private boolean askForAlliance(){
-		
-		
-		
-		return false;
-	}
 	
 	/***************************************************/
 	/********************* FOOD ************************/
@@ -224,6 +217,7 @@ public class NotifyTask extends Task {
 		
 		FormationCreator formationCreator = new FormationCreator(maw, 
 												neededBros, 
+												Formation.GoingWhere.ForFood,
 												information.getGridPoint());
 		maw.addPendingFormation(formationCreator);
 

@@ -17,6 +17,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import util.SimplyMath;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import map.Food;
@@ -65,6 +66,9 @@ public class Formation extends Fightable {
 	private int carryCapacity = 0;
 	private int carriedWeight = 0;
 	private List<Food> carriedStuff = new ArrayList<Food>();	
+	
+	private boolean canStartMoving;
+	private List<Formation> linkedFormations = new ArrayList<Formation>();
 	
 	// only called when we need a new member
 	public void findNewMember(int ID)
@@ -339,8 +343,18 @@ public class Formation extends Fightable {
 				SmartConsole.Print("Formation " + getID() + " assembly completed.", DebugModes.FORMATION);
 				isComplete = true;
 			}
-		}		
-	
+		}
+
+		// USED IN LINKED FORMATIONS
+		if(!this.canStartMoving()){
+			SmartConsole.Print("Formation " + getID() + " Can't Move Yet.", DebugModes.FORMATION);
+			return;
+		}
+		
+		// USED IN LINKED FORMATIONS
+		if(!canMove())
+			return;
+			
 		if(isFighting)
 		{
 			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
@@ -463,8 +477,33 @@ public class Formation extends Fightable {
 		}
 		return false;
 	}
-	
 
+	public void linkFromation(Formation formation){
+		this.linkedFormations.add(formation);
+	}
+
+	public boolean canStartMoving(){
+		return canStartMoving;
+	}
+	
+	public boolean canMove(){
+		// Am I the closest ?
+		
+		double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
+		if (myDistance < Constants.MOBILE_VICINITY_X) return true;
+
+		for(int i =0;i < linkedFormations.size(); i++){
+			Formation formation = linkedFormations.get(i);
+			if(formation != null){
+				double distance = SimplyMath.Distance(grid.getLocation(formation), goingPoint);
+				
+				if(myDistance < distance)
+					return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * @return the carryCapacity
 	 */
@@ -539,5 +578,5 @@ public class Formation extends Fightable {
 	public void setCarriedStuff(List<Food> carriedStuff) {
 		this.carriedStuff = carriedStuff;
 	}	
-	
+
 }

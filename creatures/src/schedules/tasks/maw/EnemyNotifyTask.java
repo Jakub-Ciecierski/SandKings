@@ -2,7 +2,9 @@ package schedules.tasks.maw;
 import java.util.ArrayList;
 import java.util.List;
 
+import Constants.Constants;
 import Enemies.Enemy;
+import map.EventType;
 import map.Food;
 import communication.knowledge.Information;
 import communication.messages.AllianceMessage;
@@ -16,6 +18,7 @@ import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.tasks.Task;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import util.GSC;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 
@@ -84,11 +87,13 @@ public class EnemyNotifyTask extends Task {
 		}
 		
 	}
-	
-	/***************************************************/
-	/******************* WPIERDOL  *********************/
-	/***************************************************/
 
+	/**
+	 * Main logic of Going For wpierdol task
+	 * @param context
+	 * @param space
+	 * @param grid
+	 */
 	private void goForWpierdol(Context<Object> context, 
 			ContinuousSpace<Object> space, Grid<Object> grid) {
 		Enemy enemy = (Enemy) information.getAgent();
@@ -114,50 +119,7 @@ public class EnemyNotifyTask extends Task {
 		SmartConsole.Print("Maw #" + maw.getPlayerID() + " Finished creating Alliance... Starting Formations", DebugModes.TASK);
 		
 		createFormations();
-		
-		/******* CRAETE FORMATION SECTION *********/
-		
-		List<Mobile> agents = new ArrayList<Mobile>();
-		int max = Constants.Constants.BIGGEST_DISTANCE;
-		int extent = 5;
-		while ( agents.size() < neededBros )
-		{
-			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), neededBros, extent);
-			extent += 1;
-			
-			if(extent > max)
-				return;
-			SmartConsole.Print("maw [" + agents.size() + "/" + neededBros + "]    c4attack bros in " + extent, DebugModes.BASIC);
-		}
-		
-		GridPoint enemyPoint = grid.getLocation( enemy );
-		if(enemyPoint == null) {
-			stage = Stages.FINISH;
-			return;
-		}
 
-		Formation f = new Formation( space, grid, maw.getPlayerID());
-		
-		context.add(f);
-		f.setNeededSize( neededBros );
-		NdPoint spacePt = space.getLocation(maw);
-		GridPoint gridPt = grid.getLocation(maw);
-		
-		space.moveTo( f, spacePt.getX(), spacePt.getY());
-		grid.moveTo(  f, gridPt.getX(),  gridPt.getY() );
-		
-		for ( Mobile m : agents )
-		{
-			f.addToFormation(m);
-		}
-		SmartConsole.Print("maw [" + agents.size() + "/" + neededBros + "]    added bros " + agents.size() + " to f #" + f.getID(), DebugModes.BASIC);
-		
-		f.setGoingSomewhere(true);
-		f.setGoingWhere( Formation.GoingWhere.Wpierdol ); // what's the formation doing?
-		f.setGoingPoint( enemyPoint ); // where's the food?
-
-		SmartConsole.Print("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + ".", DebugModes.BASIC);
-		
 		stage = Stages.FINISH;
 	}
 
@@ -177,10 +139,10 @@ public class EnemyNotifyTask extends Task {
 			alliancesStr += "\tMaw #" + mawIDMapper[i] + " Army Count: " + allianceChecker[i];
 			alliancesStr += "\n";
 		}
-		SmartConsole.Print("Maw #" + maw.getPlayerID() +" Current Alliances: \n" + alliancesStr, DebugModes.TASK);
+		SmartConsole.Print("Maw #" + maw.getPlayerID() +" Current Alliances to kill Enemy #:" + 
+								information.getAgent().getID() +"\n" + alliancesStr, DebugModes.TASK);
 	}
-	
-	
+
 	private boolean askForAlliance(int neededBros){
 		// TODO Choose next strongest instead of simply next one
 		int mawToAsk;
@@ -214,24 +176,35 @@ public class EnemyNotifyTask extends Task {
 	}
 	
 	private boolean createFormations(){
+		for(int i =0;i < allianceChecker.length; i++){
+			if(allianceChecker[i] > 0){
+				Maw allianceMaw = MawFinder.Instance().GetMaw(mawIDMapper[i]);
+				FormationCreator fCreator = new FormationCreator(allianceMaw,allianceChecker[i], 
+																	Formation.GoingWhere.Wpierdol, information.getGridPoint());
+				allianceMaw.addPendingFormation(fCreator);
+
+				GSC.Instance().AddEventInfo(EventType.Alliance, Constants.EVENT_ALLIANCE_TIMEOUT , 
+						new GridPoint(allianceMaw.getGridpos().getX() - Constants.EVENT_DISTANCE, allianceMaw.getGridpos().getY() - Constants.EVENT_DISTANCE));
+			}
+		}
+		
 		return true;
 	}
 
 	private int neededBros(Enemy enemy){
-
 		// TODO fix function
 		int neededBros = (int) Math.ceil(
 					( ( enemy.getHealth() * enemy.getDamage() ) / 
 					( 
 							( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
-							Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+							Constants.MOBILE_HEALTH * Constants.MOBILE_ATTACK 
 					) ) * 1.2f
 				); 
 
 		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
 											" mobile danger: " +	 
 											( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
-											Constants.Constants.MOBILE_HEALTH * Constants.Constants.MOBILE_ATTACK 
+											Constants.MOBILE_HEALTH * Constants.MOBILE_ATTACK 
 											+ "         needed bros: " + neededBros , DebugModes.TASK);
 		return neededBros;
 	}
