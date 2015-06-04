@@ -165,7 +165,7 @@ public class God {
 					EndGameInfo endInfo = new EndGameInfo( mawIDlist.get(0) );
 					context.add(endInfo);
 					GSC.Instance().getGrid().moveTo(endInfo, coordinate, coordinate);
-					GSC.Instance().getSpace().moveTo(context, coordinate, coordinate);
+					GSC.Instance().getSpace().moveTo(endInfo, coordinate, coordinate);
 				}
 				
 			}
