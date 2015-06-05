@@ -496,7 +496,7 @@ public abstract class Mobile extends Fightable {
 			if(agent instanceof Food){
 				Food food = (Food) agent;
 				
-				if( food.isPickingBlocked(this.playerID) )
+				if( food.isPicked() )
 					continue;
 			}
 				

@@ -67,7 +67,7 @@ public class Formation extends Fightable {
 	private int carriedWeight = 0;
 	private List<Food> carriedStuff = new ArrayList<Food>();	
 	
-	private boolean canStartMoving;
+	private boolean canStartMoving = true;
 	private List<Formation> linkedFormations = new ArrayList<Formation>();
 	
 	// only called when we need a new member
@@ -99,6 +99,15 @@ public class Formation extends Fightable {
 			}
 		}
 	}
+	
+	public void addToFormation(List<Mobile> mobiles )
+	{
+		for ( Mobile m : mobiles )
+		{
+			this.addToFormation(m);
+		}
+	}
+	
 	public void addToFormation( Mobile m )
 	{
 		SmartConsole.Print("found new pending member", DebugModes.FORMATION);
@@ -326,6 +335,7 @@ public class Formation extends Fightable {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
+		SmartConsole.Print("Formation " + getID() + " Tick.", DebugModes.FORMATION);
 		if(!addPending()) return;
 		FormationAttackCheck();
 		
@@ -344,7 +354,7 @@ public class Formation extends Fightable {
 				isComplete = true;
 			}
 		}
-
+/*
 		// USED IN LINKED FORMATIONS
 		if(!this.canStartMoving()){
 			SmartConsole.Print("Formation " + getID() + " Can't Move Yet.", DebugModes.FORMATION);
@@ -352,8 +362,8 @@ public class Formation extends Fightable {
 		}
 		
 		// USED IN LINKED FORMATIONS
-		if(!canMove())
-			return;
+		if(!canLinkedFormationsMove())
+			return;*/
 			
 		if(isFighting)
 		{
@@ -486,7 +496,7 @@ public class Formation extends Fightable {
 		return canStartMoving;
 	}
 	
-	public boolean canMove(){
+	public boolean canLinkedFormationsMove(){
 		// Am I the closest ?
 		
 		double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
@@ -502,6 +512,17 @@ public class Formation extends Fightable {
 			}
 		}
 		return true;
+	}
+	
+	public void initiateGoal(GridPoint goingPoint, GoingWhere goingWhere){
+		this.setGoingSomewhere(true);
+		this.setGoingWhere( goingWhere ); // what's the formation doing?
+		this.setGoingPoint( goingPoint ); // where's the food?
+	}
+	
+	public void setMeetingPoint(GridPoint gridPt, NdPoint spacePt){
+		space.moveTo( this, spacePt.getX(), spacePt.getY());
+		grid.moveTo(  this, gridPt.getX(),  gridPt.getY() );
 	}
 	
 	/**
@@ -553,6 +574,10 @@ public class Formation extends Fightable {
 		return neededSize;
 	}
 
+	public void setCanStartMoving(boolean b){
+		this.canStartMoving = b;
+	}
+	
 	/**
 	 * @param neededSize the neededSize to set
 	 */

@@ -66,27 +66,18 @@ public class MawFinder {
 	
 	public boolean areWeFriends(int ID1, int ID2)
 	{
-		if ( !IsMawAlive(ID1) || !IsMawAlive(ID2) )
-			return false; // we're not enemies with someone who is dead
-		
-		return MawRelations[ID1][ID2] == MawRelation.Friend;
+		if(MawRelations[ID1][ID2] == MawRelation.Friend)
+			return true;
+		else
+			return false;
 	}
 	
 	public boolean areWeEnemies(int ID1, int ID2)
 	{
-		if ( !IsMawAlive(ID1) || !IsMawAlive(ID2) )
-			return false; // we're not friends with someone who is dead
-
-		return MawRelations[ID1][ID2] == MawRelation.Enemy;
-	}
-	
-	public boolean IsMawAlive( int id )
-	{
-		for ( Maw m : _mawList )
-		{
-			if ( m.getPlayerID() == id && m.getHealth() > 0 ) return true;
-		}
-		return false;
+		if(MawRelations[ID1][ID2] == MawRelation.Enemy)
+			return true;
+		else
+			return false;
 	}
 	
 	public Maw GetMaw( int id )

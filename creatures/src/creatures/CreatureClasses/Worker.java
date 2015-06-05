@@ -24,13 +24,13 @@ public class Worker extends Mobile {
 	public void step()
 	{
 		// Gain Information if in formation.
+		
 		seekForKnowledge();
 		
 		if( isInFormation() )
 		{
 			return;
 		}
-		
 		
 		// send message
 		Attack();

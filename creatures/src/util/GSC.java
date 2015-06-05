@@ -48,16 +48,11 @@ public class GSC {
 			Context<Object> context = GSC.Instance().getContext();
 			if (this.context != null) {
 				EventsInfo starvationInfo = new EventsInfo(this.space, this.grid, type, timeout);
-<<<<<<< HEAD
+
 			    context.add(starvationInfo);			     
 			    this.grid.moveTo(starvationInfo, (int)gp.getX(), (int)gp.getY());
 			    this.space.moveTo(starvationInfo,  (int)gp.getX(), (int)gp.getY());
-=======
-				int distance = Constants.EVENT_DISTANCE;
-			    context.add(starvationInfo);
-			    this.grid.moveTo(starvationInfo, (int)gp.getX() + distance, (int)gp.getY() + distance);
-			    this.space.moveTo(starvationInfo,  (int)gp.getX() + distance, (int)gp.getY() + distance);
->>>>>>> 379b83a276a4a5e0a858f51089094ff0be17c220
+
 			}
 		}
 	}
