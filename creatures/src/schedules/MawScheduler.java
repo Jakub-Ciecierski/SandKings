@@ -27,7 +27,7 @@ public class MawScheduler extends Scheduler{
 			case FOOD:
 				return new FoodNotifyTask(info, this.maw);
 			case ENEMY_CREATURE:
-				return new EnemyNotifyTask(info, this.maw);
+				return null;//return new EnemyNotifyTask(info, this.maw);
 				
 			default:
 				return null;

@@ -1,12 +1,6 @@
 package creatures;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-
-
-import java.util.Map.Entry;
 
 import map.Food;
 import map.God;
@@ -36,8 +30,6 @@ public abstract class Fightable extends Agent{
 	public Grid< Object > grid;
 	protected int playerID = 0;
 	protected boolean isFighting = false;
-	
-	private Map<Integer, Float> damageDone = new HashMap<Integer, Float>();
 	
 	private float damage = 0;
 	private float health = 0;
@@ -76,18 +68,12 @@ public abstract class Fightable extends Agent{
 		updateDanger();
 	}
 	
-	 private void initDmgDone()
-	 {
-		 for ( int i = 0; i <= 4; i++ )
-			 damageDone.put( i, 0f);
-	 }
 	
 	public Fightable( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID)
 	{
 		this.space = space;
 		this.grid = grid;
 		this.playerID = setPlayerID;
-		initDmgDone();
 	}
 	
 	public Fightable( ContinuousSpace < Object > space, Grid< Object > grid, int setPlayerID,
@@ -99,19 +85,16 @@ public abstract class Fightable extends Agent{
 		this.damage = damage;
 		this.health = health;
 		this.droppedMeat = droppedMeat;
-		initDmgDone();
 		updateDanger();
 		updateProfit();
 	}
 
-	public void dealDamage(float damage, int fractionID){
+	public void dealDamage(float damage){
 		int rnd = ( RandomHelper.nextIntFromTo(0, 100) );
 		if ( rnd <= 10 )
 			damage = 0;
 		if ( rnd >= 90 )
 			damage += damage;
-		
-		damageDone.put(fractionID, damage);
 		
 		this.health -= damage;
 		if(this.health <= 0)
@@ -126,6 +109,15 @@ public abstract class Fightable extends Agent{
 		if( this instanceof Maw)
 		{
 			Maw instance = (Maw)this;
+			/*
+			synchronized( instance.getChildren() )
+			{
+				for( Worker worker : instance.getChildren())
+				{
+					worker.Die();
+				}	
+			}
+			*/
 			int size = instance.getChildren().size();
 			for ( int i = size - 1; i > 0; i-- ) {
 				instance.getChildren().get( i ).Die();
@@ -177,7 +169,6 @@ public abstract class Fightable extends Agent{
 	    }
 	}
 	
-	/*
 	private void DropFood(int foodID) {		
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext( this );
@@ -196,50 +187,7 @@ public abstract class Fightable extends Agent{
 		space.moveTo( food, x, y );
 		grid.moveTo( food, x, y );
 	}
-	*/
 	
-	@SuppressWarnings("unchecked")
-	public void DropFood(int foodID) {		
-
-		Context<Object> context = ContextUtils.getContext( this );
-
-		int x = grid.getLocation ( this ).getX();
-		int y = grid.getLocation ( this ).getY();
-		
-		// generate food to be dropped
-		List<Food> droppedFood = new ArrayList<Food>();
-		for( int i = 0; i < droppedMeat; i++)
-			droppedFood.add( new Food( space, grid, foodID ) );
-		
-		// distribute food ownerIDs
-		// calculate each ratio: damageDone[i] vs total dmgDone
-		float totalDmg = 0f;
-		for ( Entry<Integer, Float> entry : damageDone.entrySet() ) 
-			totalDmg += entry.getValue(); // calculate total dmg dealt
-		
-		// every fraction has floor ( droppedMeat / ratio ) pieces of food
-		int lastFoodCount = 0;
-		for ( Entry<Integer, Float> entry : damageDone.entrySet() ) 
-		{
-			int foodCount = lastFoodCount + (int) Math.floor( droppedMeat * ( entry.getValue() / totalDmg ) );
-			if ( foodCount > droppedFood.size() ) continue;
-			for ( int i = lastFoodCount; i < foodCount; i ++  ) // partition droppedFood
-			{
-				// set food fraction ID
-				droppedFood.get(i).setOwnerID( entry.getKey() );
-			}
-			lastFoodCount = foodCount;
-		}
-		
-		// add foods to context
-		for ( Food food : droppedFood )
-		{
-			context.add( food );
-			space.moveTo( food, x, y );
-			grid.moveTo( food, x, y );
-		}
-	}
-		
 	
 	public void Attack(){
 		// get the grid location of this Human
@@ -263,7 +211,7 @@ public abstract class Fightable extends Agent{
 					
 					if(MawFinder.Instance().areWeEnemies(f.playerID, this.playerID))
 					{
-						f.dealDamage(this.damage, this.playerID);
+						f.dealDamage(this.damage);
 						isFighting = true;
 						return;
 					}
@@ -279,7 +227,7 @@ public abstract class Fightable extends Agent{
 					
 					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
 					{
-						mobile.dealDamage(this.damage, this.playerID);
+						mobile.dealDamage(this.damage);
 						isFighting = true;
 						return;
 					}

@@ -37,7 +37,11 @@ public class FormationCreator {
 		ContinuousSpace<Object> space = maw.getSpace(); 
 		Grid<Object> grid = maw.getGrid();
 
+		GridPoint meetingGridPt = grid.getLocation(maw);
+		NdPoint meetingSpacePt = space.getLocation(maw);
+
 		List<Mobile> agents = new ArrayList<Mobile>();
+		
 		int max = Constants.Constants.BIGGEST_DISTANCE;
 		int extent = 5;
 		while ( agents.size() < size )
@@ -58,24 +62,18 @@ public class FormationCreator {
 		Formation f = new Formation( space, grid, maw.getPlayerID());
 		
 		context.add(f);
-		f.setNeededSize( size );
-		NdPoint spacePt = space.getLocation(maw);
-		GridPoint gridPt = grid.getLocation(maw);
-		
-		space.moveTo( f, spacePt.getX(), spacePt.getY());
-		grid.moveTo(  f, gridPt.getX(),  gridPt.getY() );
-		
-		for ( Mobile m : agents )
-		{
-			f.addToFormation(m);
-		}
-		SmartConsole.Print("maw [" + agents.size() + "/" + size + "]    added bros " + agents.size() + " to f #" + f.getID(), DebugModes.BASIC);
-		
-		f.setGoingSomewhere(true);
-		f.setGoingWhere( goingWhere ); // what's the formation doing?
-		f.setGoingPoint( goingPoint ); // where's the food?
 
-		SmartConsole.Print("atck formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + ".", DebugModes.BASIC);
+		GridPoint test =  new GridPoint(25,25);
+		NdPoint test1 = new NdPoint(25,25);
+		
+		f.setNeededSize( size );
+		f.setMeetingPoint(meetingGridPt, meetingSpacePt);
+		f.addToFormation(agents);
+		f.setCanStartMoving(true);
+		f.initiateGoal(goingPoint, goingWhere);
+
 		return true;
 	}
+
+
 }

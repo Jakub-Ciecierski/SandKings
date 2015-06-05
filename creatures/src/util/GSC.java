@@ -47,9 +47,11 @@ public class GSC {
 			Context<Object> context = GSC.Instance().getContext();
 			if (this.context != null) {
 				EventsInfo info = new EventsInfo(this.space, this.grid, type, timeout);
+				
 			    context.add(info);			     
 			    this.grid.moveTo(info, (int)gp.getX(), (int)gp.getY());
 			    this.space.moveTo(info,  (int)gp.getX(), (int)gp.getY());
+
 			}
 		}
 	}
