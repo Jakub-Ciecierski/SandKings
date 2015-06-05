@@ -111,6 +111,10 @@ public final class Constants {
 	public static final boolean DEBUG_MODE = true;
 	public static final int FORMATION_NEEDED_FRACTION = 2;
 	
+	public static final int ALLIANCE_TIMEOUT = 25;
+	public static final int ALLIANCE_START = 1;
+	public static final int ALLIANCE_TICK= 5;
+	
 	/**
 	 * Hidden constructor to ensure no instances are created.
 	 */

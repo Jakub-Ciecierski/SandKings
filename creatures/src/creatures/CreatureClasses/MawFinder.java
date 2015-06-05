@@ -50,34 +50,25 @@ public class MawFinder {
 	}
 	public void makeAlliance(int ID1, int ID2){
 		MawRelations[ID1][ID2] = MawRelation.Friend;
-		MawRelations[ID1][ID2] = MawRelation.Friend;
-		
+		MawRelations[ID2][ID1] = MawRelation.Friend;
 	}
 	public void makeWar(int ID1, int ID2){
 		MawRelations[ID1][ID2] = MawRelation.Enemy;
-		MawRelations[ID1][ID2] = MawRelation.Enemy;
-		
+		MawRelations[ID2][ID1] = MawRelation.Enemy;
 	}
 	public void makeNeutral(int ID1, int ID2){
 		MawRelations[ID1][ID2] = MawRelation.Neutral;
-		MawRelations[ID1][ID2] = MawRelation.Neutral;
-		
+		MawRelations[ID2][ID1] = MawRelation.Neutral;
 	}
 	
 	public boolean areWeFriends(int ID1, int ID2)
 	{
-		if(MawRelations[ID1][ID2] == MawRelation.Friend)
-			return true;
-		else
-			return false;
+		return (MawRelations[ID1][ID2] == MawRelation.Friend);
 	}
 	
 	public boolean areWeEnemies(int ID1, int ID2)
 	{
-		if(MawRelations[ID1][ID2] == MawRelation.Enemy)
-			return true;
-		else
-			return false;
+		return(MawRelations[ID1][ID2] == MawRelation.Enemy);
 	}
 	
 	public Maw GetMaw( int id )

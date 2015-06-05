@@ -44,6 +44,8 @@ public class EnemyNotifyTask extends Task {
 	private boolean doAlliance;
 	private int myAllianceIndex;
 	
+	private int allianceSize = 0;
+	
 	public EnemyNotifyTask(Information information, Maw maw) {
 		super(information);
 		
@@ -176,11 +178,25 @@ public class EnemyNotifyTask extends Task {
 	}
 	
 	private boolean createFormations(){
+		List<Integer> fractions= new ArrayList<Integer>();
+		for(int i = 0;i < allianceChecker.length; i++){
+			if(allianceChecker[i] > 0)
+				fractions.add(mawIDMapper[i]);
+		}
+
+		List<Formation> allianceFormations = new ArrayList<Formation>();
+		
+		Alliance alliance = new Alliance(allianceFormations, fractions);
+		GSC.Instance().getContext().add(alliance);
+		
 		for(int i =0;i < allianceChecker.length; i++){
 			if(allianceChecker[i] > 0){
 				Maw allianceMaw = MawFinder.Instance().GetMaw(mawIDMapper[i]);
+
 				FormationCreator fCreator = new FormationCreator(allianceMaw,allianceChecker[i], 
-																	Formation.GoingWhere.Wpierdol, information.getGridPoint());
+																	Formation.GoingWhere.Wpierdol, information.getGridPoint(),
+																	allianceFormations);
+			
 				allianceMaw.addPendingFormation(fCreator);
 
 				GSC.Instance().AddEventInfo(EventType.Alliance, Constants.EVENT_ALLIANCE_TIMEOUT , 
@@ -191,6 +207,17 @@ public class EnemyNotifyTask extends Task {
 		return true;
 	}
 
+	private void makeAlliance(){
+		for(int i =0;i < allianceChecker.length; i++){
+			for(int j =0; j < allianceChecker.length; j++){
+				if(allianceChecker[j] > 0 && allianceChecker[j] > 0){
+					MawFinder.Instance().makeAlliance(mawIDMapper[i], mawIDMapper[j]);
+				}
+			}
+		}
+		
+	}
+	
 	private int neededBros(Enemy enemy){
 		// TODO fix function
 		int neededBros = (int) Math.ceil(
@@ -220,6 +247,9 @@ public class EnemyNotifyTask extends Task {
 		if(mawIndex == -1){
 			SmartConsole.Print("No such mawID", DebugModes.ERROR);
 		}
+	
+		if(numberOfChildren > 0)
+			allianceSize++;
 		
 		allianceChecker[mawIndex] = numberOfChildren;
 		currentMawAnswered = true;

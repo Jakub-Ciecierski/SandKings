@@ -21,6 +21,8 @@ public class FormationCreator {
 	private GridPoint goingPoint;
 	private Formation.GoingWhere goingWhere;
 	
+	private List<Formation> allianceFormations = null;
+	
 	public FormationCreator(Maw maw, int size, 
 							Formation.GoingWhere goingWhere,
 							GridPoint goingPoint){
@@ -30,6 +32,24 @@ public class FormationCreator {
 		this.maw = maw;
 		
 		this.goingWhere = goingWhere;
+	}
+	
+	public FormationCreator(Maw maw, int size, 
+			Formation.GoingWhere goingWhere,
+			GridPoint goingPoint,
+			List<Formation> allianceFormations){
+		this.size = size;
+		this.goingPoint = goingPoint;
+		
+		this.maw = maw;
+		
+		this.goingWhere = goingWhere;
+		
+		this.allianceFormations = allianceFormations;
+	}
+	
+	public void addAlliance(List<Formation> allianceFormations){
+		this.allianceFormations = allianceFormations;
 	}
 	
 	public boolean AttemptFormation(){
@@ -55,7 +75,6 @@ public class FormationCreator {
 		}
 		
 		if(goingPoint == null) {
-
 			return false;
 		}
 
@@ -69,9 +88,18 @@ public class FormationCreator {
 		f.setNeededSize( size );
 		f.setMeetingPoint(meetingGridPt, meetingSpacePt);
 		f.addToFormation(agents);
-		f.setCanStartMoving(true);
 		f.initiateGoal(goingPoint, goingWhere);
 
+		// Decide if this formation is alone or with alliance
+		if(allianceFormations == null){
+			f.setCanStartMoving(true);
+		}
+		else{
+			f.setAllianceFormations(allianceFormations);
+			allianceFormations.add(f);
+			f.setCanStartMoving(true);
+		}
+		
 		return true;
 	}
 

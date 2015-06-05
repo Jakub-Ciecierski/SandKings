@@ -68,7 +68,9 @@ public class Formation extends Fightable {
 	private List<Food> carriedStuff = new ArrayList<Food>();	
 	
 	private boolean canStartMoving = true;
-	private List<Formation> linkedFormations = new ArrayList<Formation>();
+	private List<Formation> allianceFormations = new ArrayList<Formation>();
+	
+	private boolean isDisbanded;
 	
 	// only called when we need a new member
 	public void findNewMember(int ID)
@@ -239,7 +241,9 @@ public class Formation extends Fightable {
 		SmartConsole.Print("Formation " + getID() + " disbanded.", DebugModes.FORMATION);
 		soldiers.clear();
 		carriedStuff.clear();
+		this.isDisbanded = true;
 		this.Die();
+		
 		//context.remove(this);
 	}
 	public void MoveThere ( )
@@ -335,7 +339,6 @@ public class Formation extends Fightable {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		SmartConsole.Print("Formation " + getID() + " Tick.", DebugModes.FORMATION);
 		if(!addPending()) return;
 		FormationAttackCheck();
 		
@@ -354,7 +357,7 @@ public class Formation extends Fightable {
 				isComplete = true;
 			}
 		}
-/*
+
 		// USED IN LINKED FORMATIONS
 		if(!this.canStartMoving()){
 			SmartConsole.Print("Formation " + getID() + " Can't Move Yet.", DebugModes.FORMATION);
@@ -363,7 +366,7 @@ public class Formation extends Fightable {
 		
 		// USED IN LINKED FORMATIONS
 		if(!canLinkedFormationsMove())
-			return;*/
+			return;
 			
 		if(isFighting)
 		{
@@ -488,8 +491,8 @@ public class Formation extends Fightable {
 		return false;
 	}
 
-	public void linkFromation(Formation formation){
-		this.linkedFormations.add(formation);
+	public void setAllianceFormations(List<Formation> allianceFormations){
+		this.allianceFormations = allianceFormations;
 	}
 
 	public boolean canStartMoving(){
@@ -498,20 +501,33 @@ public class Formation extends Fightable {
 	
 	public boolean canLinkedFormationsMove(){
 		// Am I the closest ?
-		
-		double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
-		if (myDistance < Constants.MOBILE_VICINITY_X) return true;
+		synchronized(allianceFormations){
+			
+			//SmartConsole.Print("Formation " + getID() + " Alliance Size: " + allianceFormations.size(), DebugModes.FORMATION);
+			
+			double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
+			
+			//SmartConsole.Print("Formation " + getID() + " MyDistance: " + myDistance, DebugModes.FORMATION);
+			
+			// if is close enough, stop counting
+			if (myDistance < Constants.MOBILE_VICINITY_X) return true;
+	
+			for(int i =0;i < allianceFormations.size(); i++){
+				Formation formation = allianceFormations.get(i);
+				if(formation != null){
+					
+					GridPoint currPoint = grid.getLocation(formation);
+					if(currPoint == null || goingPoint == null)
+						return true;
 
-		for(int i =0;i < linkedFormations.size(); i++){
-			Formation formation = linkedFormations.get(i);
-			if(formation != null){
-				double distance = SimplyMath.Distance(grid.getLocation(formation), goingPoint);
-				
-				if(myDistance < distance)
-					return false;
+					double distance = SimplyMath.Distance(currPoint , goingPoint);
+					
+					if(myDistance < distance)
+						return false;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 	
 	public void initiateGoal(GridPoint goingPoint, GoingWhere goingWhere){
@@ -604,4 +620,7 @@ public class Formation extends Fightable {
 		this.carriedStuff = carriedStuff;
 	}	
 
+	public boolean isDisbanded(){
+		return this.isDisbanded;
+	}
 }
