@@ -389,7 +389,11 @@ public class Formation extends Fightable {
 			}
 			else
 			{
-				MoveThere();
+				GridPoint gp = grid.getLocation(this);
+				if(gp.getX() == goingPoint.getX() && gp.getY() == goingPoint.getY())
+					Disband();
+				else
+					MoveThere();
 			}
 		}
 	}

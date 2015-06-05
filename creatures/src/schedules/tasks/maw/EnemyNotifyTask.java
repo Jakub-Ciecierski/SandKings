@@ -44,7 +44,7 @@ public class EnemyNotifyTask extends Task {
 	private boolean doAlliance;
 	private int myAllianceIndex;
 	
-	private int allianceSize = 0;
+	private int allianceSize = 1;
 	
 	public EnemyNotifyTask(Information information, Maw maw) {
 		super(information);
@@ -178,17 +178,29 @@ public class EnemyNotifyTask extends Task {
 	}
 	
 	private boolean createFormations(){
+		
 		List<Integer> fractions= new ArrayList<Integer>();
 		for(int i = 0;i < allianceChecker.length; i++){
-			if(allianceChecker[i] > 0)
-				fractions.add(mawIDMapper[i]);
+			if(allianceChecker[i] > 0) {
+				Maw allianceMaw = MawFinder.Instance().GetMaw(mawIDMapper[i]);
+				if(allianceMaw == null)
+					allianceChecker[i] = -1;
+				else
+					fractions.add(mawIDMapper[i]);
+			}
+		}
+		
+		boolean isAlliance = fractions.size() > 1; 
+		
+		List<Formation> allianceFormations = null;
+		
+		if(isAlliance) {
+			allianceFormations = new ArrayList<Formation>();
+
+			Alliance alliance = new Alliance(allianceFormations, fractions);
+			GSC.Instance().getContext().add(alliance);
 		}
 
-		List<Formation> allianceFormations = new ArrayList<Formation>();
-		
-		Alliance alliance = new Alliance(allianceFormations, fractions);
-		GSC.Instance().getContext().add(alliance);
-		
 		for(int i =0;i < allianceChecker.length; i++){
 			if(allianceChecker[i] > 0){
 				Maw allianceMaw = MawFinder.Instance().GetMaw(mawIDMapper[i]);
@@ -198,26 +210,17 @@ public class EnemyNotifyTask extends Task {
 																	allianceFormations);
 			
 				allianceMaw.addPendingFormation(fCreator);
-
-				GSC.Instance().AddEventInfo(EventType.Alliance, Constants.EVENT_ALLIANCE_TIMEOUT , 
-						new GridPoint(allianceMaw.getGridpos().getX() - Constants.EVENT_DISTANCE, allianceMaw.getGridpos().getY() - Constants.EVENT_DISTANCE));
+				
+				if(isAlliance){
+					GSC.Instance().AddEventInfo(EventType.Alliance, Constants.EVENT_ALLIANCE_TIMEOUT , 
+							new GridPoint(allianceMaw.getGridpos().getX() - Constants.EVENT_DISTANCE, allianceMaw.getGridpos().getY() - Constants.EVENT_DISTANCE));
+				}
 			}
 		}
 		
 		return true;
 	}
 
-	private void makeAlliance(){
-		for(int i =0;i < allianceChecker.length; i++){
-			for(int j =0; j < allianceChecker.length; j++){
-				if(allianceChecker[j] > 0 && allianceChecker[j] > 0){
-					MawFinder.Instance().makeAlliance(mawIDMapper[i], mawIDMapper[j]);
-				}
-			}
-		}
-		
-	}
-	
 	private int neededBros(Enemy enemy){
 		// TODO fix function
 		int neededBros = (int) Math.ceil(

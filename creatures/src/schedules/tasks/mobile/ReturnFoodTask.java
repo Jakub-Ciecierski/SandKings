@@ -59,7 +59,7 @@ public class ReturnFoodTask extends Task{
 				stage = 2;
 			}
 		}
-		
+
 		if(stage == 1 && mobile.carriedStuff == null){
 			stage = 2;
 		}

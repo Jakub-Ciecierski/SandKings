@@ -3,6 +3,7 @@
  */
 package creatures.CreatureClasses;
 
+import creatures.Formation;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
@@ -29,6 +30,9 @@ public class Worker extends Mobile {
 		
 		if( isInFormation() )
 		{
+			Formation f = this.getMyFormation();
+			if(f == null || f.isDisbanded())
+				setInFormation(false);
 			return;
 		}
 		

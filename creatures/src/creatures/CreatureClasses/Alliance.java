@@ -32,7 +32,7 @@ public class Alliance {
 	@ScheduledMethod ( start = Constants.ALLIANCE_START , interval = Constants.ALLIANCE_TICK)
 	public void step()
 	{
-		SmartConsole.Print("Alliance Tick", DebugModes.ALLIANCE);
+		//SmartConsole.Print("Alliance Tick", DebugModes.ALLIANCE);
 		if(isAllianceDone() && timeoutStart == -1) {
 			timeoutStart = 	RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			SmartConsole.Print("Alliance Timeout tick: " + timeoutStart , DebugModes.ALLIANCE);
