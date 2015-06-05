@@ -122,10 +122,7 @@ public abstract class Fightable extends Agent{
 	{
 		@SuppressWarnings("unchecked")
 		Context<Object> context = ContextUtils.getContext(this);
-		
-		if(this == null || context == null)
-			return;
-		
+				
 		if( this instanceof Maw)
 		{
 			Maw instance = (Maw)this;
@@ -150,13 +147,13 @@ public abstract class Fightable extends Agent{
 		     
 		}
 		
-		else if( this instanceof Enemy)
+		if( this instanceof Enemy)
 		{
 			  DropFood(5);
 			  context.remove( this );	
 		}
 		
-		else if( this instanceof Formation)
+		if( this instanceof Formation)
 		{
 			Formation formation = (Formation) this;
 			for( Food f : formation.getCarriedStuff() )
@@ -166,7 +163,7 @@ public abstract class Fightable extends Agent{
 			context.remove( this );	
 		}
 		
-		else
+		if (this instanceof Mobile)
 	    {
 			 Mobile instance = (Mobile)this;
 		     DropFood(4);

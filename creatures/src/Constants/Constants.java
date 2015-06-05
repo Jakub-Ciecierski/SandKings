@@ -10,6 +10,7 @@ public final class Constants {
 	public static final int GRID_SIZE = 50;
 	public static final int BIGGEST_DISTANCE = (int) Math.sqrt(2 * GRID_SIZE * GRID_SIZE);
 	public static final int DISTANCE_FROM_MAW = 10;
+	public static final int SCHEDULE_TICK_DELAY = 10;
 
 	// INTERVALS
 	public static final int MOVE_START = 1;

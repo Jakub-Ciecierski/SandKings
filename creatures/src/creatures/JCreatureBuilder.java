@@ -119,10 +119,7 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 			}
 		
 		
-		// don't loop endlessly
-		if (RunEnvironment.getInstance().isBatch()) {
-			RunEnvironment.getInstance().endAt(200);
-		}
+		RunEnvironment.getInstance().setScheduleTickDelay(Constants.SCHEDULE_TICK_DELAY);
 		
 		GSC.Instance().setContext( context );
 		GSC.Instance().setGrid( grid );
