@@ -4,19 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import communication.knowledge.Information;
-import communication.knowledge.InformationType;
-import communication.knowledge.KnowledgeBase;
-import communication.messages.AskForFoodMessage;
-import communication.messages.AskForHelpMessage;
-import communication.messages.QueryMessage;
-import creatures.Agent;
-import creatures.Fightable;
-import creatures.Formation;
 import map.Food;
-import Constants.Constants;
-import Enemies.Enemy;
-import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameter;
 import repast.simphony.query.space.grid.GridCell;
@@ -28,10 +16,18 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridDimensions;
 import repast.simphony.space.grid.GridPoint;
-import repast.simphony.util.ContextUtils;
 import schedules.MobileScheduler;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
+import Constants.Constants;
+
+import communication.knowledge.Information;
+import communication.knowledge.InformationType;
+import communication.knowledge.KnowledgeBase;
+
+import creatures.Agent;
+import creatures.Fightable;
+import creatures.Formation;
 
 /**
  * @author Asmodiel
@@ -220,11 +216,11 @@ public abstract class Mobile extends Fightable {
 	
 	public boolean IsAtLocation(GridPoint point)
 	{
-		if ( point == null ) return false;
+		if ( point == null ) return true;
 
 		int tolerance = 1;
 		GridPoint currentPos = grid.getLocation(this);
-		if ( currentPos == null ) return false;
+		if ( currentPos == null ) return true;
 		
 		return ( 
 			Math.abs( point.getX() - currentPos.getX() ) < tolerance && 	
@@ -232,32 +228,8 @@ public abstract class Mobile extends Fightable {
 		);
 	}
 	
-	/*
-	private int CallForBros(int neededBros)
-	{
-		Context<Object> context = ContextUtils.getContext(this);
-		Formation f = new Formation( space, grid, playerID);
-		
-		context.add(f);
-		f.addToFormation(this);
-		
-		NdPoint spacePt = space.getLocation(this);
-		GridPoint gridPt = grid.getLocation(this);
-		space.moveTo( f, spacePt.getX(), spacePt.getY());
-		grid.moveTo(  f, gridPt.getX(),  gridPt.getY() );
-		
-		f.setGoingWhere( Formation.GoingWhere.ForFood ); // what's the formation doing?
-		f.setGoingPoint(gridPt); // where's the food?
-		f.setNeededSize(neededBros);
-		
-		System.out.println("formation " + f.getID() + " created at " + gridPt.getX() + ":" + gridPt.getY() + " for " + f.getNeededSize() + "." );
-		
-		return neededBros;
-	}*/
-	
 	@SuppressWarnings("unchecked")
 	public void PickUpFood(List<Food> foodHere) {
-		int found = 0;
 		// food with highest power-weight ratio
 		Collections.sort( foodHere );
 		
@@ -359,8 +331,10 @@ public abstract class Mobile extends Fightable {
 		if ( !IsAtLocation( gp ) )
 		{
 			NdPoint thisLocation = space.getLocation(this);
-			NdPoint goalLocation;
-				goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+			NdPoint goalLocation = new NdPoint ( gp.getX (), gp.getY ());
+				
+			if ( goalLocation == null ) System.out.println("goal null ");
+			if ( thisLocation == null ) System.out.println("this null xD");
 
 			double angle = SpatialMath.calcAngleFor2DMovement( space, thisLocation, goalLocation );
 			if ( isMoveAway) 
@@ -395,7 +369,7 @@ public abstract class Mobile extends Fightable {
 	 */
 	@Parameter(displayName = "strength", usageName = "strength")
 	public float getStrength() {
-		return MawFinder.Instance().GetMaw(this.playerID).getStrength(); 
+		return MawFinder.Instance().GetMawStrength(this.playerID); 
 	}
 
 	/**

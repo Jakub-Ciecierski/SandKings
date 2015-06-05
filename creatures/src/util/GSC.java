@@ -2,7 +2,6 @@ package util;
 
 import map.EventType;
 import map.EventsInfo;
-import Constants.Constants;
 import repast.simphony.context.Context;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
@@ -44,17 +43,19 @@ public class GSC {
 	}
 	
 	public void AddEventInfo(EventType type, int timeout, GridPoint gp) {
-		if (!(this.grid.getObjectsAt(gp.getX(), gp.getY()) instanceof EventsInfo) ) { //don't create info where it already is
-			Context<Object> context = GSC.Instance().getContext();
-			if (this.context != null) {
-				EventsInfo starvationInfo = new EventsInfo(this.space, this.grid, type, timeout);
-
-			    context.add(starvationInfo);			     
-			    this.grid.moveTo(starvationInfo, (int)gp.getX(), (int)gp.getY());
-			    this.space.moveTo(starvationInfo,  (int)gp.getX(), (int)gp.getY());
-
-			}
-		}
+		
+		for(Object obj : grid.getObjectsAt( gp.getX(), gp.getY() ))
+			if(obj instanceof EventsInfo) return;
+				
+		Context<Object> context = GSC.Instance().getContext();
+		if (this.context == null) return;
+		
+		EventsInfo info = new EventsInfo(this.space, this.grid, type, timeout);
+		
+	    context.add(info);			     
+	    this.grid.moveTo(info, (int)gp.getX(), (int)gp.getY());
+	    this.space.moveTo(info,  (int)gp.getX(), (int)gp.getY());
+		
 	}
 
 }

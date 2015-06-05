@@ -1,8 +1,6 @@
 package map;
 
 import repast.simphony.parameter.Parameter;
-import repast.simphony.space.continuous.ContinuousSpace;
-import repast.simphony.space.grid.Grid;
 
 /**
  * @author Viet Ba
@@ -12,11 +10,8 @@ import repast.simphony.space.grid.Grid;
 public class Terrarium {
 	
 	private int colourID;
-	private ContinuousSpace < Object > space; 
-	private Grid< Object > grid;
-	public Terrarium (ContinuousSpace<Object> space, Grid<Object> grid, int colourID) {
-		this.space = space;
-		this.grid = grid;
+	
+	public Terrarium (int colourID) {
 		this.colourID = colourID;
 	}
 	
