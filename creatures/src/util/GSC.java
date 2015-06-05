@@ -43,17 +43,19 @@ public class GSC {
 	}
 	
 	public void AddEventInfo(EventType type, int timeout, GridPoint gp) {
-		if (!(this.grid.getObjectsAt(gp.getX(), gp.getY()) instanceof EventsInfo) ) { //don't create info where it already is
-			Context<Object> context = GSC.Instance().getContext();
-			if (this.context != null) {
-				EventsInfo info = new EventsInfo(this.space, this.grid, type, timeout);
+		
+		for(Object obj : grid.getObjectsAt( gp.getX(), gp.getY() ))
+			if(obj instanceof EventsInfo) return;
 				
-			    context.add(info);			     
-			    this.grid.moveTo(info, (int)gp.getX(), (int)gp.getY());
-			    this.space.moveTo(info,  (int)gp.getX(), (int)gp.getY());
-
-			}
-		}
+		Context<Object> context = GSC.Instance().getContext();
+		if (this.context == null) return;
+		
+		EventsInfo info = new EventsInfo(this.space, this.grid, type, timeout);
+		
+	    context.add(info);			     
+	    this.grid.moveTo(info, (int)gp.getX(), (int)gp.getY());
+	    this.space.moveTo(info,  (int)gp.getX(), (int)gp.getY());
+		
 	}
 
 }

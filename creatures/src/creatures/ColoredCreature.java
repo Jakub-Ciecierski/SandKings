@@ -54,7 +54,7 @@ public class ColoredCreature extends DefaultStyleOGL2D {
 		if ( agent instanceof Mobile )
 		{
 			final Mobile mob = (Mobile) agent;
-			return (1 + (MawFinder.Instance().GetMaw(mob.playerID).getStrength()));	
+			return (1 + (MawFinder.Instance().GetMawStrength( mob.getPlayerID() )));	
 		}
 		
 		return 1;

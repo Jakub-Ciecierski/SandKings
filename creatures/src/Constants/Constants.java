@@ -44,7 +44,11 @@ public final class Constants {
 	public static final float MAW_HEALTH = 5000;
 	public static final int MAW_MEAT_NO = 50;
 	
+	// FORMATION CONSTANTS
+	public static final int FORMATION_NEEDED_FRACTION = 2;
+	
 	// MOBILE CONSTANTS
+	public static final float MOBILE_DANGER_TRESHOLD = 10;
 	public static final int MOBILE_SIZE_MULTIPLIER = 2;
 	public static final int MOBILE_CARRY_CAPACITY = 1;
 	// on 50*50 grid this is [0-70] + [-inf - MOBILE_STARTING_FOOD]
@@ -59,6 +63,7 @@ public final class Constants {
 	public static final int MOBILE_MEAT_NO = 1;
 	
 	public static final float STRENGTH_MULTIPLY_FACTOR = (float) 0.2;
+	
 	// ENEMIES CONSTANTS
 	public static final int ENEMY_MULTIPLIER = 1;
 	public static final int ENEMIES_MARGIN = 3;
@@ -80,6 +85,8 @@ public final class Constants {
 	public static final int ATTACK_CONSTANT = 5;	
 	
 	// FOOD CONSTANTS
+	public static final int MEAT_ID = 4;
+	public static final int STEAK_ID = 5;
 	public static final int FOOD_MULTIPLIER = 2;
 	public static final int PIZZA_CALORIES = 50 * FOOD_MULTIPLIER;
 	public static final int DONUT_CALORIES = 25 * FOOD_MULTIPLIER;
@@ -110,7 +117,6 @@ public final class Constants {
 	
 	// DISPLAY ALL DEBUG MESSAGES
 	public static final boolean DEBUG_MODE = true;
-	public static final int FORMATION_NEEDED_FRACTION = 2;
 	
 	/**
 	 * Hidden constructor to ensure no instances are created.

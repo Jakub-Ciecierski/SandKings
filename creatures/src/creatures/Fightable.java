@@ -14,7 +14,7 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
-import repast.simphony.util.ContextUtils;
+import util.GSC;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
@@ -103,26 +103,16 @@ public abstract class Fightable extends Agent{
 	
 	public void Die()
 	{
-		@SuppressWarnings("unchecked")
-		Context<Object> context = ContextUtils.getContext(this);
-				
+		Context<Object> context = GSC.Instance().getContext();
+
 		if( this instanceof Maw)
 		{
 			Maw instance = (Maw)this;
-			/*
-			synchronized( instance.getChildren() )
-			{
-				for( Worker worker : instance.getChildren())
-				{
-					worker.Die();
-				}	
-			}
-			*/
 			int size = instance.getChildren().size();
 			for ( int i = size - 1; i > 0; i-- ) {
 				instance.getChildren().get( i ).Die();
 			}
-		     DropFood(5);
+		     DropFood(Constants.STEAK_ID);
 		     instance.DropMawFood();
 
 		     //create grave stone on the map
@@ -141,7 +131,7 @@ public abstract class Fightable extends Agent{
 		
 		if( this instanceof Enemy)
 		{
-			  DropFood(5);
+			  DropFood(Constants.STEAK_ID);
 			  context.remove( this );	
 		}
 		
@@ -158,8 +148,10 @@ public abstract class Fightable extends Agent{
 		if (this instanceof Mobile)
 	    {
 			 Mobile instance = (Mobile)this;
-		     DropFood(4);
-		     MawFinder.Instance().GetMaw(this.playerID).LostAMobile( instance );
+			 DropFood(Constants.MEAT_ID);
+		     Maw myMaw = MawFinder.Instance().GetMaw(this.playerID);
+		     if ( myMaw == null ) { context.remove ( this ); return; }
+		     myMaw.LostAMobile( instance );
 		     if(instance.isInFormation()){
 		    	 instance.getMyFormation().soldiers.remove(this);
 		     }
@@ -169,20 +161,20 @@ public abstract class Fightable extends Agent{
 	    }
 	}
 	
-	private void DropFood(int foodID) {		
-			@SuppressWarnings("unchecked")
-			Context<Object> context = ContextUtils.getContext( this );
-
-			int x = grid.getLocation ( this ).getX();
-			int y = grid.getLocation ( this ).getY();
-			
-			for( int i = 0; i < droppedMeat; i++)
-				dropMeat(foodID, x, y, context);
+	private void DropFood(int foodID) {
+		if ( grid.getLocation ( this ) == null ) return; // LE FÜCKERUUND
+		
+		int x = grid.getLocation ( this ).getX();
+		int y = grid.getLocation ( this ).getY();
+		for( int i = 0; i < droppedMeat; i++)
+			dropMeat(foodID, x, y, GSC.Instance().getContext());
 	}
-	
+		
 	protected void dropMeat(int foodID, int x, int y, Context<Object> context){
 		Food food = new Food( space, grid, foodID );
-
+		
+		if ( context == null ) System.out.println("context chuj");
+		
 		context.add( food );
 		space.moveTo( food, x, y );
 		grid.moveTo( food, x, y );
@@ -194,10 +186,8 @@ public abstract class Fightable extends Agent{
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood .
-		if(pt == null || grid == null)
-		{
-			System.out.println("fightable:: grid or space null. ");
-		}
+		if(pt == null || grid == null) System.out.println("fightable:: grid or space null. ");
+		
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
 		

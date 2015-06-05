@@ -7,7 +7,7 @@ import java.util.List;
 
 import communication.knowledge.KnowledgeBase;
 import creatures.Fightable;
-import creatures.Formation;import map.Food;
+import map.Food;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
@@ -94,9 +94,9 @@ public class Maw extends Fightable {
 		}
 		else
 		{
-			if(food >= Constants.MAW_FOOD_DECREASE_VALUE)
+			if(food > Constants.MAW_FOOD_DECREASE_VALUE)
 			{
-				eatenFood = Constants.MOBILE_STARTING_FOOD;
+				eatenFood += Constants.MAW_FOOD_DECREASE_VALUE;// Constants.MOBILE_STARTING_FOOD;
 				food -=  Constants.MAW_FOOD_DECREASE_VALUE;
 			}
 			else
@@ -186,12 +186,20 @@ public class Maw extends Fightable {
 	 */
 	@Parameter(displayName = "# of kids", usageName = "numberOfChildren")
 	public int getNumberOfChildren() {
-		return numberOfChildren;
+		int kids = 0;
+		for ( Mobile m : children )
+		{
+			if ( m.getHealth() > 0 ) kids++;
+		}
+		this.numberOfChildren = kids;
+		return kids;
 	}
 
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.MOBILE_SPAWN_INTERVAL)
 	public void step()
 	{
+		if ( this.getNumberOfChildren() == 0 && this.getFood() < Constants.FOOD_PER_SPAWN ){ this.Die(); return; }
+		
 		TrySpawnMobile();
 		TryIncrementStrength();
 		tryEat();
@@ -212,7 +220,7 @@ public class Maw extends Fightable {
 	private void TrySpawnMobile()
 	{
 		if ( Constants.MAW_BIRTHING_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
-			 && childrenBornCount > Constants.MAW_CHILDPOOP_COUNTER)
+			 && childrenBornCount > Constants.MAW_CHILDPOOP_COUNTER && this.food > Constants.FOOD_PER_SPAWN)
 		{	
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);

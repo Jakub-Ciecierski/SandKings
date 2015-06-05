@@ -82,20 +82,26 @@ public class MawFinder {
 	
 	public Maw GetMaw( int id )
 	{
-		for ( Maw m : _mawList )
-		{
+		for ( Maw m : _mawList ) {
 			if ( m.getPlayerID() == id ) return m;
 		}
 		return null;
 	}
 	public GridPoint GetMawPosition( int id )
 	{
-		for ( Maw m : _mawList )
-		{
+		for ( Maw m : _mawList ) {
 			if ( m.getPlayerID() == id ) 
 				return m.getGridpos();
 		}
 		return null;
+	}
+	public float GetMawStrength( int id )
+	{
+		for ( Maw m : _mawList ) {
+			if ( m.getPlayerID() == id ) 
+				return m.getStrength();
+		}
+		return 0f;
 	}
 	public double GetDistanceToMaw( int id, int x, int y )
 	{

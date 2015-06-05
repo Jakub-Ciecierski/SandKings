@@ -111,7 +111,7 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 				}
 				else colour = 4;
 				
-				Terrarium resource = new Terrarium(space, grid, colour);
+				Terrarium resource = new Terrarium(colour);
 				context.add( resource );
 				NdPoint point = new NdPoint( i, j );
 				grid.moveTo(resource, (int)point.getX(), (int)point.getY());

@@ -3,9 +3,6 @@ package creatures;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-
-import communication.messages.DamageMessage;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
@@ -23,36 +20,30 @@ import util.SmartConsole.DebugModes;
 import map.Food;
 import Constants.Constants;
 import creatures.CreatureClasses.*;
-import creatures.CreatureClasses.Mobile.GoingWhere;
 
 public class Formation extends Fightable {
 	
 	public Formation(ContinuousSpace<Object> space, Grid<Object> grid,
 			int playerID) {
-		super(space, grid, 5);
+		super(space, grid, playerID);
 		if ( grid == null ) SmartConsole.Print("formation grid null", DebugModes.FORMATION);
 		if ( space == null ) SmartConsole.Print("formation space null", DebugModes.FORMATION);
-		this.playerID = playerID;
 		// TODO Auto-generated constructor stub
 	}
 
 	public enum GoingWhere
 	{
 		Uknown,
-		Home,
 		ForFood,
 		HomeWithFood,
-		Explore,
 		Wpierdol
 	}
 	//private List<Integer> owners = new ArrayList<Integer>();
 	
 	private boolean isComplete = false;
-	private int playerID = 0;
 	private int neededSize = 0;
 	//private int carryCapacity = 0;
 	//private float size = Constants.CREATURES_SIZE;
-	
 	//Moving logic
 	private boolean isGoingSomewhere = false;
 	private GridPoint goingPoint;
@@ -111,10 +102,8 @@ public class Formation extends Fightable {
 	public void addToFormation( Mobile m )
 	{
 		SmartConsole.Print("found new pending member", DebugModes.FORMATION);
-		GridPoint currentPos = grid.getLocation(this);
 		m.setInFormation(true);
 		m.setGoingSomewhere(false);
-		//m.setGoingPoint( currentPos );
 		m.setMyFormation(this);
 		
 		this.pendingSoldiers.add(m);
@@ -178,14 +167,15 @@ public class Formation extends Fightable {
 	// are we standing on food?
 	public List<Food> FoodAtPoint(GridPoint pt)
 	{
-		List<Food> food = new ArrayList<Food>();
+		List<Food> foodList = new ArrayList<Food>();
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
 			if (obj instanceof Food) {
-				if ( !((Food) obj).isPicked() )
-					food.add( (Food) obj);
+				Food food = (Food) obj;
+				if ( !food.isPicked() || food.getWeight() < this.carryCapacity )
+					foodList.add( (Food) obj);
 			}
 		}
-		return food;
+		return foodList;
 	}
 	
 	public void MoveCarriedStuff()
@@ -245,7 +235,6 @@ public class Formation extends Fightable {
 	public void MoveThere ( )
 	{
 		// Makes formation look cooler by randomizing the movement of each mobile
-		Random rnd = new Random();
 		
 		this.moveTowards( this.goingPoint );
 		GridPoint gp = grid.getLocation(this);
@@ -263,16 +252,9 @@ public class Formation extends Fightable {
 		SmartConsole.Print("Formation " + getID() + " arrived.", DebugModes.FORMATION);
 		switch ( this.goingWhere )
 		{
-			case Explore:
-					// wat?
-				break;
 			case ForFood:
-					//AskForFood();
 					SmartConsole.Print("Formation " + getID() + " for food.", DebugModes.FORMATION);
 					PickupFood();
-				break;
-			case Home:
-					// TODO
 				break;
 			case HomeWithFood:
 					SmartConsole.Print("Formation " + getID() + " home with food.", DebugModes.FORMATION);
@@ -340,7 +322,7 @@ public class Formation extends Fightable {
 		FormationAttackCheck();
 		
 		// NOT ENOUGH BROS IN FORMATION
-		if ( this.getSize() < this.getNeededSize() / Constants.FORMATION_NEEDED_FRACTION )
+		if ( this.getSize() <= ( double ) this.getNeededSize() / ( double ) Constants.FORMATION_NEEDED_FRACTION )
 		{
 			//this.findNewMember(this.playerID);
 			this.Disband(); // TODO: emergency disband?
@@ -427,6 +409,11 @@ public class Formation extends Fightable {
 			}
 		}
 	}
+	
+	private boolean IsTooStrong(Fightable f) {
+		return this.getDanger() > f.getDanger() + Constants.MOBILE_DANGER_TRESHOLD;
+	}
+	
 	public GridPoint AreEnemiesNearby(){
 		GridPoint pt = grid.getLocation ( this );
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
@@ -436,8 +423,8 @@ public class Formation extends Fightable {
 		for ( GridCell <Mobile> cell : gridCells ) {
 			for(Object obj : grid.getObjectsAt(cell.getPoint().getX(), cell.getPoint().getY() )){
 				if(obj instanceof Fightable && (Fightable)obj != this){
-					Fightable mobile = (Fightable)obj;
-					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
+					Fightable enemy = (Fightable)obj;
+					if(!MawFinder.Instance().areWeFriends(enemy.playerID, this.playerID) && !IsTooStrong(enemy))
 					{
 						enemies.add(cell.getPoint());
 					}
