@@ -35,7 +35,7 @@ public class MobileScheduler extends Scheduler{
 					if(food.getWeight() > mobile.getCarryCapacity())
 						return new InformFoodTask(info, this.mobile);
 					else
-						return new ReturnFoodTask(info, this.mobile);
+						return null;//return new ReturnFoodTask(info, this.mobile);
 
 				}
 			case ENEMY_CREATURE:

@@ -257,15 +257,15 @@ public abstract class Mobile extends Fightable {
 		//food;
 		GridPoint gp = grid.getLocation(this);
 		
-		//List<Food> foodHere = FoodAtPoint( gp );
-		/*
-		List<Food> foodHere = getFoodInVicinity(Constants.MOBILE_VICINITY_X, Constants.MOBILE_VICINITY_Y);
+		List<Food> foodHere = FoodAtPoint( gp );
+		
+		//List<Food> foodHere = getFoodInVicinity(1, 1);
 		if ( foodHere.size() > 0 ) 
 			{
 				PickUpFood( foodHere );
 				return;
 			}
-		*/
+		
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) )
 		{

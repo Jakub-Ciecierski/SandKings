@@ -2,6 +2,7 @@ package creatures;
 
 import java.util.List;
 
+import map.EventType;
 import map.Food;
 import map.God;
 import map.GraveStone;
@@ -186,8 +187,8 @@ public abstract class Fightable extends Agent{
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood .
-		if(pt == null || grid == null) System.out.println("fightable:: grid or space null. ");
-		
+		if(pt == null || grid == null) return;
+
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
 		
@@ -201,6 +202,8 @@ public abstract class Fightable extends Agent{
 					
 					if(MawFinder.Instance().areWeEnemies(f.playerID, this.playerID))
 					{
+						GSC.Instance().AddEventInfo(EventType.Attack, 6 , 
+								new GridPoint(pt.getX() - 1, pt.getY() - 1));
 						f.dealDamage(this.damage);
 						isFighting = true;
 						return;
@@ -217,6 +220,8 @@ public abstract class Fightable extends Agent{
 					
 					if(!MawFinder.Instance().areWeFriends(mobile.playerID, this.playerID))
 					{
+						GSC.Instance().AddEventInfo(EventType.Attack, 6 , 
+								new GridPoint(pt.getX() - 1, pt.getY() - 1));
 						mobile.dealDamage(this.damage);
 						isFighting = true;
 						return;
