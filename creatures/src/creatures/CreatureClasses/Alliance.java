@@ -73,7 +73,7 @@ public class Alliance {
 		for(int i =0;i < fractions.size(); i++){
 			for(int j =0; j < fractions.size(); j++){
 				if(fractions.get(i) != fractions.get(j) ){
-					MawFinder.Instance().makeNeutral(fractions.get(i), fractions.get(j));
+					MawFinder.Instance().makeWar(fractions.get(i), fractions.get(j));
 				}
 			}
 		}
