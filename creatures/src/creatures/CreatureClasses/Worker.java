@@ -46,6 +46,12 @@ public class Worker extends Mobile {
 				currentTask.execute();
 				return;
 			}
+		
+		// Fuck around 
+		if(this.carriedStuff != null){
+			this.DropCarriedFoodOnTheGround();
+		}
+		
 		if(this.getMove()) {
 			// Arrived at destination
 			if ( this.IsAtDestination() ){
