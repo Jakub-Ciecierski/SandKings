@@ -88,7 +88,7 @@ public class FormationCreator {
 		f.setNeededSize( size );
 		f.setMeetingPoint(meetingGridPt, meetingSpacePt);
 		f.addToFormation(agents);
-		f.initiateGoal(goingPoint, goingWhere);
+		f.setGoal(goingPoint, goingWhere);
 
 		// Decide if this formation is alone or with alliance
 		if(allianceFormations == null){

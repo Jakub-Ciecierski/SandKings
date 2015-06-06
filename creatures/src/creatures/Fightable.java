@@ -154,6 +154,7 @@ public abstract class Fightable extends Agent{
 		     if ( myMaw == null ) { context.remove ( this ); return; }
 		     myMaw.LostAMobile( instance );
 		     if(instance.isInFormation()){
+		    	 //instance.getMyFormation().kickOut(instance);
 		    	 instance.getMyFormation().soldiers.remove(this);
 		     }
 		     if ( instance.carriedStuff != null )
@@ -182,12 +183,12 @@ public abstract class Fightable extends Agent{
 	}
 	
 	
-	public void Attack(){
+	public boolean Attack(){
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation ( this );
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood .
-		if(pt == null || grid == null) return;
+		if(pt == null || grid == null) return false;
 
 		GridCellNgh <Mobile> nghCreator = new GridCellNgh <Mobile>( grid , pt ,
 		Mobile . class , 1 , 1);
@@ -206,7 +207,7 @@ public abstract class Fightable extends Agent{
 								new GridPoint(pt.getX() - 1, pt.getY() - 1));
 						f.dealDamage(this.damage);
 						isFighting = true;
-						return;
+						return true;
 					}
 				}
 			}
@@ -224,13 +225,14 @@ public abstract class Fightable extends Agent{
 								new GridPoint(pt.getX() - 1, pt.getY() - 1));
 						mobile.dealDamage(this.damage);
 						isFighting = true;
-						return;
+						return true;
 					}
 				}
 			}
 		}
 		
 		isFighting = false;
+		return false;
 	}
 
 }

@@ -48,10 +48,7 @@ public class InformEnemyTask extends Task {
 					);
 			
 			InformMessage informMessage = new InformMessage(newInfo);
-			mobile.sendMessage(maw, informMessage);
-			
-			//maw.getKnowledgeBase().addInformation(newInfo);
-			
+			mobile.sendMessage(maw, informMessage);			
 		}
 
 		if(stage == 1){

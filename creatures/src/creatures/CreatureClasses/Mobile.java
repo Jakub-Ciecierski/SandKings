@@ -254,8 +254,8 @@ public abstract class Mobile extends Fightable {
 		if(isFighting)
 			return;
 		// get current location in grid
-		//food;
 		GridPoint gp = grid.getLocation(this);
+		
 		
 		List<Food> foodHere = FoodAtPoint( gp );
 		
@@ -265,6 +265,7 @@ public abstract class Mobile extends Fightable {
 				PickUpFood( foodHere );
 				return;
 			}
+		
 		
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) )

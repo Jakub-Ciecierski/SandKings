@@ -217,12 +217,18 @@ public class Formation extends Fightable {
 		this.goingWhere = GoingWhere.HomeWithFood;
 		this.goingPoint = MawFinder.Instance().GetMawPosition(this.playerID);		
 	}	
-	public void Attack( /* Fightable f */ )
+	public boolean Attack( /* Fightable f */ )
 	{
+		// mr. Logic Master Ciecierski
+		boolean doneDamage = false;
 		for( Mobile m : soldiers)
 		{
-			m.Attack();
+			boolean tmpDoneDmg = false;
+			tmpDoneDmg = m.Attack();
+			if(tmpDoneDmg)
+				doneDamage = tmpDoneDmg;
 		}
+		return doneDamage;
 	}
 	public void Disband()
 	{
@@ -344,7 +350,7 @@ public class Formation extends Fightable {
 	public void step()
 	{
 		if(!addPending()) return;
-		FormationAttackCheck();
+		//FormationAttackCheck();
 		
 		// NOT ENOUGH BROS IN FORMATION
 		if ( this.getSize() < this.getNeededSize() / Constants.FORMATION_NEEDED_FRACTION )
@@ -363,7 +369,7 @@ public class Formation extends Fightable {
 		}
 
 		// USED IN LINKED FORMATIONS
-		if(!this.canStartMoving()){
+		if(!this.getStartMoving()){
 			SmartConsole.Print("Formation " + getID() + " Can't Move Yet.", DebugModes.FORMATION);
 			return;
 		}
@@ -371,14 +377,21 @@ public class Formation extends Fightable {
 		// USED IN LINKED FORMATIONS
 		if(!canLinkedFormationsMove())
 			return;
+		
+		if(Attack()){
+			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
+			return;
+		}
 			
+		/*
 		if(isFighting)
 		{
 			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
 
-			Attack();
+			isFighting = Attack();
 			return;
-		}
+		}*/
+		
 		// ARRIVED.
 		if ( this.IsAtDestination() )
 		{
@@ -501,7 +514,7 @@ public class Formation extends Fightable {
 		this.allianceFormations = allianceFormations;
 	}
 
-	public boolean canStartMoving(){
+	public boolean getStartMoving(){
 		return canStartMoving;
 	}
 	
@@ -536,7 +549,7 @@ public class Formation extends Fightable {
 		}
 	}
 	
-	public void initiateGoal(GridPoint goingPoint, GoingWhere goingWhere){
+	public void setGoal(GridPoint goingPoint, GoingWhere goingWhere){
 		this.setGoingSomewhere(true);
 		this.setGoingWhere( goingWhere ); // what's the formation doing?
 		this.setGoingPoint( goingPoint ); // where's the food?
