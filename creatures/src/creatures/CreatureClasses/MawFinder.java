@@ -96,10 +96,13 @@ public class MawFinder {
 	}
 	public double GetDistanceToMaw( int id, int x, int y )
 	{
-		int x1 = GetMawPosition( id ).getX();
+		GridPoint gp = GetMawPosition( id );
+		if(gp == null)
+			return 0;
+		int x1 = gp.getX();
 		int x2 = x;
 		
-		int y1 = GetMawPosition( id ).getY();
+		int y1 = gp.getY();
 		int y2 = y;
 		
 		return Math.sqrt( Math.pow(( x2-x1 ), 2) + Math.pow(( y2-y1 ), 2) );
@@ -143,7 +146,11 @@ public class MawFinder {
 					if ( 
 							mobile.getPlayerID() == playerID && 
 							!mobile.isInFormation() &&
-							!mobile.isGoingSomewhere() && 
+							!mobile.isGoingSomewhere() &&
+							mobile.carriedStuff == null &&
+							(mobile.getCurrentTask() == null ||
+							mobile.getCurrentTask() != null &&
+							mobile.getCurrentTask().isFinished()) &&
 							vicinity.size() < neededSize
 							//agent.getPlayerID() == playerID && 
 						)

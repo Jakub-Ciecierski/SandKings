@@ -58,7 +58,7 @@ public class InformFoodTask extends Task {
 			Information newInfo = new Information(
 					information.getAgent(),
 					information.getType(),
-					information.getGetTickCount(),
+					information.getTickCount(),
 					information.getGridPoint()
 					);
 			
@@ -67,6 +67,12 @@ public class InformFoodTask extends Task {
 			
 			SmartConsole.Print("Agent "+ mobile.getID() +" informed mother ", DebugModes.TASK);			
 		}
+	}
+
+	@Override
+	public void delayTask() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

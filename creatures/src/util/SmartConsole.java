@@ -6,12 +6,14 @@ public class SmartConsole {
 	
 	private static String SUFFIX = "\n";
 	
-	static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.FORMATION, DebugModes.ALLIANCE};  
+	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.FORMATION, DebugModes.TASK_FOOD};  
+	static DebugModes[] DEBUG_MDOE = {DebugModes.TASK_FOOD};
 	
 	public enum DebugModes {
 		BASIC,
 		ADVANCED,
 		TASK,
+		TASK_FOOD,
 		ERROR,
 		MESSAGE,
 		KB,
@@ -50,6 +52,9 @@ public class SmartConsole {
 			}
 			if(this == ALLIANCE){
 				return "Alliance";
+			}
+			if(this == TASK_FOOD){
+				return "Task Food";
 			}
 			return "";
 		}

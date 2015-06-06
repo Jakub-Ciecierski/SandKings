@@ -35,7 +35,7 @@ public class MobileScheduler extends Scheduler{
 					if(food.getWeight() > mobile.getCarryCapacity())
 						return new InformFoodTask(info, this.mobile);
 					else
-						return null;//return new ReturnFoodTask(info, this.mobile);
+						return new ReturnFoodTask(info, this.mobile);
 
 				}
 			case ENEMY_CREATURE:
@@ -44,6 +44,15 @@ public class MobileScheduler extends Scheduler{
 			default:
 				return null;
 		}
+	}
+	
+	private boolean isFoodTaken(Information info){
+		if(info.getAgent() instanceof Food){
+			Food food = (Food) info.getAgent();
+			if(food == null || food.isPicked())
+				return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -55,7 +64,7 @@ public class MobileScheduler extends Scheduler{
 			
 			Information info = knowledgeBase.getInformation(i);
 			
-			if(info == null || !info.isUsefull)
+			if(info == null || !info.isUsefull || isFoodTaken(info))
 				continue;
 				
 			Task currentTask = mobile.getCurrentTask();
@@ -68,6 +77,11 @@ public class MobileScheduler extends Scheduler{
 				
 				Task newTask = createTask(info);
 				if(newTask != null) {
+					
+					// If current Task is running, delay it
+					if(currentTask != null && !currentTask.isFinished())
+						currentTask.delayTask();
+					
 					mobile.setCurrentTask(newTask);
 				}
 			}

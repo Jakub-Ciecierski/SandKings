@@ -257,4 +257,10 @@ public class EnemyNotifyTask extends Task {
 		allianceChecker[mawIndex] = numberOfChildren;
 		currentMawAnswered = true;
 	}
+
+	@Override
+	public void delayTask() {
+		// TODO Auto-generated method stub
+		
+	}
 }

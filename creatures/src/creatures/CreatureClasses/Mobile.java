@@ -98,7 +98,7 @@ public abstract class Mobile extends Fightable {
 		food.setPicked(true);
 	}
 	
-	protected void MoveCarriedStuff()
+	public void MoveCarriedStuff()
 	{
 		if ( carriedStuff != null )
 		{
@@ -141,15 +141,15 @@ public abstract class Mobile extends Fightable {
 					// TODO
 				break;
 			case HomeWithFood:
-					DropCarriedFood();
+					//DropCarriedFood();
 				break;
 			case Wpierdol:
 				
 				break;
 			case PickUpFood:
-				List<Food> foodHere = FoodAtPoint( goingPoint );
-				if ( foodHere.size() > 0 ) PickUpFood( foodHere );
-				isNewTask = true;
+				//List<Food> foodHere = FoodAtPoint( goingPoint );
+				//if ( foodHere.size() > 0 ) PickUpFood( foodHere );
+				//isNewTask = true;
 				break;
 			case Uknown: break;
 			default: break;
@@ -187,13 +187,22 @@ public abstract class Mobile extends Fightable {
 		this.food = Constants.MOBILE_STARTING_FOOD;
 	}
 
-	private void DropCarriedFood( )
+	public void DropCarriedFood( )
 	{
 		if ( carriedStuff != null )
 		{
 			Maw m = MawFinder.Instance().GetMaw( this.playerID );
 			m.ReceiveFood( carriedStuff );
-			this.carriedStuff = null;}
+			this.carriedStuff = null;
+		}
+	}
+	
+	public void DropCarriedFoodOnTheGround(){
+		if ( carriedStuff != null )
+		{
+			carriedStuff.setPicked(false);
+			this.carriedStuff = null;
+		}
 	}
 	
 	public void Starve()
@@ -242,8 +251,6 @@ public abstract class Mobile extends Fightable {
 			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity )
 			{	// lift
 				StartCarrying( food );
-				this.goingWhere = GoingWhere.HomeWithFood;
-				GoHome();
 				break; 
 			}
 		}
@@ -255,18 +262,7 @@ public abstract class Mobile extends Fightable {
 			return;
 		// get current location in grid
 		GridPoint gp = grid.getLocation(this);
-		
-		
-		List<Food> foodHere = FoodAtPoint( gp );
-		
-		//List<Food> foodHere = getFoodInVicinity(1, 1);
-		if ( foodHere.size() > 0 ) 
-			{
-				PickUpFood( foodHere );
-				return;
-			}
-		
-		
+
 		// calculate gohome desire
 		if ( getGoHomeDesire( gp ) )
 		{
@@ -324,6 +320,7 @@ public abstract class Mobile extends Fightable {
 	public void moveTowards( GridPoint gp )
 	{
 		moveTowards( gp, false );
+		MoveCarriedStuff();
 	}
 	public void moveTowards( GridPoint gp, boolean isMoveAway )
 	{

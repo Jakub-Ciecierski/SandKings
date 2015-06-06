@@ -43,7 +43,7 @@ public class InformEnemyTask extends Task {
 			Information newInfo = new Information(
 					information.getAgent(),
 					information.getType(),
-					information.getGetTickCount(),
+					information.getTickCount(),
 					information.getGridPoint()
 					);
 			
@@ -55,6 +55,12 @@ public class InformEnemyTask extends Task {
 			finish();
 			return;
 		}
+	}
+
+	@Override
+	public void delayTask() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -31,4 +31,6 @@ public abstract class Task {
 		isFinished = true;
 		information.isUsefull = false;
 	}
+	
+	public abstract void delayTask();
 }

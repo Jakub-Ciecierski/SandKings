@@ -42,7 +42,16 @@ public class Information {
 		return this.point;
 	}
 	
-	public double getGetTickCount(){
+	public double getTickCount(){
 		return this.tickCount;
 	}
+	
+	public void setGridPoint(GridPoint gp){
+		this.point = gp;
+	}
+	
+	public void setTickCount(double tickCount){
+		this.tickCount = tickCount;
+	}
+	
 }

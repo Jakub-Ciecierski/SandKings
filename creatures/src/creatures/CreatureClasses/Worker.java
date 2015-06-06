@@ -44,24 +44,23 @@ public class Worker extends Mobile {
 		if(currentTask != null)
 			if(!currentTask.isFinished()){
 				currentTask.execute();
-				//return;
+				return;
 			}
 		if(this.getMove()) {
-			if ( this.IsAtDestination() )
-			{
+			// Arrived at destination
+			if ( this.IsAtDestination() ){
 				this.ActOnArrival();
 				return;
-			} else if ( this.isGoingSomewhere() )
-			{
+			}
+			else if ( this.isGoingSomewhere() ){
 				this.MoveThere();
-				this.MoveCarriedStuff();
 				return;
-			} else {
+			} 
+			else {
 				this.Explore();
 				this.MoveCarriedStuff();
 				return;
 			}
 		}
-		
 	}
 }

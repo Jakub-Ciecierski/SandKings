@@ -350,8 +350,7 @@ public class Formation extends Fightable {
 	public void step()
 	{
 		if(!addPending()) return;
-		//FormationAttackCheck();
-		
+
 		// NOT ENOUGH BROS IN FORMATION
 		if ( this.getSize() < this.getNeededSize() / Constants.FORMATION_NEEDED_FRACTION )
 		{
@@ -382,15 +381,6 @@ public class Formation extends Fightable {
 			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
 			return;
 		}
-			
-		/*
-		if(isFighting)
-		{
-			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
-
-			isFighting = Attack();
-			return;
-		}*/
 		
 		// ARRIVED.
 		if ( this.IsAtDestination() )

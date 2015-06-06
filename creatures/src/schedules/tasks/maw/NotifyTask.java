@@ -224,6 +224,12 @@ public class NotifyTask extends Task {
 		stage = Stages.FINISH;
 	}
 
+	@Override
+	public void delayTask() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

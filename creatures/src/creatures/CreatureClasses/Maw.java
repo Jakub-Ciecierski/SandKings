@@ -360,7 +360,10 @@ public class Maw extends Fightable {
 		int free = 0;
 		for ( Mobile m : children )
 		{
-			if ( !m.isInFormation() && !m.isGoingSomewhere())
+			if ( !m.isInFormation() && !m.isGoingSomewhere() &&
+					(m.getCurrentTask() == null ||
+					m.getCurrentTask() != null &&
+					m.getCurrentTask().isFinished()))
 			{
 				free++;
 			}

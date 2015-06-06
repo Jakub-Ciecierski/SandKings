@@ -111,7 +111,7 @@ public final class Constants {
 	public static final int MOBILE_VICINITY_X = 5;
 	public static final int MOBILE_VICINITY_Y = 5;
 	
-	public static final int MOBILE_MAX_KNOWLEDGE = 10;
+	public static final int MOBILE_MAX_KNOWLEDGE = 500;
 	
 	public static final int MAW_MAX_KNOWLEDGE = 500;
 	

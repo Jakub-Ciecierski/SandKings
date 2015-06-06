@@ -39,7 +39,10 @@ public class KnowledgeBase {
 	
 	private boolean hasInformation(Information info){
 		for(int i =0;i < knowledge.size();i++){
-			if(info.getAgent() == knowledge.get(i).getAgent()){
+			Information currentInfo = knowledge.get(i);
+			if(info.getAgent() == currentInfo.getAgent()){
+				currentInfo.setGridPoint(info.getGridPoint());
+				currentInfo.setTickCount(info.getTickCount());
 				return true;
 			}
 		}
@@ -66,14 +69,14 @@ public class KnowledgeBase {
 	 */
 	public boolean addInformation(Information newInfo){
 		synchronized (this) {
-			
-			if(isInCache(newInfo.getAgent()))
-				return false;
-			
+
 			// dont add this info if it already exists
 			if(this.hasInformation(newInfo)) {
 				return false;
 			}
+			
+			if(isInCache(newInfo.getAgent()))
+				return false;
 			
 			// Replace the oldest information with lower priority
 			if(knowledge.size() >= maxInfoCount){
