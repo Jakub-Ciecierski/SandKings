@@ -89,7 +89,7 @@ public class ReturnFoodTask extends Task{
 		// return back home
 		if(stage == Stages.GOING_HOME){
 			mobile.moveTowards(mawPoint);
-
+			if ( mawPoint == null || currPoint == null ) { SmartConsole.Print("returning home but location is null", DebugModes.ERROR); return; }
 			if(currPoint.getX() == mawPoint.getX() && currPoint.getY() == mawPoint.getY()){
 				mobile.DropCarriedFood();
 				SmartConsole.Print("Agent #" + mobile.getID() +" Delivered Food", DebugModes.TASK_FOOD);

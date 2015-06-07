@@ -245,7 +245,7 @@ public abstract class Mobile extends Fightable {
 		// iterate over foodHere
 		for ( Food food : foodHere )
 		{
-			if(food.isPicked())
+			if( food.isPickingBlocked(this.playerID) ) //if(food.isPicked())
 				continue;
 			// check if food too heavy
 			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity )
@@ -289,6 +289,7 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	private float DangerRelation(Maw maw){
+		if ( maw == null ) return 0;
 		return (MawFinder.Instance().getBiggestDanger() / maw.getDanger()) * Constants.MAW_DISTANCE_FACTOR;
 	}
 
