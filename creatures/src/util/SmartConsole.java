@@ -6,8 +6,8 @@ public class SmartConsole {
 	
 	private static String SUFFIX = "\n";
 	
-	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.FORMATION, DebugModes.TASK_FOOD};  
-	static DebugModes[] DEBUG_MDOE = {DebugModes.TASK_FOOD};
+	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.ALLIANCE};  
+	static DebugModes[] DEBUG_MDOE = {DebugModes.FORMATION};
 	
 	public enum DebugModes {
 		BASIC,

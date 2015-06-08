@@ -7,6 +7,7 @@ import java.util.Random;
 
 import communication.messages.DamageMessage;
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -35,6 +36,8 @@ public class Formation extends Fightable {
 		if ( space == null ) SmartConsole.Print("formation space null", DebugModes.FORMATION);
 		this.playerID = playerID;
 		// TODO Auto-generated constructor stub
+		
+		maw = MawFinder.Instance().GetMaw(playerID);
 	}
 
 	public enum GoingWhere
@@ -72,6 +75,15 @@ public class Formation extends Fightable {
 	private List<Formation> allianceFormations = new ArrayList<Formation>();
 	
 	private boolean isDisbanded;
+	
+	private Maw maw;
+	
+	private boolean doNotRepeatPending = false;
+	
+	// Used to unstack idle formations
+	private GridPoint lastPosition = null;
+	private double lastMovedTick = 0;
+	
 	
 	// only called when we need a new member
 	public void findNewMember(int ID)
@@ -130,24 +142,29 @@ public class Formation extends Fightable {
 		List<Mobile> newPendingSoldiers = new ArrayList<Mobile>();
 		for( int i = 0; i < pendingSoldiers.size(); i++)
 		{
+			Mobile m = pendingSoldiers.get(i);
 			
-			if(!pendingSoldiers.get(i).IsAtLocation(currentPos))
+			if(!m.IsAtLocation(currentPos) )
 			{
-				pendingSoldiers.get(i).moveTowards(currentPos);
+				m.moveTowards(currentPos);
 				
-				newPendingSoldiers.add(pendingSoldiers.get(i));
+				newPendingSoldiers.add(m);
 			}
 			else
 			{
-				this.setCarryCapacity(this.getCarryCapacity() + pendingSoldiers.get(i).getCarryCapacity());
-				soldiers.add(pendingSoldiers.get(i));
+				this.setCarryCapacity(this.getCarryCapacity() + m.getCarryCapacity());
+				soldiers.add(m);
 			}
 		}
 		
 		pendingSoldiers = newPendingSoldiers;
 		
-		if(pendingSoldiers.size() == 0)
+		if(pendingSoldiers.size() == 0 )
 			return true;
+		if(maw.getNumberOfChildren() <= soldiers.size()){
+			SmartConsole.Print("Not enough children alive - Starting Formation with currtent maximum", DebugModes.FORMATION);
+			return true;
+		}
 		return false;
 	}
 	
@@ -349,7 +366,32 @@ public class Formation extends Fightable {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
-		if(!addPending()) return;
+		GridPoint currPoint = grid.getLocation(this);
+		if(lastPosition == null)
+			lastPosition = currPoint;
+		else{
+			if(currPoint.getX() == lastPosition.getX() &&
+					currPoint.getY() == lastPosition.getY()){
+				if(lastMovedTick == -1)
+					lastMovedTick = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+			}else{
+				lastMovedTick  = -1;
+			}
+			lastPosition = currPoint;
+		}
+		
+		if(lastMovedTick > 0 && 
+				RunEnvironment.getInstance().getCurrentSchedule().getTickCount() > Constants.FORMATION_IDLE_TIMEOUT + lastMovedTick){
+			SmartConsole.Print("Formation " + getID() + " Has Been Idle for Too Long. Disbanding.", DebugModes.FORMATION);
+			this.Disband();
+			return;
+		}
+		
+		if(!addPending() && !doNotRepeatPending) {
+			return;
+		}
+		
+		doNotRepeatPending = true;
 
 		// NOT ENOUGH BROS IN FORMATION
 		if ( this.getSize() < this.getNeededSize() / Constants.FORMATION_NEEDED_FRACTION )
@@ -374,7 +416,7 @@ public class Formation extends Fightable {
 		}
 		
 		// USED IN LINKED FORMATIONS
-		if(!canLinkedFormationsMove())
+		if(!canAllianceFormationsMove())
 			return;
 		
 		if(Attack()){
@@ -508,14 +550,14 @@ public class Formation extends Fightable {
 		return canStartMoving;
 	}
 	
-	public boolean canLinkedFormationsMove(){
+	public boolean canAllianceFormationsMove2(){
 		// Am I the closest ?
 		synchronized(allianceFormations){
 			
 			//SmartConsole.Print("Formation " + getID() + " Alliance Size: " + allianceFormations.size(), DebugModes.FORMATION);
 			
 			double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
-			
+
 			//SmartConsole.Print("Formation " + getID() + " MyDistance: " + myDistance, DebugModes.FORMATION);
 			
 			// if is close enough, stop counting
@@ -539,6 +581,58 @@ public class Formation extends Fightable {
 		}
 	}
 	
+	public boolean canAllianceFormationsMove(){
+		// Am I the closest ?
+		
+		synchronized(allianceFormations){
+			if(allianceFormations == null || allianceFormations.size() == 0 || allianceFormations.size() == 1)
+				return true;
+			
+			double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
+			double max = myDistance;
+			
+			int synchAttackCount = 0;
+			int allCount = 0;
+			
+			// if is close enough, stop counting
+			//if (myDistance < Constants.MOBILE_VICINITY_X) return true;
+			
+			for(int i =0;i < allianceFormations.size(); i++){
+				Formation formation = allianceFormations.get(i);
+				if(formation != null){
+					
+					GridPoint currPoint = grid.getLocation(formation);
+					if(currPoint == null || goingPoint == null)
+						continue;//return true;
+
+					double distance = SimplyMath.Distance(currPoint , goingPoint);
+					
+					if(distance <= Constants.MOBILE_VICINITY_X)
+						synchAttackCount++;
+					
+					if(max < distance)
+						max = distance;
+					
+					allCount++;
+				}
+			}
+			
+			if(synchAttackCount == allCount){
+				SmartConsole.Print("Formation " + getID() + " CHAAARGE !!!", DebugModes.FORMATION);
+				return true;
+			}
+			
+			if(myDistance >= max){
+				//SmartConsole.Print("Formation " + getID() + " Can move. Dist: " + myDistance, DebugModes.FORMATION);
+				return true;
+			}
+			else{
+				//SmartConsole.Print("Formation " + getID() + " Is too close, waiting for other. Dist: " + myDistance, DebugModes.FORMATION);
+				return false;
+			}
+		}
+	}
+
 	public void setGoal(GridPoint goingPoint, GoingWhere goingWhere){
 		this.setGoingSomewhere(true);
 		this.setGoingWhere( goingWhere ); // what's the formation doing?

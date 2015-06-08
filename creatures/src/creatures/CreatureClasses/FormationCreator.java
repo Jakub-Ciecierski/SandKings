@@ -15,6 +15,11 @@ import util.SmartConsole.DebugModes;
 
 public class FormationCreator {
 	
+	private enum Types {
+		STRICT,
+		LOOSE
+	}
+
 	private Maw maw;
 	
 	private int size;
@@ -22,6 +27,8 @@ public class FormationCreator {
 	private Formation.GoingWhere goingWhere;
 	
 	private List<Formation> allianceFormations = null;
+	
+	private Types type;
 	
 	public FormationCreator(Maw maw, int size, 
 							Formation.GoingWhere goingWhere,
@@ -32,6 +39,8 @@ public class FormationCreator {
 		this.maw = maw;
 		
 		this.goingWhere = goingWhere;
+		
+		type = Types.STRICT;
 	}
 	
 	public FormationCreator(Maw maw, int size, 
@@ -46,6 +55,12 @@ public class FormationCreator {
 		this.goingWhere = goingWhere;
 		
 		this.allianceFormations = allianceFormations;
+		
+		type = Types.LOOSE;
+	}
+	
+	public void setType(Types type){
+		this.type = type;
 	}
 	
 	public void addAlliance(List<Formation> allianceFormations){
@@ -53,6 +68,11 @@ public class FormationCreator {
 	}
 	
 	public boolean AttemptFormation(){
+
+		if(goingPoint == null) {
+			return false;
+		}
+		
 		Context<Object> context = ContextUtils.getContext(maw);
 		ContinuousSpace<Object> space = maw.getSpace(); 
 		Grid<Object> grid = maw.getGrid();
@@ -63,23 +83,26 @@ public class FormationCreator {
 		List<Mobile> agents = new ArrayList<Mobile>();
 		
 		int max = Constants.Constants.BIGGEST_DISTANCE;
-		int extent = 5;
-		while ( agents.size() < size )
-		{
-			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);
-			extent += 1;
-			
-			if(extent > max)
-				return false;
-			SmartConsole.Print("maw [" + agents.size() + "/" + size + "]    c4attack bros in " + extent, DebugModes.BASIC);
-		}
+		int extent = 50;
 		
-		if(goingPoint == null) {
-			return false;
+		// Strict - look until found enough
+		if(type == Types.STRICT){
+			while ( agents.size() < size )
+			{
+				agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);	
+				extent += 5;
+				
+				if(extent > max)
+					return false;
+			}
+		}
+		// Loose - go with what you have
+		else if(type == Types.LOOSE) {
+			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);
+			size = agents.size(); 
 		}
 
 		Formation f = new Formation( space, grid, maw.getPlayerID());
-		
 		context.add(f);
 
 		GridPoint test =  new GridPoint(25,25);
@@ -99,7 +122,7 @@ public class FormationCreator {
 			allianceFormations.add(f);
 			f.setCanStartMoving(true);
 		}
-		
+
 		return true;
 	}
 

@@ -13,6 +13,7 @@ import creatures.CreatureClasses.Mobile.GoingWhere;
 import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
 import util.GSC;
+import util.SimplyMath;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 
@@ -38,28 +39,34 @@ public class ReturnFoodTask extends Task{
 		this.mobile = mobile;
 
 		this.maw = MawFinder.Instance().GetMaw(mobile.getPlayerID());
-		mawPoint = GSC.Instance().getGrid().getLocation(maw);
+		if(maw != null)
+			mawPoint = GSC.Instance().getGrid().getLocation(maw);
 		
 		stage = Stages.BEGIN;
 
-		SmartConsole.Print("Agent #" + mobile.getID() +" New ReturnFoodTask", DebugModes.TASK_FOOD);
+		//SmartConsole.Print("Agent #" + mobile.getID() +" New ReturnFoodTask", DebugModes.TASK_FOOD);
 	}
 
 	@Override
 	public void execute() {
 		if(stage == Stages.FINISH){
+			mobile.DropCarriedFood(); // Just in case
 			finish();
 			return;
 		}
-
+		
 		GridPoint destPoint = information.getGridPoint();
 		GridPoint currPoint = mobile.grid.getLocation(mobile);
 
 		Food food = (Food)information.getAgent();
 		
+		if(destPoint == null || currPoint == null || mawPoint == null){
+			stage = Stages.FINISH;
+		}
+		
 		// If food not there or is picked
 		if(food == null || (food.isPicked() && mobile.carriedStuff != null && mobile.carriedStuff != food)) {
-			SmartConsole.Print("Agent #" + mobile.getID() +" TASK NOT RUNNING, FOOD PICKED", DebugModes.TASK_FOOD);
+			//SmartConsole.Print("Agent #" + mobile.getID() +" TASK NOT RUNNING, FOOD PICKED", DebugModes.TASK_FOOD);
 			stage = Stages.FINISH;
 		}
 
@@ -89,22 +96,14 @@ public class ReturnFoodTask extends Task{
 		// return back home
 		if(stage == Stages.GOING_HOME){
 			mobile.moveTowards(mawPoint);
-
-			if(currPoint.getX() == mawPoint.getX() && currPoint.getY() == mawPoint.getY()){
+			
+			// Give mother the food
+			if(SimplyMath.Distance(currPoint, mawPoint) < 2.0){
 				mobile.DropCarriedFood();
 				SmartConsole.Print("Agent #" + mobile.getID() +" Delivered Food", DebugModes.TASK_FOOD);
 				stage = Stages.FINISH;
-				
-				//stage = Stages.DELIVER_FOOD;
 			}
 				
-		}
-		
-		// deliver food
-		if(stage == Stages.DELIVER_FOOD){
-			mobile.DropCarriedFood();
-			SmartConsole.Print("Agent #" + mobile.getID() +" Delivered Food", DebugModes.TASK_FOOD);
-			stage = Stages.FINISH;
 		}
 	}
 

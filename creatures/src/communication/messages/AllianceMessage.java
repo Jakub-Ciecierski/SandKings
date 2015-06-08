@@ -5,6 +5,7 @@ import schedules.tasks.maw.EnemyNotifyTask;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import communication.Message;
+import communication.knowledge.Information;
 import creatures.Agent;
 import creatures.CreatureClasses.Maw;
 
@@ -47,7 +48,12 @@ public class AllianceMessage extends Message {
 
 		if(doAlliance) {
 			// Add him to cache, so don't this Maw does not start other tasks with this Agent
+			Information currInfo = task.getInformation();
+			Information newInfo = new Information(currInfo.getAgent(), currInfo.getType(), 
+								currInfo.getTickCount(), currInfo.getGridPoint());
+			
 			maw.getKnowledgeBase().addToCache(task.getInformation().getAgent());
+			//maw.getKnowledgeBase().addInformation(newInfo);
 			
 			SmartConsole.Print("Agent #" + recipient.getID() + " Agreed For Alliance with " + numberOfFreeBros + " Mobiles", DebugModes.MESSAGE);
 		}

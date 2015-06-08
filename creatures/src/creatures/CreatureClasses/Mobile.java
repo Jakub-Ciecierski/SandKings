@@ -289,6 +289,8 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	private float DangerRelation(Maw maw){
+		if(maw == null)
+			return 0;
 		return (MawFinder.Instance().getBiggestDanger() / maw.getDanger()) * Constants.MAW_DISTANCE_FACTOR;
 	}
 

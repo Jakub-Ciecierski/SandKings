@@ -31,6 +31,7 @@ public class EnemyNotifyTask extends Task {
 	private enum Stages {
 		BEGIN,
 		FINISH,
+		RESTART,
 		FORM_ALLIANCE,
 		FORM_FORMATION
 	}
@@ -53,6 +54,11 @@ public class EnemyNotifyTask extends Task {
 		
 		SmartConsole.Print("Maw #" + maw.getPlayerID() +" New EnemyNotifyTask: " + information.getType().toString(), DebugModes.TASK);
 		
+		init();
+		
+	}
+	
+	private void init(){
 		// Set up alliance stuff
 		List<Maw> maws = MawFinder.Instance().getMaws();
 		int mawsCount = maws.size();
@@ -68,8 +74,9 @@ public class EnemyNotifyTask extends Task {
 				myAllianceIndex = i;
 		}
 		
+		currentMawAnswered = true;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() {
@@ -115,6 +122,11 @@ public class EnemyNotifyTask extends Task {
 		{
 			askForAlliance(neededBros - getAllianceBrosCount());
 			
+			if(allAnswered()){
+				SmartConsole.Print("All Maws answered, not enough mobiles, restarting...", DebugModes.ALLIANCE);
+				init();
+			}
+
 			return;
 		}
 		
@@ -125,6 +137,20 @@ public class EnemyNotifyTask extends Task {
 		stage = Stages.FINISH;
 	}
 
+	private boolean allAnswered(){
+		for(int i = 0;i < allianceChecker.length; i++){
+			Maw allianceMaw = MawFinder.Instance().GetMaw(mawIDMapper[i]);
+			if(allianceMaw == null){
+				allianceChecker[i] = 0;
+				continue;
+			}
+			if(allianceChecker[i] < 0){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private int getAllianceBrosCount(){
 		int count = 0;
 		for(int i = 0;i < allianceChecker.length; i++){

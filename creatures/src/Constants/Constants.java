@@ -122,6 +122,8 @@ public final class Constants {
 	public static final int ALLIANCE_START = 1;
 	public static final int ALLIANCE_TICK= 5;
 	
+	public static final int FORMATION_IDLE_TIMEOUT= 45;
+	
 	/**
 	 * Hidden constructor to ensure no instances are created.
 	 */
