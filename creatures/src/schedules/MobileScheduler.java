@@ -49,7 +49,7 @@ public class MobileScheduler extends Scheduler{
 	private boolean isFoodTaken(Information info){
 		if(info.getAgent() instanceof Food){
 			Food food = (Food) info.getAgent();
-			if(food == null || food.isPicked())
+			if(food == null || food.isPickingBlocked(mobile.getPlayerID()))
 				return true;
 		}
 		return false;

@@ -95,8 +95,14 @@ public class ReturnFoodTask extends Task{
 
 		// return back home
 		if(stage == Stages.GOING_HOME){
-			mobile.moveTowards(mawPoint);
+
+			if ( mawPoint == null || currPoint == null ) { 
+					SmartConsole.Print("returning home but location is null", DebugModes.ERROR);
+					stage = Stages.FINISH;
+					return; 
+				}			
 			
+			mobile.moveTowards(mawPoint);
 			// Give mother the food
 			if(SimplyMath.Distance(currPoint, mawPoint) < 2.0){
 				mobile.DropCarriedFood();
