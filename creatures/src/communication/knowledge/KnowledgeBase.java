@@ -7,6 +7,7 @@ import Constants.Constants;
 import Enemies.Enemy;
 import map.Food;
 import creatures.Agent;
+import creatures.Formation;
 
 /**
  * Knowledge base of each agent.
@@ -117,8 +118,12 @@ public class KnowledgeBase {
 		if(agent instanceof Food){
 			return InformationType.FOOD;
 		}
-		if(agent instanceof Enemy){
+		else if(agent instanceof Enemy){
 			return InformationType.ENEMY_CREATURE;
+		}
+		else if(agent instanceof Formation)
+		{
+			return InformationType.ENEMY_FORMATION;
 		}
 		return InformationType.GARBAGE;
 	}

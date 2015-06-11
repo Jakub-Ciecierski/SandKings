@@ -1,6 +1,10 @@
 package creatures;
 
+import java.util.List;
+
 import communication.MessageQueue;
+import communication.knowledge.Information;
+import communication.knowledge.InformationType;
 import map.God;
 import map.Terrarium;
 import Constants.Constants;
@@ -125,8 +129,22 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		GSC.Instance().setGrid( grid );
 		GSC.Instance().setSpace( space );
 
+		addMawsInformation();
+		
 		return context;
 	}
-	
 
+	private void addMawsInformation(){
+		List<Maw> maws = MawFinder.Instance().getMaws();
+		for(int i = 0;i < maws.size(); i++){
+			Maw mawI = maws.get(i);
+			Information info = new Information(mawI, InformationType.MAW, 0, GSC.Instance().getGrid().getLocation(mawI));
+			for(int j = 0;j < maws.size(); j++){
+				Maw mawJ = maws.get(j);
+				if(mawJ != mawI){
+					mawJ.getKnowledgeBase().addInformation(info);
+				}
+			}
+		}
+	}
 }

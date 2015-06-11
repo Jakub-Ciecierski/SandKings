@@ -1,13 +1,24 @@
 package schedules;
 
+import Constants.Constants;
+import gov.nasa.worldwind.formats.tiff.GeoTiff.GCS;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
-import schedules.tasks.maw.EnemyNotifyTask;
-import schedules.tasks.maw.FoodNotifyTask;
+import schedules.tasks.maw.DefendTask;
+import schedules.tasks.maw.EnemyTask;
+import schedules.tasks.maw.FoodTask;
 import schedules.tasks.maw.NotifyTask;
+import schedules.tasks.maw.WarTask;
 import schedules.tasks.mobile.ReturnFoodTask;
+import sun.font.CreatedFontTracker;
+import util.GSC;
+import util.SimplyMath;
 import communication.knowledge.Information;
 import communication.knowledge.KnowledgeBase;
+import creatures.Formation;
 import creatures.CreatureClasses.Maw;
+import creatures.CreatureClasses.MawFinder;
 
 public class MawScheduler extends Scheduler{
 
@@ -18,6 +29,46 @@ public class MawScheduler extends Scheduler{
 	}
 	
 	/**
+	 * Creates War task
+	 * @param info
+	 * @return
+	 */
+	private Task createWarTask(Information info){
+		synchronized(WarTask.WAR_MUTEX){
+			if(!WarTask.IS_WAR && 
+					Constants.WAR_TICK_BLOCKADE < RunEnvironment.getInstance().getCurrentSchedule().getTickCount()){
+				
+				Maw targetMaw = (Maw)info.getAgent();
+				
+				Maw mostPowerfullMaw = MawFinder.Instance().getMostPowerfullMaw();
+				if(mostPowerfullMaw != null){
+					if(targetMaw == mostPowerfullMaw){
+						WarTask.IS_WAR = true;
+						return new WarTask(info, this.maw);
+					}
+				}
+			}
+			return null;
+		}
+	}
+	
+	private Task createDefendTask(Information info){
+		Formation f = (Formation) info.getAgent();
+		
+		// Start task only if Formation is close enough
+		if(f != null){
+			GridPoint fGP = GSC.Instance().getGrid().getLocation(f);
+			GridPoint mawGP = GSC.Instance().getGrid().getLocation(this.maw);
+			
+			if(fGP != null && mawGP != null)
+				if(SimplyMath.Distance(fGP, mawGP) < Constants.MOBILE_VICINITY_X){
+					return new DefendTask(info, this.maw);
+				}
+		}
+		return null;
+	}
+	
+	/**
 	 * Creates a task based on the info
 	 * @param info
 	 * @return
@@ -25,10 +76,17 @@ public class MawScheduler extends Scheduler{
 	private Task createTask(Information info){
 		switch(info.getType()){
 			case FOOD:
-				return new FoodNotifyTask(info, this.maw);
-			case ENEMY_CREATURE:
-				return new EnemyNotifyTask(info, this.maw);
+				return new FoodTask(info, this.maw);
 				
+			case ENEMY_CREATURE:
+				return new EnemyTask(info, this.maw);
+			
+			case ENEMY_FORMATION:
+				return createDefendTask(info);
+				
+			case MAW:
+				return createWarTask(info);
+	
 			default:
 				return null;
 		}

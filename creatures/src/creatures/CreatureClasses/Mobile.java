@@ -20,20 +20,21 @@ import schedules.MobileScheduler;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import Constants.Constants;
-
 import communication.knowledge.Information;
 import communication.knowledge.InformationType;
 import communication.knowledge.KnowledgeBase;
-
 import creatures.Agent;
 import creatures.Fightable;
 import creatures.Formation;
+import creatures.CreatureClasses.MawFinder.MawRelation;
 
 /**
  * @author Asmodiel
  *	base class for mobile
  */
 public abstract class Mobile extends Fightable {
+	
+	public Object MOBILE_MUTEX = new Object();
 	
 	public enum GoingWhere
 	{
@@ -217,7 +218,7 @@ public abstract class Mobile extends Fightable {
 		}
 	}
 	
-	private void GoHome()
+	public void GoHome()
 	{
 		this.setGoingSomewhere(true);
 		goingPoint = MawFinder.Instance().GetMawPosition( this.playerID );
@@ -238,22 +239,24 @@ public abstract class Mobile extends Fightable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void PickUpFood(List<Food> foodHere) {
+	public boolean PickUpFood(List<Food> foodHere) {
 		// food with highest power-weight ratio
 		Collections.sort( foodHere );
 		
 		// iterate over foodHere
 		for ( Food food : foodHere )
 		{
-			if( food.isPickingBlocked(this.playerID) ) //if(food.isPicked())
+			//if( food.isPickingBlocked(this.playerID) ) 
+			if(food.isPicked())
 				continue;
 			// check if food too heavy
 			if ( carriedStuff == null &&  food.getWeight() <= this.carryCapacity )
 			{	// lift
 				StartCarrying( food );
-				break; 
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void Explore()
@@ -470,6 +473,13 @@ public abstract class Mobile extends Fightable {
 				
 				if( food.isPicked() )
 					continue;
+			}
+			// Do not learn about alliance formation
+			if(agent instanceof Formation){
+				Formation f = (Formation)agent;
+				if(MawFinder.Instance().areWeFriends(this.playerID, f.getPlayerID())){
+					continue;
+				}
 			}
 				
 			InformationType infoType = KnowledgeBase.GetInfoType(agent);

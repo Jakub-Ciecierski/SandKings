@@ -17,7 +17,7 @@ import schedules.tasks.Task;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 
-public class FoodNotifyTask extends Task {
+public class FoodTask extends Task {
 
 	private Maw maw;
 	
@@ -29,12 +29,12 @@ public class FoodNotifyTask extends Task {
 		ALLIANCE
 	}
 	
-	public FoodNotifyTask(Information information, Maw maw) {
+	public FoodTask(Information information, Maw maw) {
 		super(information);
 		
 		this.maw = maw;
 			
-		SmartConsole.Print("Agent #" + maw.getID() +" New FoodNotifyTask: " + information.getType().toString(), DebugModes.TASK);
+		//SmartConsole.Print("Agent #" + maw.getID() +" New FoodNotifyTask: " + information.getType().toString(), DebugModes.TASK);
 	}
 
 	@SuppressWarnings("unchecked")

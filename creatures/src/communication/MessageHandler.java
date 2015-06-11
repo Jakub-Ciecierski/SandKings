@@ -14,7 +14,6 @@ public class MessageHandler {
 	}
 	
 	private void handleQuery(QueryMessage msg){
-		System.out.println(msg.getContent());
 	}
 	
 	public void handle(Message message){

@@ -47,7 +47,7 @@ public class EnemyTypes extends DefaultStyleOGL2D {
 			}
 			
 			try {
-				System.out.println("ENEMY: " + iconDir + "**********************************");
+				//System.out.println("ENEMY: " + iconDir + "**********************************");
 				spatial = factory.createImage(projectDir + File.separator + iconDir);
 			} catch (IOException e) {
 				e.printStackTrace();

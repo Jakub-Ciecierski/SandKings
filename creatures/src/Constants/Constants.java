@@ -124,6 +124,15 @@ public final class Constants {
 	
 	public static final int FORMATION_IDLE_TIMEOUT= 45;
 	
+	// HOW MUCH MORE POWERFULL A MAW HAS TO BE
+	// FOR THE WAR AGAINST IT TO START.
+	public static final float WAR_MAW_POWER_SCALLAR = 2.0f;
+	
+	// WAR CAN NOT HAPPEN BEFORE THIS TICK
+	public static final double WAR_TICK_BLOCKADE = 150.0;
+	
+	// HOW CLOSE FORMATION HAS TO BE TO ENGAGE INTO COMBOT WITH NON-TASK ENEMIES
+	public static final double FORMATION_ENGAGE_DISTANCE = 1.0;
 	/**
 	 * Hidden constructor to ensure no instances are created.
 	 */

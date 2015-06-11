@@ -6,6 +6,7 @@ import java.util.List;
 import creatures.Formation;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import schedules.tasks.maw.WarTask;
 import util.GSC;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
@@ -19,9 +20,20 @@ public class Alliance {
 	
 	private List<Integer> fractions = new ArrayList<Integer>();
 	
+	private boolean isWar = false;
+	
 	public Alliance (List<Formation> allianceFormations, List<Integer> fractions) {
 		this.allianceFormations = allianceFormations;
 		this.fractions = fractions;
+		
+		makeAlliance();
+	}
+	
+	public Alliance (List<Formation> allianceFormations, List<Integer> fractions, boolean isWar) {
+		this.allianceFormations = allianceFormations;
+		this.fractions = fractions;
+		
+		this.isWar = isWar;
 		
 		makeAlliance();
 	}
@@ -68,6 +80,13 @@ public class Alliance {
 	
 	private void stopAlliance() {
 		
+		if(isWar){
+			synchronized (WarTask.WAR_MUTEX) {
+				WarTask.IS_WAR = false;				
+			}
+			
+			SmartConsole.Print("War Finished", DebugModes.WAR);
+		}
 		SmartConsole.Print("Alliance Finished", DebugModes.ALLIANCE);
 		
 		for(int i =0;i < fractions.size(); i++){

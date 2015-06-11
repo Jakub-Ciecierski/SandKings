@@ -7,7 +7,7 @@ public class SmartConsole {
 	private static String SUFFIX = "\n";
 	
 	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.ALLIANCE};  
-	static DebugModes[] DEBUG_MDOE = {DebugModes.FORMATION};
+	static DebugModes[] DEBUG_MDOE = {DebugModes.WAR, DebugModes.ALLIANCE};
 	
 	public enum DebugModes {
 		BASIC,
@@ -20,7 +20,8 @@ public class SmartConsole {
 		SCHEDULER,
 		FORMATION,
 		GOD,
-		ALLIANCE;
+		ALLIANCE,
+		WAR;
 		
 		public String toString(){
 			if(this == ADVANCED){
@@ -55,6 +56,9 @@ public class SmartConsole {
 			}
 			if(this == TASK_FOOD){
 				return "Task Food";
+			}
+			if(this == WAR){
+				return "War";
 			}
 			return "";
 		}
