@@ -7,9 +7,10 @@ public class SmartConsole {
 	private static String SUFFIX = "\n";
 	
 	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.ALLIANCE};  
-	static DebugModes[] DEBUG_MDOE = {DebugModes.WAR, DebugModes.ALLIANCE};
+	static DebugModes[] DEBUG_MDOE = {DebugModes.WAR};
 	
 	public enum DebugModes {
+		STDOUT,
 		BASIC,
 		ADVANCED,
 		TASK,
@@ -24,6 +25,9 @@ public class SmartConsole {
 		WAR;
 		
 		public String toString(){
+			if(this == STDOUT){
+				return "stdout";
+			}
 			if(this == ADVANCED){
 				return "Advanced";
 			}
@@ -73,6 +77,9 @@ public class SmartConsole {
 				doPrint = true;
 				break;
 			} 
+		}
+		if(debugMode == DebugModes.STDOUT){
+			doPrint = true;
 		}
 		
 		if(doPrint){

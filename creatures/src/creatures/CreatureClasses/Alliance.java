@@ -12,7 +12,17 @@ import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import Constants.Constants;
 
+/**
+ * Class responsible for Alliance Logic.
+ * Controls who is still alive in alliance.
+ * Controls when the Alliance is finished. 
+ * 
+ * @author Kuba
+ *
+ */
 public class Alliance {
+	
+	private static int allianceCount = 0; 
 
 	private double timeoutStart = -1;
 	
@@ -27,6 +37,8 @@ public class Alliance {
 		this.fractions = fractions;
 		
 		makeAlliance();
+		
+		printStatistics();
 	}
 	
 	public Alliance (List<Formation> allianceFormations, List<Integer> fractions, boolean isWar) {
@@ -36,6 +48,12 @@ public class Alliance {
 		this.isWar = isWar;
 		
 		makeAlliance();
+		
+		printStatistics();
+	}
+	
+	private static void printStatistics(){
+		SmartConsole.Print("Current Total Alliances Count: " + allianceCount++, DebugModes.STDOUT);
 	}
 	
 	/*
