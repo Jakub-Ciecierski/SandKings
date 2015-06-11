@@ -22,10 +22,31 @@ import creatures.CreatureClasses.MawFinder;
 
 public class MawScheduler extends Scheduler{
 
+	private int tasksSize = 4;
+	/*
+	 * [0] FOOD
+	 * [1] ENEMY CRETURE
+	 * [2] ENEMY FORMATION
+	 * [3] MAW
+	 */
+	public int[] TASK_COUNT = new int[tasksSize];
+
+	private int tasksSizeMobile = 3;
+	/*
+	 * [0] - FOOD
+	 * [1] - ENEMY CRETURE
+	 * [2] - ENEMY FORMATION
+	 */
+	public int[] TASK_COUNT_MOBILES = new int[tasksSizeMobile];
+	
 	private Maw maw;
 	
 	public MawScheduler(Maw maw) {
 		this.maw = maw;
+		
+		for(int i = 0 ; i < tasksSize; i++){
+			TASK_COUNT[i] = 0;
+		}
 	}
 	
 	/**
@@ -76,15 +97,19 @@ public class MawScheduler extends Scheduler{
 	private Task createTask(Information info){
 		switch(info.getType()){
 			case FOOD:
+				TASK_COUNT[0]++;
 				return new FoodTask(info, this.maw);
-				
+
 			case ENEMY_CREATURE:
+				TASK_COUNT[1]++;
 				return new EnemyTask(info, this.maw);
 			
 			case ENEMY_FORMATION:
+				TASK_COUNT[2]++;
 				return createDefendTask(info);
 				
 			case MAW:
+				TASK_COUNT[3]++;
 				return createWarTask(info);
 	
 			default:

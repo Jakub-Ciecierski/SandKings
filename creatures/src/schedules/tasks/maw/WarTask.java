@@ -32,6 +32,8 @@ import util.SmartConsole.DebugModes;
  */
 public class WarTask extends Task {
 
+	public static int WAR_COUNT = 0;
+	
 	public static boolean IS_WAR = false;
 	public static Object WAR_MUTEX = new Object();
 	
@@ -48,12 +50,9 @@ public class WarTask extends Task {
 	}
 	
 	// ALLIANCE STUFF
-	private static int MAW_COUNT = 4;
 	private boolean currentMawAnswered = true;
-	private int currentAskMawID = -1;
 	private int[] mawIDMapper;
 	private int[] allianceChecker;
-	private boolean doAlliance;
 	private int myAllianceIndex;
 	
 	private int allianceSize = 1;
@@ -69,6 +68,8 @@ public class WarTask extends Task {
 		SmartConsole.Print("Maw #" + maw.getID() +" New WarTask against Maw #" + targetMaw.getID(), DebugModes.WAR);
 		
 		init();
+		
+		WAR_COUNT++;
 	}
 	
 	private void init(){
