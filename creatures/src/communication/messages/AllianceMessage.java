@@ -1,7 +1,8 @@
 package communication.messages;
 
 import schedules.tasks.Task;
-import schedules.tasks.maw.EnemyNotifyTask;
+import schedules.tasks.maw.EnemyTask;
+import schedules.tasks.maw.WarTask;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 import communication.Message;
@@ -11,12 +12,11 @@ import creatures.CreatureClasses.Maw;
 
 public class AllianceMessage extends Message {
 
-	// Task responsible for creating alliance 
-	private EnemyNotifyTask task;
+	private Task task;
 	
 	private int neededBros;
-	
-	public AllianceMessage(EnemyNotifyTask task, int neededBros) {
+
+	public AllianceMessage(Task task, int neededBros) {
 		this.task = task;
 		
 		this.neededBros = neededBros;
@@ -60,8 +60,14 @@ public class AllianceMessage extends Message {
 		else
 			SmartConsole.Print("Agent #" + recipient.getID() + " Decliend Alliance", DebugModes.MESSAGE);
 		
-		this.task.Answer(numberOfFreeBros, maw.getPlayerID());
-		
+		if(task instanceof WarTask){
+			WarTask warTask = (WarTask)this.task;
+			warTask.Answer(numberOfFreeBros, maw.getPlayerID());
+		}
+		else if(task instanceof EnemyTask){
+			EnemyTask enemyNotifyTask = (EnemyTask)this.task;
+			enemyNotifyTask.Answer(numberOfFreeBros, maw.getPlayerID());
+		}		
 	}
 
 }

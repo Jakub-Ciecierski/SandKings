@@ -22,7 +22,15 @@ import util.GSC;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 
-public class EnemyNotifyTask extends Task {
+/**
+ * Task to destroy an Enemy Agent
+ * 
+ * If given Maw does not have enough children to deal with the problem,
+ * an alliance request is done.
+ * @author Kuba
+ *
+ */
+public class EnemyTask extends Task {
 
 	private Maw maw;
 	
@@ -47,12 +55,12 @@ public class EnemyNotifyTask extends Task {
 	
 	private int allianceSize = 1;
 	
-	public EnemyNotifyTask(Information information, Maw maw) {
+	public EnemyTask(Information information, Maw maw) {
 		super(information);
 		
 		this.maw = maw;
 		
-		SmartConsole.Print("Maw #" + maw.getPlayerID() +" New EnemyNotifyTask: " + information.getType().toString(), DebugModes.TASK);
+		SmartConsole.Print("Maw #" + maw.getID() +" New EnemyNotifyTask: " + information.getType().toString(), DebugModes.TASK);
 		
 		init();
 		

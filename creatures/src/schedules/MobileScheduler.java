@@ -12,13 +12,13 @@ import creatures.Agent;
 import creatures.CreatureClasses.Mobile;
 
 public class MobileScheduler extends Scheduler{
-
+	
 	private Mobile mobile;
 	
 	public MobileScheduler(Mobile mobile) {
 		this.mobile = mobile;
 	}
-
+	
 	/**
 	 * Creates a task based on the info
 	 * @param info
@@ -38,7 +38,11 @@ public class MobileScheduler extends Scheduler{
 						return new ReturnFoodTask(info, this.mobile);
 
 				}
+				
 			case ENEMY_CREATURE:
+				return new InformEnemyTask(info, mobile);
+				
+			case ENEMY_FORMATION:
 				return new InformEnemyTask(info, mobile);
 				
 			default:
@@ -49,7 +53,7 @@ public class MobileScheduler extends Scheduler{
 	private boolean isFoodTaken(Information info){
 		if(info.getAgent() instanceof Food){
 			Food food = (Food) info.getAgent();
-			if(food == null || food.isPickingBlocked(mobile.getPlayerID()))
+			if(food == null || food.isPicked())
 				return true;
 		}
 		return false;

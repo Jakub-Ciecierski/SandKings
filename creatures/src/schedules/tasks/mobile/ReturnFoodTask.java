@@ -3,13 +3,10 @@ package schedules.tasks.mobile;
 import java.util.List;
 
 import map.Food;
-import Constants.Constants;
 import communication.knowledge.Information;
-import creatures.Agent;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
-import creatures.CreatureClasses.Mobile.GoingWhere;
 import repast.simphony.space.grid.GridPoint;
 import schedules.tasks.Task;
 import util.GSC;
@@ -81,11 +78,13 @@ public class ReturnFoodTask extends Task{
 				currPoint.getY() == destPoint.getY())
 		{
 			List<Food> foodHere = mobile.FoodAtPoint( destPoint );
-			
+
 			// pick it up
 			if ( foodHere.size() > 0 ) {
-				mobile.PickUpFood( foodHere );
-				stage = Stages.GOING_HOME;
+				if(!mobile.PickUpFood( foodHere ))
+					return;
+				else
+					stage = Stages.GOING_HOME;
 			}
 			// or finish task if no food was found
 			else{
@@ -97,7 +96,7 @@ public class ReturnFoodTask extends Task{
 		if(stage == Stages.GOING_HOME){
 
 			if ( mawPoint == null || currPoint == null ) { 
-					SmartConsole.Print("returning home but location is null", DebugModes.ERROR);
+					//SmartConsole.Print("returning home but location is null", DebugModes.ERROR);
 					stage = Stages.FINISH;
 					return; 
 				}			
@@ -106,7 +105,7 @@ public class ReturnFoodTask extends Task{
 			// Give mother the food
 			if(SimplyMath.Distance(currPoint, mawPoint) < 2.0){
 				mobile.DropCarriedFood();
-				SmartConsole.Print("Agent #" + mobile.getID() +" Delivered Food", DebugModes.TASK_FOOD);
+				//SmartConsole.Print("Agent #" + mobile.getID() +" Delivered Food", DebugModes.TASK_FOOD);
 				stage = Stages.FINISH;
 			}
 				

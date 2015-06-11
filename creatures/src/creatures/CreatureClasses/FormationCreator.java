@@ -15,7 +15,7 @@ import util.SmartConsole.DebugModes;
 
 public class FormationCreator {
 	
-	private enum Types {
+	public enum FormationTypes {
 		STRICT,
 		LOOSE
 	}
@@ -28,7 +28,7 @@ public class FormationCreator {
 	
 	private List<Formation> allianceFormations = null;
 	
-	private Types type;
+	private FormationTypes type;
 	
 	public FormationCreator(Maw maw, int size, 
 							Formation.GoingWhere goingWhere,
@@ -40,7 +40,7 @@ public class FormationCreator {
 		
 		this.goingWhere = goingWhere;
 		
-		type = Types.STRICT;
+		type = FormationTypes.STRICT;
 	}
 	
 	public FormationCreator(Maw maw, int size, 
@@ -56,10 +56,10 @@ public class FormationCreator {
 		
 		this.allianceFormations = allianceFormations;
 		
-		type = Types.LOOSE;
+		type = FormationTypes.LOOSE;
 	}
 	
-	public void setType(Types type){
+	public void setType(FormationTypes type){
 		this.type = type;
 	}
 	
@@ -86,7 +86,7 @@ public class FormationCreator {
 		int extent = 50;
 		
 		// Strict - look until found enough
-		if(type == Types.STRICT){
+		if(type == FormationTypes.STRICT){
 			while ( agents.size() < size )
 			{
 				agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);	
@@ -97,7 +97,7 @@ public class FormationCreator {
 			}
 		}
 		// Loose - go with what you have
-		else if(type == Types.LOOSE) {
+		else if(type == FormationTypes.LOOSE) {
 			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);
 			size = agents.size(); 
 		}

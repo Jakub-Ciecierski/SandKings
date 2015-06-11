@@ -3,6 +3,12 @@ package schedules;
 import communication.knowledge.KnowledgeBase;
 import schedules.tasks.Task;
 
+/**
+ * Scheduler distributes Tasks to Agent based on its Knowledge Base.
+ * 
+ * @author Kuba
+ *
+ */
 public abstract class Scheduler {
 	
 	public Scheduler(){

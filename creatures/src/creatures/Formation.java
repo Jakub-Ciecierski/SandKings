@@ -1,5 +1,7 @@
 package creatures;
 
+import gov.nasa.worldwind.formats.tiff.GeoTiff.GCS;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -162,7 +164,7 @@ public class Formation extends Fightable {
 		if(pendingSoldiers.size() == 0 )
 			return true;
 		if(maw.getNumberOfChildren() <= soldiers.size()){
-			SmartConsole.Print("Not enough children alive - Starting Formation with currtent maximum", DebugModes.FORMATION);
+			SmartConsole.Print("Not enough children alive - Starting Formation with current maximum", DebugModes.FORMATION);
 			return true;
 		}
 		return false;
@@ -366,6 +368,8 @@ public class Formation extends Fightable {
 	@ScheduledMethod ( start = Constants.MOVE_START , interval = Constants.CREATURES_MOVE_INTERVAL)
 	public void step()
 	{
+		/***** IDLE WORKOUT ********/
+
 		GridPoint currPoint = grid.getLocation(this);
 		if(lastPosition == null)
 			lastPosition = currPoint;
@@ -387,10 +391,11 @@ public class Formation extends Fightable {
 			return;
 		}
 		
+		/***** CREATE FORMATION ********/
+		
 		if(!addPending() && !doNotRepeatPending) {
 			return;
 		}
-		
 		doNotRepeatPending = true;
 
 		// NOT ENOUGH BROS IN FORMATION
@@ -419,6 +424,7 @@ public class Formation extends Fightable {
 		if(!canAllianceFormationsMove())
 			return;
 		
+		// FIGHTING LOGIC
 		if(Attack()){
 			SmartConsole.Print("Formation " + getID() + " formation fighting.", DebugModes.FORMATION);
 			return;
@@ -448,9 +454,13 @@ public class Formation extends Fightable {
 		{
 			// look for enemies in 5x5 NH
 			GridPoint closestEnemy = AreEnemiesNearby();
-			// if NH contains enemies
-			if( closestEnemy != null)
+			/*goingPoint != null
+					&& SimplyMath.Distance(goingPoint, GSC.Instance().getGrid().getLocation(this)) < Constants.FORMATION_ENGAGE_DISTANCE
+					&& */
+			
+			if(closestEnemy != null)
 			{
+				SmartConsole.Print("Formation " + getID() + " Engaging into Combat with Encoutered Enemy.", DebugModes.FORMATION);
 				moveTowards(closestEnemy);
 				return;
 			}
@@ -458,6 +468,7 @@ public class Formation extends Fightable {
 			{
 				MoveThere();
 			}
+			
 		}
 	}
 
@@ -585,9 +596,19 @@ public class Formation extends Fightable {
 		// Am I the closest ?
 		
 		synchronized(allianceFormations){
+			// If im not in formation, I can move
 			if(allianceFormations == null || allianceFormations.size() == 0 || allianceFormations.size() == 1)
 				return true;
-			
+			// First check if other are close enough
+			/*
+			else{
+				for(Formation f : allianceFormations){
+					if(f != null){
+						SimplyMath.Distance(goingPoint, grid.getLocation(this));
+					}
+				}
+			}*/
+				
 			double myDistance = SimplyMath.Distance(goingPoint, grid.getLocation(this));
 			double max = myDistance;
 			
@@ -607,7 +628,7 @@ public class Formation extends Fightable {
 
 					double distance = SimplyMath.Distance(currPoint , goingPoint);
 					
-					if(distance <= Constants.MOBILE_VICINITY_X)
+					if(distance <= Constants.MOBILE_VICINITY_X + Constants.MOBILE_VICINITY_X)
 						synchAttackCount++;
 					
 					if(max < distance)
@@ -725,5 +746,9 @@ public class Formation extends Fightable {
 
 	public boolean isDisbanded(){
 		return this.isDisbanded;
+	}
+	
+	public int getPlayerID(){
+		return this.playerID;
 	}
 }

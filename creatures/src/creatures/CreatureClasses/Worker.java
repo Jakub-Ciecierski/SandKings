@@ -38,15 +38,16 @@ public class Worker extends Mobile {
 		
 		// send message
 		Attack();
+		synchronized (this.MOBILE_MUTEX) {
+			scheduler.updateSchulder();
+			
+			if(currentTask != null)
+				if(!currentTask.isFinished()){
+					currentTask.execute();
+					return;
+				}
+		}
 		
-		scheduler.updateSchulder();
-		
-		if(currentTask != null)
-			if(!currentTask.isFinished()){
-				currentTask.execute();
-				return;
-			}
-
 		if(this.getMove()) {
 			// Arrived at destination
 			if ( this.IsAtDestination() ){

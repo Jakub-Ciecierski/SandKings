@@ -4,7 +4,17 @@ import communication.knowledge.Information;
 
 import creatures.Agent;
 
+/**
+ * The abstract class of Task.
+ * Task is responsible for current behaviour of a given Agent.
+ * 
+ * Task is set up in the Scheduler.
+ * 
+ * @author Kuba
+ *
+ */
 public abstract class Task {
+	
 	protected boolean isFinished = false;
 	
 	protected Information information;

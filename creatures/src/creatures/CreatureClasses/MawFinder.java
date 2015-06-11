@@ -165,8 +165,33 @@ public class MawFinder {
 	public List<Maw> getMaws(){
 		return this._mawList;
 	}
+	
 	public void removeMaw(Maw maw) {
 		this._mawList.remove(maw);
+	}
+	
+	public Maw getMostPowerfullMaw(){
+
+		int maxIndex = 0;
+		int max = _mawList.get(maxIndex).getNumberOfChildren();
+		int total = 0;
 		
+		for(int i = 0; i < _mawList.size();i++){
+			Maw maw = _mawList.get(i);
+			
+			int count = maw.getNumberOfChildren();
+			
+			total += count;
+			
+			if(max < count){
+				maxIndex = i;
+				max = count;
+			}
+		}
+		total -= max;
+		if(max >= total)
+			return _mawList.get(maxIndex);
+		else
+			return null;
 	}
 }

@@ -1,10 +1,12 @@
 package communication.knowledge;
 
 public enum InformationType {
-	ENEMY_CREATURE(3),
+	MAW(6),
+	ENEMY_FORMATION(5),
 	FOOD(4),
+	ENEMY_CREATURE(3),
 	ENEMY_MOBILE(1), 
-	FRIEDLY_MOBILE(0), 
+	FRIEDLY_MOBILE(0),
 	GARBAGE(-1);
 	
 	/**
@@ -35,6 +37,12 @@ public enum InformationType {
 		}
 		else if(this == InformationType.FRIEDLY_MOBILE){
 			return "Friendly mobile";
+		}
+		else if(this == InformationType.MAW){
+			return "Maw";
+		}
+		else if(this == InformationType.ENEMY_FORMATION){
+			return "Enemy Formation";
 		}
 		else
 			return "Garbage";
