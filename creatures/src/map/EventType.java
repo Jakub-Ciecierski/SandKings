@@ -9,5 +9,6 @@ public enum EventType {
 	Defense,
 	Attack,
 	Alliance,
-	Starvation
+	Starvation,
+	War
 }

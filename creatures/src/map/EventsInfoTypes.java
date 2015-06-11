@@ -41,6 +41,9 @@ public class EventsInfoTypes extends DefaultStyleOGL2D {
 			case Starvation:
 				iconDir = "starvation.png";
 				break;
+			case War:
+				iconDir = "war.png";
+				break;
 			default:
 				break;
 			}			

@@ -8,6 +8,7 @@ import java.util.List;
 import communication.knowledge.KnowledgeBase;
 import creatures.Fightable;
 import map.Food;
+import map.God;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameter;
@@ -33,6 +34,7 @@ public class Maw extends Fightable {
 	private int playerID;
 	private int numberOfChildren;
 	private int numOfLostChildren;
+	private int maxNumOfChildren; //max number of children AT A TIME
 	private int childrenBornCount = 200;
 	private int strengthCount = 0;
 	private float strength;
@@ -48,6 +50,7 @@ public class Maw extends Fightable {
 
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
 	private MawScheduler scheduler = new MawScheduler(this);
+	private int pizza = 0, donut = 0, grape = 0, cabbage = 0, meat = 0, steak = 0; //how many she have eaten of each
 
 	//private int pendingFormations = 0;
 	
@@ -83,9 +86,9 @@ public class Maw extends Fightable {
 				
 		}
 		updateDanger();
-		updateProfit();
-		
+		updateProfit();	
 	}	
+	
 
 	private void tryEat(){
 		if(eatenFood > 0)
@@ -130,6 +133,28 @@ public class Maw extends Fightable {
 	public void ReceiveFood( Food f )
 	{
 		this.setFood( this.food + f.getPower() );
+		switch(f.getID()) {
+			case 0:
+				pizza++;
+				break;
+			case 1:
+				donut++;
+				break;
+			case 2:
+				grape++;
+				break;
+			case 3:
+				cabbage++;
+				break;
+			case 4:
+				meat++;
+				break;
+			case 5:
+				steak++;
+				break;
+			default:
+				break;	
+		}
 		//add strength to children
 		f.Delete();
 	}
@@ -215,8 +240,15 @@ public class Maw extends Fightable {
 		updateProfit();
 		
 		createFormation();
+		UpdateMaxNumOfChildren();
+		
 	}
 	
+	private void UpdateMaxNumOfChildren()
+	{
+		if(numberOfChildren > maxNumOfChildren)
+			maxNumOfChildren = numberOfChildren;
+	}
 	private void TrySpawnMobile()
 	{
 		if ( Constants.MAW_BIRTHING_FACTOR * numberOfChildren * Constants.MOBILE_STOMACH_SIZE * (1 + this.strength) < this.food  
@@ -322,6 +354,9 @@ public class Maw extends Fightable {
 		}
 	}
 
+	public int getMaxNumOftChildren() {
+		return maxNumOfChildren;
+	}
 	
 	public KnowledgeBase getKnowledgeBase(){
 		return this.knowledgeBase;
@@ -354,6 +389,31 @@ public class Maw extends Fightable {
 	public void setGrid(Grid<Object> grid) {
 		this.grid = grid;
 	}
+	
+	public int getPizza() {
+		return this.pizza;
+	}
+	
+	public int getDonut() {
+		return this.donut;
+	}
+	
+	public int getGrape() {
+		return this.grape;
+	}
+	
+	public int getCabbage() {
+		return this.cabbage;
+	}
+	
+	public int getMeat() {
+		return this.meat;
+	}
+	
+	public int getSteak() {
+		return this.steak;
+	}
+	
 
 	public int getNumberOfFreeChildren() {
 		// TODO Auto-generated method stub

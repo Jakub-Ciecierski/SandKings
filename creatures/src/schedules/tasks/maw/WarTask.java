@@ -147,7 +147,7 @@ public class WarTask extends Task {
 		if(targetMaw != null) {
 			GridPoint targetPoint = GSC.Instance().getGrid().getLocation(targetMaw);
 			
-			GSC.Instance().AddEventInfo(EventType.Attack, Constants.EVENT_ALLIANCE_TIMEOUT , 
+			GSC.Instance().AddEventInfo(EventType.War, Constants.EVENT_ALLIANCE_TIMEOUT , 
 					new GridPoint(targetPoint.getX() - Constants.EVENT_DISTANCE, targetPoint.getY() - Constants.EVENT_DISTANCE));
 		}
 

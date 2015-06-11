@@ -6,6 +6,8 @@ package map;
 import java.util.ArrayList;
 import java.util.List;
 
+import creatures.Fightable;
+import creatures.CreatureClasses.Maw;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -31,7 +33,9 @@ public class God {
 	private Grid< Object > grid;
 	private static int deadMawCounter = 0;
 	private static List<Integer> mawIDlist = new ArrayList<>();
-	
+	private static int pizza = 0, donut = 0, grape = 0, cabbage = 0;
+	private static int scorpion = 0, snake = 0, spider = 0;
+	private static List<Maw> mawList = new ArrayList();
 	public God (ContinuousSpace<Object> space, Grid<Object> grid) { 
 		this.space = space;
 		this.grid = grid;
@@ -55,12 +59,18 @@ public class God {
 		{ 
 			int enemyID;
 			int rand = RandomHelper.nextIntFromTo( 0, 5 );
-			if( rand == 5 )
+			if( rand == 5 ) {
 				enemyID = 1;
-			else if ( rand == 4 || rand == 3 )
+				snake++;
+			}
+			else if ( rand == 4 || rand == 3 ) {
 				enemyID = 2;
-			else 
-				enemyID = 0;	
+				scorpion++;
+			}
+			else {
+				enemyID = 0;
+				spider++;
+			}
 						
 			float attack = 0;
 			float health = 0;
@@ -131,10 +141,19 @@ public class God {
 		if (RandomHelper.nextIntFromTo( 0, Constants.FOOD_DROP_PROBABILITY) == 0) //probability of food drop
 		{ 
 			int foodID = 3;
-			if(RandomHelper.nextIntFromTo( 0, 10 ) == 5)
+			if(RandomHelper.nextIntFromTo( 0, 10 ) == 5) {
 				foodID = 0;
-			else
+				pizza++;
+			}
+			else {
 				foodID = RandomHelper.nextIntFromTo( 1, 3 );
+				if(foodID == 1)
+					donut++;
+				else if (foodID == 2)
+					grape++;
+				else
+					cabbage++;
+			}
 
 			int x = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
 			int y = RandomHelper.nextIntFromTo( 2, Constants.GRID_SIZE - 2 );
@@ -150,6 +169,10 @@ public class God {
 				grid.moveTo( food, x, y );
 			}
 		}			
+	}
+	
+	public void AddMawToList(Maw maw) {
+		mawList.add(maw);
 	}
 
 	public static void setDeadMawCounter(int deadMawID) {
@@ -169,17 +192,29 @@ public class God {
 				
 			}
 			RunEnvironment.getInstance().endRun();
-			if(Constants.DEBUG_MODE)
-			{
-				System.out.println("**************************************************");
-				System.out.println("***                                            ***");
-				System.out.println("***                                            ***");
-				System.out.println("  END OF SIMULATION!!! MAW ID " + mawIDlist.get(0) + " WON");
-				System.out.println("***                                            ***");
-				System.out.println("***                                            ***");
-				System.out.println("**************************************************");
-
+			printStatistics();
+		}
+	}
+	
+	private static void printStatistics()
+	{
+		if(Constants.STATISTICS_DEBUG_MODE)
+		{
+			System.out.println("**************************************************");
+			SmartConsole.Print("  END OF SIMULATION!!! MAW ID " + mawIDlist.get(0) + " WON", DebugModes.STDOUT);
+			SmartConsole.Print("        STATISTICS:        ", DebugModes.STDOUT);
+			SmartConsole.Print(">> " + "Tick count: " + RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), DebugModes.STDOUT);
+			SmartConsole.Print(">> " + "Enemies: " + snake + " x Snake, " + scorpion + " x Scorpion and " + spider + " x Spider.", DebugModes.STDOUT);
+			SmartConsole.Print(">> " + "Food: " + pizza + " x Pizza, " + donut + " x Donut, " + grape + " x Grape and " + cabbage + " x Cabbage.", DebugModes.STDOUT);
+			for(int i = 0; i < mawList.size(); i++) {
+				SmartConsole.Print(">> " + mawList.get(i).getMawName() + " Maw:", DebugModes.STDOUT);
+				SmartConsole.Print("Total number of lost children: " + mawList.get(i).getNumOfLostChildren(), DebugModes.STDOUT);
+				SmartConsole.Print("Greatest total number of children at a time: " + mawList.get(i).getMaxNumOftChildren(), DebugModes.STDOUT);
+				SmartConsole.Print("Eaten food: " + mawList.get(i).getPizza() + " x Pizza, " + mawList.get(i).getDonut() + " x Donut, "
+									+ mawList.get(i).getGrape() + " x Grape, " + mawList.get(i).getCabbage() + " x Cabbage."
+									+ mawList.get(i).getMeat() + " x Meat and " + mawList.get(i).getSteak() + " x Steak.", DebugModes.STDOUT);
 			}
+			System.out.println("**************************************************");
 		}
 	}
 }

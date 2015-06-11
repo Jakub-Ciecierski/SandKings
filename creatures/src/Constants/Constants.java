@@ -118,6 +118,8 @@ public final class Constants {
 	
 	// DISPLAY ALL DEBUG MESSAGES
 	public static final boolean DEBUG_MODE = true;
+	public static final boolean STATISTICS_DEBUG_MODE = true;
+
 	
 	public static final int ALLIANCE_TIMEOUT = 25;
 	public static final int ALLIANCE_START = 1;

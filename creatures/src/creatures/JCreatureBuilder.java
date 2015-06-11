@@ -58,6 +58,12 @@ public class JCreatureBuilder implements ContextBuilder<Object> {
 		Maw player3Maw = new Maw( space, grid, 3 );
 		Maw player4Maw = new Maw( space, grid, 4 );
 		
+		//God knows bout Maws yeyeye
+		god.AddMawToList(player1Maw);
+		god.AddMawToList(player2Maw);
+		god.AddMawToList(player3Maw);
+		god.AddMawToList(player4Maw);
+
 		// add maws to context
 		context.add( god );
 		context.add( player1Maw );
