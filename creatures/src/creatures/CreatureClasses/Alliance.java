@@ -22,7 +22,7 @@ import Constants.Constants;
  */
 public class Alliance {
 	
-	private static int allianceCount = 0; 
+	public static int ALLIANCE_COUNT = 0; 
 
 	private double timeoutStart = -1;
 	
@@ -38,7 +38,7 @@ public class Alliance {
 		
 		makeAlliance();
 		
-		printStatistics();
+		ALLIANCE_COUNT++;
 	}
 	
 	public Alliance (List<Formation> allianceFormations, List<Integer> fractions, boolean isWar) {
@@ -49,11 +49,7 @@ public class Alliance {
 		
 		makeAlliance();
 		
-		printStatistics();
-	}
-	
-	private static void printStatistics(){
-		SmartConsole.Print("Current Total Alliances Count: " + allianceCount++, DebugModes.STDOUT);
+		ALLIANCE_COUNT++;
 	}
 	
 	/*

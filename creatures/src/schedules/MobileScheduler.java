@@ -5,18 +5,48 @@ import schedules.tasks.Task;
 import schedules.tasks.mobile.InformEnemyTask;
 import schedules.tasks.mobile.InformFoodTask;
 import schedules.tasks.mobile.ReturnFoodTask;
+import util.GSC;
 import communication.knowledge.Information;
 import communication.knowledge.InformationType;
 import communication.knowledge.KnowledgeBase;
 import creatures.Agent;
+import creatures.CreatureClasses.Maw;
+import creatures.CreatureClasses.MawFinder;
 import creatures.CreatureClasses.Mobile;
 
 public class MobileScheduler extends Scheduler{
-	
+
 	private Mobile mobile;
 	
 	public MobileScheduler(Mobile mobile) {
 		this.mobile = mobile;
+	}
+	
+	/**
+	 * Used to calculate final statistics
+	 * @param type
+	 */
+	private void incrementStats(int type){
+		Maw maw = MawFinder.Instance().GetMaw(this.mobile.getPlayerID());
+		if(maw != null){
+			MawScheduler scheduler = maw.getScheduler();
+			scheduler.TASK_COUNT_MOBILES[type]++;
+		}
+	}
+	
+	private Task createFoodTask(Information info){
+		Agent agent = info.getAgent();
+		if(agent instanceof Food){
+			Food food = (Food)agent;	
+			
+			if(food.getWeight() > mobile.getCarryCapacity())
+				return new InformFoodTask(info, this.mobile);
+			else
+				return new ReturnFoodTask(info, this.mobile);
+
+		}
+		else
+			return null;
 	}
 	
 	/**
@@ -27,22 +57,15 @@ public class MobileScheduler extends Scheduler{
 	private Task createTask(Information info){
 		switch(info.getType()){
 			case FOOD:
-				
-				Agent agent = info.getAgent();
-				if(agent instanceof Food){
-					Food food = (Food)agent;	
-					
-					if(food.getWeight() > mobile.getCarryCapacity())
-						return new InformFoodTask(info, this.mobile);
-					else
-						return new ReturnFoodTask(info, this.mobile);
-
-				}
+				incrementStats(0);
+				return createFoodTask(info);
 				
 			case ENEMY_CREATURE:
+				incrementStats(1);
 				return new InformEnemyTask(info, mobile);
 				
 			case ENEMY_FORMATION:
+				incrementStats(2);
 				return new InformEnemyTask(info, mobile);
 				
 			default:

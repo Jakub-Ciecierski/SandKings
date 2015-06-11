@@ -18,6 +18,7 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import schedules.MawScheduler;
+import schedules.Scheduler;
 import map.EventType;
 import util.GSC;import util.SmartConsole;
 import util.SmartConsole.DebugModes;import Constants.Constants;
@@ -414,6 +415,9 @@ public class Maw extends Fightable {
 		return this.steak;
 	}
 	
+	public MawScheduler getScheduler(){
+		return this.scheduler;
+	}
 
 	public int getNumberOfFreeChildren() {
 		// TODO Auto-generated method stub
