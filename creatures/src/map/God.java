@@ -128,8 +128,7 @@ public class God {
 	}
 	
 	private void DropFood() {		
-		int rand = RandomHelper.nextIntFromTo( 0, 2 );
-		if (rand == 0) //33% chance of food drop
+		if (RandomHelper.nextIntFromTo( 0, Constants.FOOD_DROP_PROBABILITY) == 0) //probability of food drop
 		{ 
 			int foodID = 3;
 			if(RandomHelper.nextIntFromTo( 0, 10 ) == 5)

@@ -85,6 +85,7 @@ public final class Constants {
 	public static final int ATTACK_CONSTANT = 5;	
 	
 	// FOOD CONSTANTS
+	public static final int FOOD_DROP_PROBABILITY = 2; //górna granica rand startuj¹cego od 0, czyli np 9 da 10% szansy
 	public static final int MEAT_ID = 4;
 	public static final int STEAK_ID = 5;
 	public static final int FOOD_MULTIPLIER = 2;

@@ -1,10 +1,22 @@
-<repast.simphony.visualization.engine.DefaultDisplayDescriptor>
+<repast.simphony.visualization.engine.CartesianDisplayDescriptor>
   <name>A Display</name>
-  <type>TWO_D</type>
+  <type>2D</type>
   <styles>
     <entry>
-      <string>map.EndGameInfo</string>
-      <string>map.EndGameType</string>
+      <string>map.EventsInfo</string>
+      <string>map.EventsInfoTypes</string>
+    </entry>
+    <entry>
+      <string>creatures.Formation</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Worker</string>
+      <string>creatures.ColoredCreature</string>
+    </entry>
+    <entry>
+      <string>map.Food</string>
+      <string>map.FoodTypes</string>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
@@ -15,29 +27,33 @@
       <string>creatures.ColoredMaws</string>
     </entry>
     <entry>
+      <string>map.EndGameInfo</string>
+      <string>map.EndGameType</string>
+    </entry>
+    <entry>
       <string>map.GraveStone</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
-    </entry>
-    <entry>
-      <string>map.Food</string>
-      <string>map.FoodTypes</string>
-    </entry>
-    <entry>
-      <string>map.EventsInfo</string>
-      <string>map.EventsInfoTypes</string>
     </entry>
     <entry>
       <string>map.Terrarium</string>
       <string>map.MapStyle</string>
     </entry>
-    <entry>
-      <string>creatures.CreatureClasses.Worker</string>
-      <string>creatures.ColoredCreature</string>
-    </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>map.EndGameInfo</string>
+      <string>map.EventsInfo</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>creatures.Formation</string>
+      <string>creatures.Formation.style_0.xml</string>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Worker</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>map.Food</string>
       <null/>
     </entry>
     <entry>
@@ -49,23 +65,15 @@
       <null/>
     </entry>
     <entry>
+      <string>map.EndGameInfo</string>
+      <null/>
+    </entry>
+    <entry>
       <string>map.GraveStone</string>
       <string>map.GraveStone.style_2.xml</string>
     </entry>
     <entry>
-      <string>map.Food</string>
-      <null/>
-    </entry>
-    <entry>
-      <string>map.EventsInfo</string>
-      <null/>
-    </entry>
-    <entry>
       <string>map.Terrarium</string>
-      <null/>
-    </entry>
-    <entry>
-      <string>creatures.CreatureClasses.Worker</string>
       <null/>
     </entry>
   </editedStyles>
@@ -79,15 +87,27 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1364504259</hashCode>
+    <hashCode>-296190940</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
-  <layoutProjection>space</layoutProjection>
+  <layoutProjection>grid</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>map.EndGameInfo</string>
+      <string>map.EventsInfo</string>
       <int>7</int>
+    </entry>
+    <entry>
+      <string>creatures.Formation</string>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>creatures.CreatureClasses.Worker</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>map.Food</string>
+      <int>5</int>
     </entry>
     <entry>
       <string>Enemies.Enemy</string>
@@ -98,39 +118,30 @@
       <int>2</int>
     </entry>
     <entry>
+      <string>map.EndGameInfo</string>
+      <int>8</int>
+    </entry>
+    <entry>
       <string>map.GraveStone</string>
-      <int>5</int>
-    </entry>
-    <entry>
-      <string>map.Food</string>
-      <int>4</int>
-    </entry>
-    <entry>
-      <string>map.EventsInfo</string>
       <int>6</int>
     </entry>
     <entry>
       <string>map.Terrarium</string>
       <int>0</int>
     </entry>
-    <entry>
-      <string>creatures.CreatureClasses.Worker</string>
-      <int>3</int>
-    </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
       <id>space</id>
       <attributes/>
-      <type>CONTINUOUS_SPACE</type>
+      <type>continuous space</type>
     </repast.simphony.scenario.data.ProjectionData>
     <repast.simphony.scenario.data.ProjectionData>
       <id>grid</id>
       <attributes/>
-      <type>GRID</type>
+      <type>grid</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
-  <valueLayers/>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
     <unitSize>15.0</unitSize>
   </visualizationProperties>
@@ -144,16 +155,16 @@
             <string>repast.simphony.visualization.grid.GridDecorator</string>
             <map>
               <entry>
+                <string>COLOR</string>
+                <int>-16777216</int>
+              </entry>
+              <entry>
                 <string>UNIT_SIZE</string>
                 <float>15.0</float>
               </entry>
               <entry>
                 <string>SHOW</string>
                 <boolean>false</boolean>
-              </entry>
-              <entry>
-                <string>COLOR</string>
-                <int>-16777216</int>
               </entry>
             </map>
           </entry>
@@ -169,16 +180,16 @@
             <string>repast.simphony.visualization.continuous.ContinuousDecorator</string>
             <map>
               <entry>
+                <string>COLOR</string>
+                <int>-1</int>
+              </entry>
+              <entry>
                 <string>UNIT_SIZE</string>
                 <float>15.0</float>
               </entry>
               <entry>
                 <string>SHOW</string>
                 <boolean>false</boolean>
-              </entry>
-              <entry>
-                <string>COLOR</string>
-                <int>-1</int>
               </entry>
             </map>
           </entry>
@@ -193,4 +204,5 @@
     <blue>255</blue>
     <alpha>255</alpha>
   </backgroundColor>
-</repast.simphony.visualization.engine.DefaultDisplayDescriptor>
+  <valueLayers/>
+</repast.simphony.visualization.engine.CartesianDisplayDescriptor>
