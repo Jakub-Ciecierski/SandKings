@@ -134,7 +134,7 @@ public class Maw extends Fightable {
 	public void ReceiveFood( Food f )
 	{
 		this.setFood( this.food + f.getPower() );
-		switch(f.getID()) {
+		switch(f.getFoodID()) {
 			case 0:
 				pizza++;
 				break;

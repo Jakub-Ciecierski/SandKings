@@ -22,7 +22,8 @@ public class SmartConsole {
 		FORMATION,
 		GOD,
 		ALLIANCE,
-		WAR;
+		WAR,
+		STATS;
 		
 		public String toString(){
 			if(this == STDOUT){
@@ -78,13 +79,17 @@ public class SmartConsole {
 				break;
 			} 
 		}
-		if(debugMode == DebugModes.STDOUT){
+		if(debugMode == DebugModes.STDOUT || debugMode == DebugModes.STATS){
 			doPrint = true;
 		}
 		
 		if(doPrint){
-			System.out.println("["+debugMode.toString()+ "]"+ PREFIX + msg + SUFFIX);
+			if(debugMode == DebugModes.STATS)
+				System.out.println(msg + SUFFIX);
+			else
+				System.out.println("["+debugMode.toString()+ "]"+ PREFIX + msg + SUFFIX);
 		}
+		
 	}
 	
 }

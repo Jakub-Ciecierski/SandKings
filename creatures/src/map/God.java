@@ -8,6 +8,7 @@ import java.util.List;
 
 import creatures.Fightable;
 import creatures.CreatureClasses.Maw;
+import creatures.CreatureClasses.MawFinder;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -16,6 +17,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.MawScheduler;
 import util.GSC;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
@@ -200,21 +202,46 @@ public class God {
 	{
 		if(Constants.STATISTICS_DEBUG_MODE)
 		{
-			System.out.println("**************************************************");
-			SmartConsole.Print("  END OF SIMULATION!!! MAW ID " + mawIDlist.get(0) + " WON", DebugModes.STDOUT);
-			SmartConsole.Print("        STATISTICS:        ", DebugModes.STDOUT);
-			SmartConsole.Print(">> " + "Tick count: " + RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), DebugModes.STDOUT);
-			SmartConsole.Print(">> " + "Enemies: " + snake + " x Snake, " + scorpion + " x Scorpion and " + spider + " x Spider.", DebugModes.STDOUT);
-			SmartConsole.Print(">> " + "Food: " + pizza + " x Pizza, " + donut + " x Donut, " + grape + " x Grape and " + cabbage + " x Cabbage.", DebugModes.STDOUT);
+			Maw winner = MawFinder.Instance().GetMaw(mawIDlist.get(0));
+
+			SmartConsole.Print("**************************************************", DebugModes.STATS);
+			SmartConsole.Print("  END OF SIMULATION!!! MAW " + winner.getMawName() + " WON", DebugModes.STATS);
+			SmartConsole.Print("        STATISTICS:        ", DebugModes.STATS);
+			
+			SmartConsole.Print("Tick count: " + RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), DebugModes.STATS);
+			SmartConsole.Print("Enemies:\n" + snake + " x Snake\n" + scorpion + " x Scorpion\n" + spider + " x Spider\n", DebugModes.STATS);
+			SmartConsole.Print("Food:\n" + pizza + " x Pizza\n" + donut + " x Donut\n" + grape + " x Grape\n" + cabbage + " x Cabbage\n", DebugModes.STATS);
+			
 			for(int i = 0; i < mawList.size(); i++) {
-				SmartConsole.Print(">> " + mawList.get(i).getMawName() + " Maw:", DebugModes.STDOUT);
-				SmartConsole.Print("Total number of lost children: " + mawList.get(i).getNumOfLostChildren(), DebugModes.STDOUT);
-				SmartConsole.Print("Greatest total number of children at a time: " + mawList.get(i).getMaxNumOftChildren(), DebugModes.STDOUT);
-				SmartConsole.Print("Eaten food: " + mawList.get(i).getPizza() + " x Pizza, " + mawList.get(i).getDonut() + " x Donut, "
-									+ mawList.get(i).getGrape() + " x Grape, " + mawList.get(i).getCabbage() + " x Cabbage."
-									+ mawList.get(i).getMeat() + " x Meat and " + mawList.get(i).getSteak() + " x Steak.", DebugModes.STDOUT);
+				Maw maw = mawList.get(i);
+				SmartConsole.Print("**************************************************", DebugModes.STATS);
+				
+				SmartConsole.Print("\n" + mawList.get(i).getMawName() + " Maw\n", DebugModes.STATS);
+				
+				SmartConsole.Print("Total number of lost children: " + mawList.get(i).getNumOfLostChildren(), DebugModes.STATS);
+				SmartConsole.Print("Greatest total number of children at a time: " + mawList.get(i).getMaxNumOftChildren(), DebugModes.STATS);
+				SmartConsole.Print("Eaten food\n" + mawList.get(i).getPizza() + " x Pizza\n" + mawList.get(i).getDonut() + " x Donut\n"
+									+ mawList.get(i).getGrape() + " x Grape\n" + mawList.get(i).getCabbage() + " x Cabbage\n"
+									+ mawList.get(i).getMeat() + " x Meat\n" + mawList.get(i).getSteak() + " x Steak\n", DebugModes.STATS);
+				
+				MawScheduler scheduler = maw.getScheduler();
+				String mawTaskStr = "Tasks Maw:\n"
+						+ "Food: " + scheduler.TASK_COUNT[0] + "\n"
+						+ "Enemy Creature: " + scheduler.TASK_COUNT[1] + "\n"
+						+ "Enemy Formation: " + scheduler.TASK_COUNT[2] + "\n"
+						+ "War: " + scheduler.TASK_COUNT[3] + "\n";
+				
+				String mobileTaskStr = "Tasks Mobile:\n"
+						+ "Food: " + scheduler.TASK_COUNT_MOBILES[0] + "\n"
+						+ "Enemy Creature: " + scheduler.TASK_COUNT_MOBILES[1] + "\n"
+						+ "Enemy Formation: " + scheduler.TASK_COUNT_MOBILES[2] + "\n";
+								
+				SmartConsole.Print(mawTaskStr, DebugModes.STATS);
+				SmartConsole.Print(mobileTaskStr, DebugModes.STATS);
+				
+				SmartConsole.Print("**************************************************", DebugModes.STATS);
 			}
-			System.out.println("**************************************************");
+			SmartConsole.Print("**************************************************", DebugModes.STATS);
 		}
 	}
 }

@@ -65,6 +65,7 @@ public class MawScheduler extends Scheduler{
 				if(mostPowerfullMaw != null){
 					if(targetMaw == mostPowerfullMaw){
 						WarTask.IS_WAR = true;
+						TASK_COUNT[3]++;
 						return new WarTask(info, this.maw);
 					}
 				}
@@ -83,6 +84,7 @@ public class MawScheduler extends Scheduler{
 			
 			if(fGP != null && mawGP != null)
 				if(SimplyMath.Distance(fGP, mawGP) < Constants.MOBILE_VICINITY_X){
+					TASK_COUNT[2]++;
 					return new DefendTask(info, this.maw);
 				}
 		}
@@ -105,11 +107,9 @@ public class MawScheduler extends Scheduler{
 				return new EnemyTask(info, this.maw);
 			
 			case ENEMY_FORMATION:
-				TASK_COUNT[2]++;
 				return createDefendTask(info);
 				
 			case MAW:
-				TASK_COUNT[3]++;
 				return createWarTask(info);
 	
 			default:
