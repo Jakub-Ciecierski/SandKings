@@ -11,6 +11,9 @@ public final class Constants {
 	public static final int BIGGEST_DISTANCE = (int) Math.sqrt(2 * GRID_SIZE * GRID_SIZE);
 	public static final int DISTANCE_FROM_MAW = 10;
 	public static final int SCHEDULE_TICK_DELAY = 10;
+	
+	//MODE CHANGE!!!!! - will set environment constants
+	public static final boolean FRIENDLY_MODE = true;
 
 	// INTERVALS
 	public static final int MOVE_START = 1;
@@ -69,23 +72,23 @@ public final class Constants {
 	public static final int ENEMIES_MARGIN = 3;
 	public static final int MAX_NUMBER_OF_ENEMIES = 10;
 	
-	public static final float SPIDER_ATTACK = 10 * ENEMY_MULTIPLIER;
-	public static final float SPIDER_HEALTH = 150 * ENEMY_MULTIPLIER;
+	public static final float SPIDER_ATTACK;// = 10 * ENEMY_MULTIPLIER;
+	public static final float SPIDER_HEALTH;// = 150 * ENEMY_MULTIPLIER;
 	public static final int SPIDER_MEAT_NO = 1;
 	
-	public static final float SNAKE_ATTACK = 40 * ENEMY_MULTIPLIER;
-	public static final float SNAKE_HEALTH = 600 * ENEMY_MULTIPLIER;
+	public static final float SNAKE_ATTACK;// = 40 * ENEMY_MULTIPLIER;
+	public static final float SNAKE_HEALTH;// = 600 * ENEMY_MULTIPLIER;
 	public static final int SNAKE_MEAT_NO = 20;
 	
-	public static final float SCORPION_ATTACK = 20 * ENEMY_MULTIPLIER;
-	public static final float SCORPION_HEALTH = 300 * ENEMY_MULTIPLIER;
+	public static final float SCORPION_ATTACK;// = 20 * ENEMY_MULTIPLIER;
+	public static final float SCORPION_HEALTH;// = 300 * ENEMY_MULTIPLIER;
 	public static final int SCORPION_MEAT_NO = 4;
 	
 	public static final int HEALTH_CONSTANT = 4;
 	public static final int ATTACK_CONSTANT = 5;	
 	
 	// FOOD CONSTANTS
-	public static final int FOOD_DROP_PROBABILITY = 2; //górna granica rand startuj¹cego od 0, czyli np 9 da 10% szansy
+	public static final int FOOD_DROP_PROBABILITY; //górna granica rand startuj¹cego od 0, czyli np 9 da 10% szansy
 	public static final int MEAT_ID = 4;
 	public static final int STEAK_ID = 5;
 	public static final int FOOD_MULTIPLIER = 2;
@@ -136,6 +139,27 @@ public final class Constants {
 	
 	// HOW CLOSE FORMATION HAS TO BE TO ENGAGE INTO COMBOT WITH NON-TASK ENEMIES
 	public static final double FORMATION_ENGAGE_DISTANCE = 1.0;
+	
+	static {
+		if(FRIENDLY_MODE) {
+			FOOD_DROP_PROBABILITY = 2;
+			SPIDER_ATTACK = 10;
+			SPIDER_HEALTH = 150;
+			SCORPION_ATTACK = 20;
+			SCORPION_HEALTH = 300;
+			SNAKE_ATTACK = 40;
+			SNAKE_HEALTH = 600;
+		}
+		else{
+			FOOD_DROP_PROBABILITY = 9;
+			SPIDER_ATTACK = 15;
+			SPIDER_HEALTH = 200;
+			SCORPION_ATTACK = 30;
+			SCORPION_HEALTH = 450;
+			SNAKE_ATTACK = 60;
+			SNAKE_HEALTH = 800;
+		}
+	}
 	/**
 	 * Hidden constructor to ensure no instances are created.
 	 */
