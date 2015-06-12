@@ -289,6 +289,11 @@ public class WarTask extends Task {
 		allianceChecker[mawIndex] = numberOfChildren;
 		currentMawAnswered = true;
 	}
+	
+	@Override
+	public void finish() {}{
+		this.isFinished = true;
+	}
 
 	@Override
 	public void delayTask() {

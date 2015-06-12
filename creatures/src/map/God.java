@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import creatures.Fightable;
+import creatures.CreatureClasses.Alliance;
 import creatures.CreatureClasses.Maw;
 import creatures.CreatureClasses.MawFinder;
 import repast.simphony.context.Context;
@@ -212,12 +213,14 @@ public class God {
 			SmartConsole.Print("Enemies:\n" + snake + " x Snake\n" + scorpion + " x Scorpion\n" + spider + " x Spider\n", DebugModes.STATS);
 			SmartConsole.Print("Food:\n" + pizza + " x Pizza\n" + donut + " x Donut\n" + grape + " x Grape\n" + cabbage + " x Cabbage\n", DebugModes.STATS);
 			
+			SmartConsole.Print("Alliances Count: " + Alliance.ALLIANCE_COUNT, DebugModes.STATS);
+			
 			for(int i = 0; i < mawList.size(); i++) {
 				Maw maw = mawList.get(i);
 				SmartConsole.Print("**************************************************", DebugModes.STATS);
 				
 				SmartConsole.Print("\n" + mawList.get(i).getMawName() + " Maw\n", DebugModes.STATS);
-				
+				SmartConsole.Print("Tick of Death: " + maw.timeOfDeath, DebugModes.STATS);
 				SmartConsole.Print("Total number of lost children: " + mawList.get(i).getNumOfLostChildren(), DebugModes.STATS);
 				SmartConsole.Print("Greatest total number of children at a time: " + mawList.get(i).getMaxNumOftChildren(), DebugModes.STATS);
 				SmartConsole.Print("Eaten food\n" + mawList.get(i).getPizza() + " x Pizza\n" + mawList.get(i).getDonut() + " x Donut\n"

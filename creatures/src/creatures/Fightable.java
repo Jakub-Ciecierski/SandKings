@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 
+
 import map.EventType;
 import map.Food;
 import map.God;
@@ -14,6 +15,7 @@ import map.GraveStone;
 import Constants.Constants;
 import Enemies.Enemy;
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
@@ -152,6 +154,8 @@ public abstract class Fightable extends Agent{
 		     
 		     grid.moveTo(grave, (int)gp.getX(), (int)gp.getY());
 		     space.moveTo(grave,  (int)gp.getX(), (int)gp.getY());
+		     
+		     instance.timeOfDeath = RunEnvironment.getInstance().getCurrentSchedule().getTickCount(); 
 		     
 		     God.setDeadMawCounter(this.playerID);
 		     MawFinder.Instance().removeMaw(instance);
