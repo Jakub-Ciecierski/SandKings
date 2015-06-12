@@ -145,8 +145,10 @@ public final class Constants {
 			FOOD_DROP_PROBABILITY = 2;
 			SPIDER_ATTACK = 10;
 			SPIDER_HEALTH = 150;
+			
 			SCORPION_ATTACK = 20;
 			SCORPION_HEALTH = 300;
+			
 			SNAKE_ATTACK = 40;
 			SNAKE_HEALTH = 600;
 		}
@@ -154,8 +156,10 @@ public final class Constants {
 			FOOD_DROP_PROBABILITY = 9;
 			SPIDER_ATTACK = 15;
 			SPIDER_HEALTH = 200;
+			
 			SCORPION_ATTACK = 30;
 			SCORPION_HEALTH = 450;
+			
 			SNAKE_ATTACK = 60;
 			SNAKE_HEALTH = 800;
 		}

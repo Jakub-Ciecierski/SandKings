@@ -373,13 +373,14 @@ public class Formation extends Fightable {
 		if ( carriedStuff != null )
 		{
 			Maw m = MawFinder.Instance().GetMaw( this.playerID );
-			for( Food f : carriedStuff ) {
-				f.setDelivered(true);
-				SmartConsole.Print("Formation " + getID() + " arrived with Food #" + f.getID(), DebugModes.ADVANCED);
-				m.ReceiveFood( f );
+			if(m != null){
+				for( Food f : carriedStuff ) {
+					f.setDelivered(true);
+					SmartConsole.Print("Formation " + getID() + " arrived with Food #" + f.getID(), DebugModes.ADVANCED);
+					m.ReceiveFood( f );
+				}
+				this.carriedStuff = new ArrayList<Food>();
 			}
-			this.carriedStuff = new ArrayList<Food>();
-			
 		}
 		this.Disband();
 	}	
