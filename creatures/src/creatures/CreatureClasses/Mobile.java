@@ -278,7 +278,7 @@ public abstract class Mobile extends Fightable {
 	
 	private boolean getGoHomeDesire( GridPoint gp ) {
 		Maw mother = MawFinder.Instance().GetMaw(this.playerID);
-		
+		if ( mother == null ) return true;
 		double distance = MawFinder.Instance().GetDistanceToMaw(this.playerID, gp.getX(), gp.getY());
 		if( food < distance + Constants.MOBILE_STARTVATION_THRESHOLD)
 			return true;
@@ -471,7 +471,7 @@ public abstract class Mobile extends Fightable {
 			if(agent instanceof Food){
 				Food food = (Food) agent;
 				
-				if( food.isPicked() )
+				if( food.isPickingBlocked(this.playerID) ) //if(food.isPicked())
 					continue;
 			}
 			// Do not learn about alliance formation

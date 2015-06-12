@@ -105,7 +105,7 @@ public class Food extends Agent implements Comparable {
 	}
 	
 	public boolean isPickingBlocked( int fractionID ) {
-		return isPicked || MawFinder.Instance().areWeFriends( this.getOwnerID(), fractionID );
+		return isPicked || ( this.ownerID != fractionID && MawFinder.Instance().areWeFriends( this.getOwnerID(), fractionID ) );
 	}
 
 	public boolean isPicked() {
