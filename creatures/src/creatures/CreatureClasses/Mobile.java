@@ -268,12 +268,12 @@ public abstract class Mobile extends Fightable {
 		GridPoint gp = grid.getLocation(this);
 
 		// calculate gohome desire
-		/*if ( getGoHomeDesire( gp ) )
+		if ( getGoHomeDesire( gp ) )
 		{
 			this.goingWhere = GoingWhere.ForFood;
 			GoHome();
 			return;
-		}*/
+		}
 		MoveRandomly( gp );
 	}
 	

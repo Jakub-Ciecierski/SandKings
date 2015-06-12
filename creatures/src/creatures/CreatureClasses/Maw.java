@@ -51,8 +51,10 @@ public class Maw extends Fightable {
 
 	private KnowledgeBase knowledgeBase = new KnowledgeBase(Constants.MAW_MAX_KNOWLEDGE);
 	private MawScheduler scheduler = new MawScheduler(this);
+	
 	private int pizza = 0, donut = 0, grape = 0, cabbage = 0, meat = 0, steak = 0; //how many she have eaten of each
-
+	public double timeOfDeath = 0;
+	
 	//private int pendingFormations = 0;
 	
 	private List<FormationCreator> pendingFormations = new ArrayList<FormationCreator>();
