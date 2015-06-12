@@ -26,6 +26,9 @@ public class Food extends Agent implements Comparable {
 	private int ownerID = 0;
 	
 	private boolean isPicked = false;
+	
+	private boolean isDelivered = false; 
+	
 	public Food (ContinuousSpace<Object> space, Grid<Object> grid, int foodID) {
 		this.space = space;
 		this.grid = grid;
@@ -130,5 +133,12 @@ public class Food extends Agent implements Comparable {
 		this.ownerID = ownerID;
 	}
 	
+	public boolean isDelivered(){
+		return this.isDelivered;
+	}
+	
+	public void setDelivered(boolean delivered){
+		this.isDelivered = delivered;
+	}
 	
 }

@@ -25,8 +25,8 @@ public class FoodTask extends Task {
 	
 	private enum Stages {
 		BEGIN,
-		FINISH,
-		ALLIANCE
+		DELIVERY,
+		FINISH
 	}
 	
 	public FoodTask(Information information, Maw maw) {
@@ -34,7 +34,7 @@ public class FoodTask extends Task {
 		
 		this.maw = maw;
 			
-		//SmartConsole.Print("Agent #" + maw.getID() +" New FoodNotifyTask: " + information.getType().toString(), DebugModes.TASK);
+		SmartConsole.Print("Agent #" + maw.getID() +" New FoodNotifyTask: Food#" + information.getAgent().getID() + "*************", DebugModes.ADVANCED);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -42,6 +42,7 @@ public class FoodTask extends Task {
 	public void execute() {
 		if ( stage == Stages.FINISH ) 
 		{
+			// Finish is currently done inside Formation - ActOnArrival - HomeWithFood
 			finish();
 			return;
 		} 
@@ -62,22 +63,34 @@ public class FoodTask extends Task {
 			ContinuousSpace<Object> space, Grid<Object> grid) {
 
 		Food food = (Food) information.getAgent();
+		
 		if ( food == null ) {
 			stage = Stages.FINISH;
 			return;
 		}
-
+		if(stage == Stages.DELIVERY && food.isDelivered()){
+			stage = Stages.FINISH;
+			return;
+		}
+		
 		int neededBros = food.getWeight();
 		
 		FormationCreator formationCreator = new FormationCreator(maw, 
 												neededBros, 
 												Formation.GoingWhere.ForFood,
 												information.getGridPoint());
+		//formationCreator.setTask(this);
+		
 		maw.addPendingFormation(formationCreator);
 
 		stage = Stages.FINISH;
 	}
-
+/*
+	@Override
+	public void finish() {
+		this.isFinished = true;
+	}
+	*/
 	@Override
 	public void delayTask() {
 		// TODO Auto-generated method stub

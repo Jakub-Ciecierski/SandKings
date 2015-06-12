@@ -441,10 +441,11 @@ public class Maw extends Fightable {
 	
 	public boolean createFormation(){
 		if(pendingFormations.size() > 0){
+			SmartConsole.Print("Maw #" + this.getPlayerID() + "FromationCreator Size:" + pendingFormations.size(), DebugModes.CR_FORMATION);
 			FormationCreator pendingFormation = pendingFormations.get(0);
 			SmartConsole.Print("Maw #" + this.getPlayerID() + "Attempting FromationCreator", DebugModes.FORMATION);
 			
-			if(pendingFormation.AttemptFormation()){
+			if(pendingFormation.AttemptFormation() || pendingFormation.toRemove){
 				pendingFormations.remove(0);
 				return true;
 			}

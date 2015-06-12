@@ -1,9 +1,9 @@
 package communication.knowledge;
 
 public enum InformationType {
-	MAW(6),
+	MAW(4),
 	ENEMY_FORMATION(5),
-	FOOD(4),
+	FOOD(6),
 	ENEMY_CREATURE(3),
 	ENEMY_MOBILE(1), 
 	FRIEDLY_MOBILE(0),

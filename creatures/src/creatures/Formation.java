@@ -20,6 +20,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.tasks.Task;
 import util.GSC;
 import util.SimplyMath;
 import util.SmartConsole;
@@ -86,6 +87,7 @@ public class Formation extends Fightable {
 	private GridPoint lastPosition = null;
 	private double lastMovedTick = 0;
 	
+	private Task task = null;
 	
 	// only called when we need a new member
 	public void findNewMember(int ID)
@@ -308,7 +310,9 @@ public class Formation extends Fightable {
 					// TODO
 				break;
 			case HomeWithFood:
-					SmartConsole.Print("Formation " + getID() + " home with food.", DebugModes.FORMATION);
+					SmartConsole.Print("Formation " + getID() + " home with food.", DebugModes.ADVANCED);
+					if(task != null)
+						task.finish();
 					DropCarriedFood();
 				break;
 			case Wpierdol:
@@ -358,9 +362,13 @@ public class Formation extends Fightable {
 		if ( carriedStuff != null )
 		{
 			Maw m = MawFinder.Instance().GetMaw( this.playerID );
-			for( Food f : carriedStuff )
+			for( Food f : carriedStuff ) {
+				f.setDelivered(true);
+				SmartConsole.Print("Formation " + getID() + " arrived with Food #" + f.getID(), DebugModes.ADVANCED);
 				m.ReceiveFood( f );
+			}
 			this.carriedStuff = new ArrayList<Food>();
+			
 		}
 		this.Disband();
 	}	
@@ -751,5 +759,9 @@ public class Formation extends Fightable {
 	
 	public int getPlayerID(){
 		return this.playerID;
+	}
+	
+	public void setTask(Task task){
+		this.task = task;
 	}
 }

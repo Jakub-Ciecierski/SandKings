@@ -7,7 +7,7 @@ public class SmartConsole {
 	private static String SUFFIX = "\n";
 	
 	//static DebugModes[] DEBUG_MDOE = {DebugModes.ADVANCED, DebugModes.TASK, DebugModes.ALLIANCE};  
-	static DebugModes[] DEBUG_MDOE = {DebugModes.WAR};
+	static DebugModes[] DEBUG_MDOE = {DebugModes.CR_FORMATION, DebugModes.ADVANCED};
 	
 	public enum DebugModes {
 		STDOUT,
@@ -20,6 +20,7 @@ public class SmartConsole {
 		KB,
 		SCHEDULER,
 		FORMATION,
+		CR_FORMATION,
 		GOD,
 		ALLIANCE,
 		WAR,
@@ -49,6 +50,9 @@ public class SmartConsole {
 			}
 			if(this == SCHEDULER){
 				return "Scheduler";
+			}
+			if(this == CR_FORMATION){
+				return "FormationCreator";
 			}
 			if(this == FORMATION){
 				return "Formation";

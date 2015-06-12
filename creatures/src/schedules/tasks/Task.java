@@ -37,7 +37,7 @@ public abstract class Task {
 		return this.information;
 	}
 	
-	protected void finish(){
+	public void finish(){
 		isFinished = true;
 		information.isUsefull = false;
 	}

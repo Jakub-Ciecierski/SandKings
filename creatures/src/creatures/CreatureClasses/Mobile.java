@@ -472,8 +472,11 @@ public abstract class Mobile extends Fightable {
 			if(agent instanceof Food){
 				Food food = (Food) agent;
 				
-				if( food.isPickingBlocked(this.playerID) ) //if(food.isPicked())
+				
+				if( food.isPickingBlocked(this.playerID) ){ //if(food.isPicked())
+					//SmartConsole.Print("Agent #" + this.id +" Picked blocked", DebugModes.KB);
 					continue;
+				}
 			}
 			// Do not learn about alliance formation
 			if(agent instanceof Formation){
@@ -495,11 +498,11 @@ public abstract class Mobile extends Fightable {
 				Information info = new Information(agent, infoType, tickCount, pt);
 				
 				if(this.knowledgeBase.addInformation(info)){
-
+					/*
 					SmartConsole.Print("Agent #" + this.id +" Gained knowledge", DebugModes.KB);
 					SmartConsole.Print("What: " + infoType.toString(), DebugModes.KB);
 					SmartConsole.Print("Where: [" + pt.getX() + ", " + pt.getY() +"] ", DebugModes.KB);
-					SmartConsole.Print("When: " + tickCount, DebugModes.KB);
+					SmartConsole.Print("When: " + tickCount, DebugModes.KB);*/
 				}
 			}
 		}

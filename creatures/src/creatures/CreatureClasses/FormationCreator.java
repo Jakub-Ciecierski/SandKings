@@ -10,6 +10,7 @@ import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import schedules.tasks.Task;
 import util.SmartConsole;
 import util.SmartConsole.DebugModes;
 
@@ -29,6 +30,10 @@ public class FormationCreator {
 	private List<Formation> allianceFormations = null;
 	
 	private FormationTypes type;
+	
+	private Task task = null;
+	
+	public boolean toRemove = false;
 	
 	public FormationCreator(Maw maw, int size, 
 							Formation.GoingWhere goingWhere,
@@ -70,6 +75,8 @@ public class FormationCreator {
 	public boolean AttemptFormation(){
 
 		if(goingPoint == null) {
+			toRemove = true;
+			SmartConsole.Print("CAN'T MAKE FORMATION CANCELING", DebugModes.ADVANCED);
 			return false;
 		}
 		
@@ -83,7 +90,7 @@ public class FormationCreator {
 		List<Mobile> agents = new ArrayList<Mobile>();
 		
 		int max = Constants.Constants.BIGGEST_DISTANCE;
-		int extent = 50;
+		int extent = 20;
 		
 		// Strict - look until found enough
 		if(type == FormationTypes.STRICT){
@@ -103,6 +110,10 @@ public class FormationCreator {
 		}
 
 		Formation f = new Formation( space, grid, maw.getPlayerID());
+		
+		if(task != null)
+			f.setTask(task);
+		
 		context.add(f);
 
 		GridPoint test =  new GridPoint(25,25);
@@ -126,5 +137,8 @@ public class FormationCreator {
 		return true;
 	}
 
+	public void setTask(Task task){
+		this.task = task;
+	}
 
 }
