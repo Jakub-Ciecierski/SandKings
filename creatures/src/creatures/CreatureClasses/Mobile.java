@@ -193,7 +193,8 @@ public abstract class Mobile extends Fightable {
 		if ( carriedStuff != null )
 		{
 			Maw m = MawFinder.Instance().GetMaw( this.playerID );
-			m.ReceiveFood( carriedStuff );
+			if ( m != null )
+				m.ReceiveFood( carriedStuff );
 			this.carriedStuff = null;
 		}
 	}
@@ -267,12 +268,12 @@ public abstract class Mobile extends Fightable {
 		GridPoint gp = grid.getLocation(this);
 
 		// calculate gohome desire
-		if ( getGoHomeDesire( gp ) )
+		/*if ( getGoHomeDesire( gp ) )
 		{
 			this.goingWhere = GoingWhere.ForFood;
 			GoHome();
 			return;
-		}
+		}*/
 		MoveRandomly( gp );
 	}
 	

@@ -394,6 +394,7 @@ public class Formation extends Fightable {
 		/***** CREATE FORMATION ********/
 		
 		if(!addPending() && !doNotRepeatPending) {
+			Attack();
 			return;
 		}
 		doNotRepeatPending = true;
