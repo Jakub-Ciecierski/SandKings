@@ -295,6 +295,6 @@ public class EnemyTask extends Task {
 	@Override
 	public void delayTask() {
 		// TODO Auto-generated method stub
-		
+		stage = Stages.BEGIN;
 	}
 }

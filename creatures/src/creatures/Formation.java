@@ -272,6 +272,11 @@ public class Formation extends Fightable {
 		this.isDisbanded = true;
 		this.Die();
 		
+		if(task != null) {
+			task.delayTask();
+			task = null;
+		}
+		
 		//context.remove(this);
 	}
 	public void MoveThere ( )
@@ -289,6 +294,10 @@ public class Formation extends Fightable {
 			if(!GSC.Instance().getContext().contains(m))
 				continue;
 
+			if(gp.getX() + randX >= Constants.GRID_SIZE || gp.getY() + randY >= Constants.GRID_SIZE || 
+					gp.getX() + randX < 0 || gp.getY() + randY < 0)
+				continue;
+			
 			space.moveTo(m, gp.getX() + randX, gp.getY() + randY);
 			grid.moveTo( m, gp.getX() + randX, gp.getY() + randY);
 		}
@@ -311,8 +320,10 @@ public class Formation extends Fightable {
 				break;
 			case HomeWithFood:
 					SmartConsole.Print("Formation " + getID() + " home with food.", DebugModes.ADVANCED);
-					if(task != null)
+					if(task != null) {
 						task.finish();
+						task = null;
+					}
 					DropCarriedFood();
 				break;
 			case Wpierdol:

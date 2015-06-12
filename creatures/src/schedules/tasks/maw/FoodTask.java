@@ -40,6 +40,13 @@ public class FoodTask extends Task {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() {
+		
+		Food food = (Food) information.getAgent();
+
+		if(food == null || food.isDelivered()){
+			stage = Stages.FINISH;
+		}
+		
 		if ( stage == Stages.FINISH ) 
 		{
 			// Finish is currently done inside Formation - ActOnArrival - HomeWithFood
@@ -48,30 +55,21 @@ public class FoodTask extends Task {
 		} 
 		else if ( stage == Stages.BEGIN )
 		{
-			// SPAWN FORMATION FOR THE JOB
-			
 			Context<Object> context = ContextUtils.getContext(maw);
 			ContinuousSpace<Object> space = maw.getSpace(); 
 			Grid<Object> grid = maw.getGrid();
 			
-			goForFood( context, space, grid );
+			goForFood( context, space, grid , food);
+		}
+		else if(stage == Stages.DELIVERY && food.isDelivered()){
+			stage = Stages.FINISH;
+			return;
 		}
 		
 	}
 	
 	private void goForFood(Context<Object> context, 
-			ContinuousSpace<Object> space, Grid<Object> grid) {
-
-		Food food = (Food) information.getAgent();
-		
-		if ( food == null ) {
-			stage = Stages.FINISH;
-			return;
-		}
-		if(stage == Stages.DELIVERY && food.isDelivered()){
-			stage = Stages.FINISH;
-			return;
-		}
+			ContinuousSpace<Object> space, Grid<Object> grid, Food food) {
 		
 		int neededBros = food.getWeight();
 		
@@ -79,11 +77,11 @@ public class FoodTask extends Task {
 												neededBros, 
 												Formation.GoingWhere.ForFood,
 												information.getGridPoint());
-		//formationCreator.setTask(this);
+		formationCreator.setTask(this);
 		
 		maw.addPendingFormation(formationCreator);
 
-		stage = Stages.FINISH;
+		stage = Stages.DELIVERY;
 	}
 /*
 	@Override
@@ -94,7 +92,7 @@ public class FoodTask extends Task {
 	@Override
 	public void delayTask() {
 		// TODO Auto-generated method stub
-		
+		stage = Stages.BEGIN;
 	}
 
 }

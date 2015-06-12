@@ -90,18 +90,14 @@ public class FormationCreator {
 		List<Mobile> agents = new ArrayList<Mobile>();
 		
 		int max = Constants.Constants.BIGGEST_DISTANCE;
-		int extent = 20;
-		
+		int extent = 50;
+
 		// Strict - look until found enough
 		if(type == FormationTypes.STRICT){
-			while ( agents.size() < size )
-			{
-				agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);	
-				extent += 5;
-				
-				if(extent > max)
-					return false;
-			}
+
+			agents = MawFinder.Instance().getFreeAgentsInVicinity(maw.getPlayerID(), size, extent);
+			if(agents.size() < size)
+				return false;
 		}
 		// Loose - go with what you have
 		else if(type == FormationTypes.LOOSE) {
