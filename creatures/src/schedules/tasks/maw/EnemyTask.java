@@ -121,7 +121,7 @@ public class EnemyTask extends Task {
 		}
 
 		int neededBros = neededBros(enemy);
-		neededBros = 20; // TODO fix magic number
+		//neededBros = 20; // TODO fix magic number
 		
 		allianceChecker[myAllianceIndex] = maw.getNumberOfFreeChildren();
 		printCurrentAlliances();
@@ -258,18 +258,18 @@ public class EnemyTask extends Task {
 	private int neededBros(Enemy enemy){
 		// TODO fix function
 		int neededBros = (int) Math.ceil(
-					( ( enemy.getHealth() * enemy.getDamage() ) / 
+					( ( Math.abs(enemy.getHealth() * enemy.getDamage()) ) / 
 					( 
 							( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
 							Constants.MOBILE_HEALTH * Constants.MOBILE_ATTACK 
-					) ) * 1.2f
+					) ) * 0.3f
 				); 
 
 		SmartConsole.Print(" danger: " + enemy.getHealth() * enemy.getDamage() + "   " + 
 											" mobile danger: " +	 
 											( Math.pow( 1 + maw.getStrength(), 2 ) ) * 
 											Constants.MOBILE_HEALTH * Constants.MOBILE_ATTACK 
-											+ "         needed bros: " + neededBros , DebugModes.TASK);
+											+ "         needed bros: " + neededBros , DebugModes.ADVANCED);
 		return neededBros;
 	}
 	
